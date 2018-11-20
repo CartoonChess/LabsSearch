@@ -6,6 +6,8 @@
 //  Copyright © 2018 Distant Labs. All rights reserved.
 //
 
+// FIXME: Delete this line (git test 1)
+
 import UIKit
 import SafariServices
 
