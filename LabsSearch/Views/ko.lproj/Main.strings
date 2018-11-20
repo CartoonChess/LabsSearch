@@ -1,0 +1,105 @@
+/* Class = "UITextField"; placeholder = "Link"; ObjectID = "2Vn-9d-eDi"; */
+"2Vn-9d-eDi.placeholder" = "주소";
+
+/* Class = "UILabel"; text = "Engine Name"; ObjectID = "3o3-qM-Kim"; */
+"3o3-qM-Kim.text" = "Engine Name";
+
+/* Class = "UITableViewSection"; headerTitle = "Advanced Options"; ObjectID = "AD0-OO-J4n"; */
+"AD0-OO-J4n.headerTitle" = "고급 설정";
+
+/* Class = "UILabel"; text = "Remove"; ObjectID = "aEb-i6-kyU"; */
+"aEb-i6-kyU.text" = "삭제";
+
+/* Class = "UILabel"; text = "Stay in App"; ObjectID = "ah2-Wb-uGZ"; */
+"ah2-Wb-uGZ.text" = "앱 내에 머무르기";
+
+/* Class = "UINavigationItem"; title = "Search"; ObjectID = "b5k-0u-G3Y"; */
+"b5k-0u-G3Y.title" = "검색";
+
+/* Class = "UILabel"; text = "Default Service"; ObjectID = "Bpu-Xf-Mu2"; */
+"Bpu-Xf-Mu2.text" = "기본 검색 엔진";
+
+/* Class = "UITextField"; placeholder = "Search"; ObjectID = "cMM-aJ-1Yd"; */
+"cMM-aJ-1Yd.placeholder" = "Search";
+
+/* Class = "UILabel"; text = "Not Set"; ObjectID = "d1X-Kd-UI9"; */
+"d1X-Kd-UI9.text" = "변경 없음";
+
+/* Class = "UILabel"; text = "Test"; ObjectID = "Dl1-QI-dM8"; */
+"Dl1-QI-dM8.text" = "확인";
+
+/* Class = "UITableViewSection"; headerTitle = "Experimental Features"; ObjectID = "DQF-PT-GWP"; */
+"DQF-PT-GWP.headerTitle" = "실험실";
+
+/* Class = "UILabel"; text = "X"; ObjectID = "dzn-eI-a9O"; */
+"dzn-eI-a9O.text" = "X";
+
+/* Class = "UITextField"; placeholder = "Shortcut"; ObjectID = "I8j-4N-2gH"; */
+"I8j-4N-2gH.placeholder" = "단축키";
+
+/* Class = "UITableViewController"; title = "All Services"; ObjectID = "IZM-qo-rvZ"; */
+"IZM-qo-rvZ.title" = "검색 엔진";
+
+/* Class = "UILabel"; text = "Engine Name"; ObjectID = "jEF-2Q-fPm"; */
+"jEF-2Q-fPm.text" = "Engine Name";
+
+/* Class = "UILabel"; text = "Add & Edit Services"; ObjectID = "Jen-rr-SCc"; */
+"Jen-rr-SCc.text" = "검색 엔진 추가 및 수정";
+
+/* Class = "UINavigationItem"; title = "Add/Edit Service"; ObjectID = "k8y-gI-Jfn"; */
+"k8y-gI-Jfn.title" = "Add/Edit Service";
+
+/* Class = "UILabel"; text = "X"; ObjectID = "kdK-nh-tQh"; */
+"kdK-nh-tQh.text" = "X";
+
+/* Class = "UILabel"; text = "Back Up Search Services"; ObjectID = "kOa-74-fFf"; */
+"kOa-74-fFf.text" = "모든 검색 엔진 설정 백업";
+
+/* Class = "UITableViewSection"; footerTitle = "[instructions]"; ObjectID = "Kt4-5b-gNP"; */
+"Kt4-5b-gNP.footerTitle" = "[instructions]";
+
+/* Class = "UITableViewSection"; headerTitle = "Instructions"; ObjectID = "Kt4-5b-gNP"; */
+"Kt4-5b-gNP.headerTitle" = "검색 엔진 추가 방법";
+
+/* Class = "UITableViewSection"; footerTitle = "Search results will..."; ObjectID = "lBF-Vk-PBe"; */
+"lBF-Vk-PBe.footerTitle" = "Search results will...";
+
+/* Class = "UILabel"; text = "shortcut"; ObjectID = "MDT-Ar-4bJ"; */
+"MDT-Ar-4bJ.text" = "shortcut";
+
+/* Class = "UITableViewController"; title = "Default Service"; ObjectID = "mmR-bE-A8h"; */
+"mmR-bE-A8h.title" = "기본 검색 엔진";
+
+/* Class = "UILabel"; text = "Remove All Services & Use Defaults"; ObjectID = "n1P-jt-5Ob"; */
+"n1P-jt-5Ob.text" = "모든 검색 엔진 설정 재설정";
+
+/* Class = "UINavigationItem"; title = "All Services"; ObjectID = "ofd-aP-mv1"; */
+"ofd-aP-mv1.title" = "검색 엔진";
+
+/* Class = "UITextField"; placeholder = "Search word"; ObjectID = "rZI-wk-SzI"; */
+"rZI-wk-SzI.placeholder" = "검색어";
+
+/* Class = "UITableViewController"; title = "Settings"; ObjectID = "TJL-X2-Mk5"; */
+"TJL-X2-Mk5.title" = "설정";
+
+/* Class = "UITableViewSection"; headerTitle = "Search Services"; ObjectID = "VlS-fT-lRg"; */
+"VlS-fT-lRg.headerTitle" = "사용자 설정";
+
+/* Class = "UILabel"; text = "X"; ObjectID = "vmZ-TH-H54"; */
+"vmZ-TH-H54.text" = "X";
+
+/* Class = "UILabel"; text = "Link Details"; ObjectID = "W2a-yn-IkE"; */
+"W2a-yn-IkE.text" = "세부사항";
+
+/* Class = "UILabel"; text = "Engine Name"; ObjectID = "WBH-Ed-IeJ"; */
+"WBH-Ed-IeJ.text" = "Engine Name";
+
+/* Class = "UIButton"; normalTitle = "Settings"; ObjectID = "XrU-wc-PB0"; */
+"XrU-wc-PB0.normalTitle" = "• • •";
+
+/* Class = "UITextField"; placeholder = "Name"; ObjectID = "y8L-a9-9iD"; */
+"y8L-a9-9iD.placeholder" = "이름";
+
+/* Class = "UILabel"; text = "🔍"; ObjectID = "zdb-9v-L09"; */
+"zdb-9v-L09.text" = "🔍";
+

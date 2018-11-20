@@ -16,7 +16,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // MARK: - Caching
+        // We had set some memory caching for when grabbing images via (local) URL,
+        //- but apparently this is set by default, and should be enough (500k?)
+        
+//        let temporaryDirectory = NSTemporaryDirectory()
+//        let urlCache = URLCache(memoryCapacity: 25000000, diskCapacity: 0, diskPath: temporaryDirectory)
+//        let urlCache = URLCache(memoryCapacity: 25000000, diskCapacity: 0, diskPath: nil)
+//        URLCache.shared = urlCache
+        
         return true
+        
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -31,10 +42,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        
+        // If an engine was added via the action extension, refresh the data when returning to main app
+        if let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
+            extensionDidChangeData {
+            print(.o, "Engine previously added via action extension; refreshing data.")
+            // Refresh data
+            SearchEngines.shared.loadEngines()
+        }
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+        // extensionDidChangeData is returned to false here to allow active views to first refresh themselves
+        if let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
+            extensionDidChangeData {
+            print(.n, "Data and any currently visible tables should have been refreshed; setting extensionDidChangeData to false.")
+            UserDefaults(suiteName: AppKeys.appGroup)?.set(false, forKey: SettingsKeys.extensionDidChangeData)
+        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

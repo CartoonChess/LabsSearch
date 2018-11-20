@@ -1,0 +1,56 @@
+//
+//  Localizable.strings
+//  Korean (ko)
+//
+//  LabsSearch
+//
+//  Copyright © 2018 Distant Labs. All rights reserved.
+//
+
+
+// MARK: - Search Engine
+
+"SearchEngine.defaultEngines-Google" = "구글";
+"SearchEngine.defaultEngines-AppleMaps" = "애플 지도";
+"SearchEngine.defaultEngines-Naver" = "네이버";
+"SearchEngine.defaultEngines-NaverKoEnDictionary" = "네이버 한영사전";
+"SearchEngine.defaultEngines-QDWiki" = "QD Wiki";
+"SearchEngine.defaultEngines-Wikipedia" = "위키피디아";
+"SearchEngine.defaultEngines-WikipediaURL" = "https://ko.m.wikipedia.org/w/";
+"SearchEngine.defaultEngines-YouTube" = "유투브";
+
+
+// MARK: - Settings
+
+
+// MARK: Stay In App explanation
+"Settings.stayInAppFooter-On" = "가능한 경우 검색 결과가 앱 내에서 보여집니다.";
+"Settings.stayInAppFooter-Off" = "검색 결과가 Safari나 관련 앱에서 보여집니다.";
+
+"Settings.defaultEngineNameLabel-Choose" = "미설정";
+
+// MARK: Reset app alert
+"Settings.resetAppAlert-Title" = "모든 검색 엔진 설정 재설정";
+"Settings.resetAppAlert-Message" = "검색 엔진 설정 및 단축키 설정을 포함한 모든 사용자 설정 내역이 삭제됩니다. 삭제 후에는 기본 설정으로 설정됩니다.";
+"Settings.resetAppAlert-Reset" = "재설정";
+"Settings.resetAppAlert-Cancel" = "취소";
+
+
+// MARK: - Add/Edit Engine
+
+"AddEditEngine.navigationItemTitle-Add" = "검색 엔진 추가";
+"AddEditEngine.navigationItemTitle-Edit" = "검색 엔진 수정";
+
+// MARK: URL details update status
+"AddEditEngine.urlDetails-Saved" = "저장됨";
+"AddEditEngine.urlDetails-Changed" = "변경됨";
+"AddEditEngine.urlDetails-NotUpdated" = "변경 없음";
+
+// MARK: Delete engine alert
+"AddEditEngine.deleteEngine-Remove" = "삭제";
+"AddEditEngine.deleteEngine-Cancel" = "취소";
+
+
+// MARK: - URL Details
+
+"UrlDetails.firstSection-Instructions" = "새로운 검색 엔진을 추가하기 위해서는 먼저 Safari를 이용해 새로운 검색 엔진에 접속해 검색을 시작하세요. 검색 결과가 나타나면, 링크를 복사 후 아래에 붙여넣습니다. 팁: 검색어를 123으로 사용해 검색할 경우, 다음 단계는 자동적으로 완료됩니다.";

@@ -1,0 +1,105 @@
+
+/* Class = "UITextField"; placeholder = "Link"; ObjectID = "2Vn-9d-eDi"; */
+"2Vn-9d-eDi.placeholder" = "Link";
+
+/* Class = "UILabel"; text = "Engine Name"; ObjectID = "3o3-qM-Kim"; */
+"3o3-qM-Kim.text" = "Engine Name";
+
+/* Class = "UITableViewSection"; headerTitle = "Advanced Options"; ObjectID = "AD0-OO-J4n"; */
+"AD0-OO-J4n.headerTitle" = "Advanced Options";
+
+/* Class = "UILabel"; text = "Default Service"; ObjectID = "Bpu-Xf-Mu2"; */
+"Bpu-Xf-Mu2.text" = "Default Service";
+
+/* Class = "UITableViewSection"; headerTitle = "Experimental Features"; ObjectID = "DQF-PT-GWP"; */
+"DQF-PT-GWP.headerTitle" = "Experimental Features";
+
+/* Class = "UILabel"; text = "Test"; ObjectID = "Dl1-QI-dM8"; */
+"Dl1-QI-dM8.text" = "Test";
+
+/* Class = "UITextField"; placeholder = "Shortcut"; ObjectID = "I8j-4N-2gH"; */
+"I8j-4N-2gH.placeholder" = "Shortcut";
+
+/* Class = "UITableViewController"; title = "All Services"; ObjectID = "IZM-qo-rvZ"; */
+"IZM-qo-rvZ.title" = "All Services";
+
+/* Class = "UILabel"; text = "Add & Edit Services"; ObjectID = "Jen-rr-SCc"; */
+"Jen-rr-SCc.text" = "Add & Edit Services";
+
+/* Class = "UITableViewSection"; footerTitle = "[instructions]"; ObjectID = "Kt4-5b-gNP"; */
+"Kt4-5b-gNP.footerTitle" = "[instructions]";
+
+/* Class = "UITableViewSection"; headerTitle = "Instructions"; ObjectID = "Kt4-5b-gNP"; */
+"Kt4-5b-gNP.headerTitle" = "Instructions";
+
+/* Class = "UILabel"; text = "shortcut"; ObjectID = "MDT-Ar-4bJ"; */
+"MDT-Ar-4bJ.text" = "shortcut";
+
+/* Class = "UITableViewController"; title = "Settings"; ObjectID = "TJL-X2-Mk5"; */
+"TJL-X2-Mk5.title" = "Settings";
+
+/* Class = "UITableViewSection"; headerTitle = "Search Services"; ObjectID = "VlS-fT-lRg"; */
+"VlS-fT-lRg.headerTitle" = "Search Services";
+
+/* Class = "UILabel"; text = "Link Details"; ObjectID = "W2a-yn-IkE"; */
+"W2a-yn-IkE.text" = "Link Details";
+
+/* Class = "UILabel"; text = "Engine Name"; ObjectID = "WBH-Ed-IeJ"; */
+"WBH-Ed-IeJ.text" = "Engine Name";
+
+/* Class = "UIButton"; normalTitle = "• • •"; ObjectID = "XrU-wc-PB0"; */
+"XrU-wc-PB0.normalTitle" = "• • •";
+
+/* Class = "UILabel"; text = "Remove"; ObjectID = "aEb-i6-kyU"; */
+"aEb-i6-kyU.text" = "Remove";
+
+/* Class = "UILabel"; text = "Stay in App"; ObjectID = "ah2-Wb-uGZ"; */
+"ah2-Wb-uGZ.text" = "Stay in App";
+
+/* Class = "UINavigationItem"; title = "Search"; ObjectID = "b5k-0u-G3Y"; */
+"b5k-0u-G3Y.title" = "Search";
+
+/* Class = "UITextField"; placeholder = "Search"; ObjectID = "cMM-aJ-1Yd"; */
+"cMM-aJ-1Yd.placeholder" = "Search";
+
+/* Class = "UILabel"; text = "Not Set"; ObjectID = "d1X-Kd-UI9"; */
+"d1X-Kd-UI9.text" = "Not Set";
+
+/* Class = "UILabel"; text = "X"; ObjectID = "dzn-eI-a9O"; */
+"dzn-eI-a9O.text" = "X";
+
+/* Class = "UILabel"; text = "Engine Name"; ObjectID = "jEF-2Q-fPm"; */
+"jEF-2Q-fPm.text" = "Engine Name";
+
+/* Class = "UINavigationItem"; title = "Add/Edit Service"; ObjectID = "k8y-gI-Jfn"; */
+"k8y-gI-Jfn.title" = "Add/Edit Service";
+
+/* Class = "UILabel"; text = "Back Up Search Services"; ObjectID = "kOa-74-fFf"; */
+"kOa-74-fFf.text" = "Back Up Search Services";
+
+/* Class = "UILabel"; text = "X"; ObjectID = "kdK-nh-tQh"; */
+"kdK-nh-tQh.text" = "X";
+
+/* Class = "UITableViewSection"; footerTitle = "Search results will..."; ObjectID = "lBF-Vk-PBe"; */
+"lBF-Vk-PBe.footerTitle" = "Search results will...";
+
+/* Class = "UITableViewController"; title = "Default Service"; ObjectID = "mmR-bE-A8h"; */
+"mmR-bE-A8h.title" = "Default Service";
+
+/* Class = "UILabel"; text = "Remove All Services & Use Defaults"; ObjectID = "n1P-jt-5Ob"; */
+"n1P-jt-5Ob.text" = "Remove All Services & Use Defaults";
+
+/* Class = "UINavigationItem"; title = "All Services"; ObjectID = "ofd-aP-mv1"; */
+"ofd-aP-mv1.title" = "All Services";
+
+/* Class = "UITextField"; placeholder = "Search word"; ObjectID = "rZI-wk-SzI"; */
+"rZI-wk-SzI.placeholder" = "Search word";
+
+/* Class = "UILabel"; text = "X"; ObjectID = "vmZ-TH-H54"; */
+"vmZ-TH-H54.text" = "X";
+
+/* Class = "UITextField"; placeholder = "Name"; ObjectID = "y8L-a9-9iD"; */
+"y8L-a9-9iD.placeholder" = "Name";
+
+/* Class = "UILabel"; text = "🔍"; ObjectID = "zdb-9v-L09"; */
+"zdb-9v-L09.text" = "🔍";

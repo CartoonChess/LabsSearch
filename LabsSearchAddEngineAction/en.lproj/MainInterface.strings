@@ -1,0 +1,39 @@
+
+/* Class = "UITextField"; placeholder = "Link"; ObjectID = "2Vn-9d-eDi"; */
+"2Vn-9d-eDi.placeholder" = "Link";
+
+/* Class = "UITableViewSection"; headerTitle = "Advanced Options"; ObjectID = "AD0-OO-J4n"; */
+"AD0-OO-J4n.headerTitle" = "Advanced Options";
+
+/* Class = "UILabel"; text = "Test"; ObjectID = "Dl1-QI-dM8"; */
+"Dl1-QI-dM8.text" = "Test";
+
+/* Class = "UITextField"; placeholder = "Shortcut"; ObjectID = "I8j-4N-2gH"; */
+"I8j-4N-2gH.placeholder" = "Shortcut";
+
+/* Class = "UITableViewSection"; footerTitle = "[instructions]"; ObjectID = "Kt4-5b-gNP"; */
+"Kt4-5b-gNP.footerTitle" = "[instructions]";
+
+/* Class = "UITableViewSection"; headerTitle = "Instructions"; ObjectID = "Kt4-5b-gNP"; */
+"Kt4-5b-gNP.headerTitle" = "Instructions";
+
+/* Class = "UILabel"; text = "Link Details"; ObjectID = "W2a-yn-IkE"; */
+"W2a-yn-IkE.text" = "Link Details";
+
+/* Class = "UILabel"; text = "Remove"; ObjectID = "aEb-i6-kyU"; */
+"aEb-i6-kyU.text" = "Remove";
+
+/* Class = "UILabel"; text = "Not Set"; ObjectID = "d1X-Kd-UI9"; */
+"d1X-Kd-UI9.text" = "Not Set";
+
+/* Class = "UINavigationItem"; title = "Add/Edit Service"; ObjectID = "k8y-gI-Jfn"; */
+"k8y-gI-Jfn.title" = "Add/Edit Service";
+
+/* Class = "UITextField"; placeholder = "Search word"; ObjectID = "rZI-wk-SzI"; */
+"rZI-wk-SzI.placeholder" = "Search word";
+
+/* Class = "UITextField"; placeholder = "Name"; ObjectID = "y8L-a9-9iD"; */
+"y8L-a9-9iD.placeholder" = "Name";
+
+/* Class = "UILabel"; text = "🔍"; ObjectID = "zdb-9v-L09"; */
+"zdb-9v-L09.text" = "🔍";
