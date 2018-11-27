@@ -44,8 +44,6 @@
 		AE5B15562187830F00FEF24D /* UIViewController+showSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B15552187830F00FEF24D /* UIViewController+showSafariViewController.swift */; };
 		AE7164A121A4FFDA00BF2441 /* AddEditEngine.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE7164A421A4FFDA00BF2441 /* AddEditEngine.storyboard */; };
 		AE7164A221A4FFDA00BF2441 /* AddEditEngine.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE7164A421A4FFDA00BF2441 /* AddEditEngine.storyboard */; };
-		AE7164AD21AD8B6B00BF2441 /* gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AE7164AC21AD8B6B00BF2441 /* gitignore */; };
-		AE7164AE21AD8B6B00BF2441 /* gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AE7164AC21AD8B6B00BF2441 /* gitignore */; };
 		AE7270612195D60C00962D9C /* GetSharedUrl.js in Resources */ = {isa = PBXBuildFile; fileRef = AE7270602195D60C00962D9C /* GetSharedUrl.js */; };
 		AE830D10219807FD00CD8257 /* UrlController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE830D0F219807FD00CD8257 /* UrlController.swift */; };
 		AE830D11219823F200CD8257 /* UrlController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE830D0F219807FD00CD8257 /* UrlController.swift */; };
@@ -121,7 +119,6 @@
 		AE7164A321A4FFDA00BF2441 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/AddEditEngine.storyboard; sourceTree = "<group>"; };
 		AE7164A621A4FFE000BF2441 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AddEditEngine.strings; sourceTree = "<group>"; };
 		AE7164A821A4FFE300BF2441 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/AddEditEngine.strings; sourceTree = "<group>"; };
-		AE7164AC21AD8B6B00BF2441 /* gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = gitignore; sourceTree = "<group>"; };
 		AE7270602195D60C00962D9C /* GetSharedUrl.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = GetSharedUrl.js; sourceTree = "<group>"; };
 		AE830D0F219807FD00CD8257 /* UrlController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlController.swift; sourceTree = "<group>"; };
 		AE830D122199353600CD8257 /* LabsSearch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LabsSearch.entitlements; sourceTree = "<group>"; };
@@ -184,7 +181,6 @@
 		AEF665BE21781BAF00DB310D = {
 			isa = PBXGroup;
 			children = (
-				AE7164AC21AD8B6B00BF2441 /* gitignore */,
 				AEF665C921781BAF00DB310D /* LabsSearch */,
 				AE093EBC2192B61600CF3361 /* LabsSearchAddEngineAction */,
 				AEF665C821781BAF00DB310D /* Products */,
@@ -367,7 +363,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEBA4749219DCCFB00869E24 /* InfoPlist.strings in Resources */,
-				AE7164AE21AD8B6B00BF2441 /* gitignore in Resources */,
 				AE7270612195D60C00962D9C /* GetSharedUrl.js in Resources */,
 				AE4BBA4A219BDAEF0075BC61 /* Localizable.strings in Resources */,
 				AEBA473B219D2C0400869E24 /* Assets.xcassets in Resources */,
@@ -380,7 +375,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEF665D521781BB100DB310D /* LaunchScreen.storyboard in Resources */,
-				AE7164AD21AD8B6B00BF2441 /* gitignore in Resources */,
 				AE4BBA49219BDAEF0075BC61 /* Localizable.strings in Resources */,
 				AEE0EF77217D8E1A0003FA13 /* Assets.xcassets in Resources */,
 				AE7164A121A4FFDA00BF2441 /* AddEditEngine.storyboard in Resources */,
