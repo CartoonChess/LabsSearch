@@ -40,22 +40,12 @@ class AllEnginesTableViewController: EngineTableViewController {
     //- https://codereview.stackexchange.com/
     
     func addEngine(_ engine: SearchEngine) {
-        print(.o, "Adding engine \(engine.name).")
-        let shortcut = engine.shortcut
-        
-        // Add to shared object
-        SearchEngines.shared.allEngines[shortcut] = engine
-        
-        // Update save data
-        SearchEngines.shared.saveEngines()
+        // Model updates are all performed before the segue in AddEdit VC
         
         // Add to table view
-        engines[shortcut] = engine
+        engines[engine.shortcut] = engine
         shortcuts = SearchEngines.shared.allShortcuts // preserves alpha-order
         tableView.reloadData()
-        
-//        // Update save data
-//        SearchEngines.shared.saveEngines()
     }
     
     func updateEngine(_ engineBeforeUpdates: SearchEngine, to engineAfterUpdates: SearchEngine, at indexPath: IndexPath) {
@@ -164,15 +154,9 @@ class AllEnginesTableViewController: EngineTableViewController {
      
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // TODO: Maybe we should have one segue and look for a selected cell instead
+        // Actually, with no data to pass, AddEngineSegue is all handled through the storyboard
         
-        if segue.identifier == "AddEngineSegue" {
-            // Actually, with no data to pass, this is all handled through the storyboard
-//            guard let destinationNavigationController = segue.destination as? UINavigationController,
-//                let destination = destinationNavigationController.topViewController as? AddEditEngineTableViewController else {
-//                    print(.x, "Add/edit view or its parent navigation controller could not be loaded.")
-//                    return
-//            }
-        } else if segue.identifier == "EditEngineSegue" {
+        if segue.identifier == "EditEngineSegue" {
             // Get the new view controller using segue.destination
             guard let destinationNavigationController = segue.destination as? UINavigationController,
                 let destination = destinationNavigationController.topViewController as? AddEditEngineTableViewController else {

@@ -12,7 +12,7 @@
         <!--Add/Edit Service-->
         <scene sceneID="c0g-a1-scP">
             <objects>
-                <tableViewController id="kQy-Ui-Ykl" customClass="ActionExtensionAddEditEngineTableViewController" customModule="LabsSearchAddEngineAction" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="kQy-Ui-Ykl" customClass="AddEditEngineTableViewController" customModule="Chears" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="bt5-s4-Rrg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -21,16 +21,16 @@
                             <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d0l-ET-7U2" customClass="EngineIconView" customModule="LabsSearchAddEngineAction" customModuleProvider="target">
+                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d0l-ET-7U2" customClass="EngineIconView" customModule="Chears" customModuleProvider="target">
                                     <rect key="frame" x="157.5" y="20" width="60" height="60"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🔍" textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.0099999997764825821" translatesAutoresizingMaskIntoConstraints="NO" id="zdb-9v-L09" customClass="EngineIconLabel" customModule="LabsSearchAddEngineAction" customModuleProvider="target">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🔍" textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.0099999997764825821" translatesAutoresizingMaskIntoConstraints="NO" id="zdb-9v-L09" customClass="EngineIconLabel" customModule="Chears" customModuleProvider="target">
                                             <rect key="frame" x="7.5" y="7.5" width="45" height="45"/>
                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="360"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IR7-dh-pKG" customClass="EngineIconImageView" customModule="LabsSearchAddEngineAction" customModuleProvider="target">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IR7-dh-pKG" customClass="EngineIconImageView" customModule="Chears" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                         </imageView>
                                     </subviews>
@@ -66,7 +66,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="y8L-a9-9iD" customClass="TableViewCellTextField" customModule="LabsSearchAddEngineAction" customModuleProvider="target">
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="y8L-a9-9iD" customClass="TableViewCellTextField" customModule="Chears" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -91,13 +91,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Shortcut" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="I8j-4N-2gH" customClass="TableViewCellTextField" customModule="LabsSearchAddEngineAction" customModuleProvider="target">
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Shortcut" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="I8j-4N-2gH" customClass="TableViewCellTextField" customModule="Chears" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartQuotesType="no"/>
                                                     <connections>
-                                                        <action selector="shortcutChanged" destination="kQy-Ui-Ykl" eventType="editingChanged" id="Jpv-an-Jf4"/>
+                                                        <action selector="shortcutChanged" destination="kQy-Ui-Ykl" eventType="editingChanged" id="McJ-TF-DLF"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -173,12 +173,12 @@
                     <navigationItem key="navigationItem" title="Add/Edit Service" id="k8y-gI-Jfn">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Gb7-3T-Hka">
                             <connections>
-                                <action selector="cancelButtonTapped" destination="kQy-Ui-Ykl" id="lhI-9v-wFB"/>
+                                <action selector="cancelButtonTapped" destination="kQy-Ui-Ykl" id="LZ3-Dz-akd"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" enabled="NO" style="done" systemItem="save" id="PYh-BY-ImV">
                             <connections>
-                                <action selector="saveButtonTapped" destination="kQy-Ui-Ykl" id="wnR-0A-pmO"/>
+                                <action selector="saveButtonTapped" destination="kQy-Ui-Ykl" id="K5R-Qx-QaP"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -191,6 +191,7 @@
                         <outlet property="shortcutTextField" destination="I8j-4N-2gH" id="5bn-T3-ISc"/>
                         <outlet property="urlDetailsChangedLabel" destination="d1X-Kd-UI9" id="xOP-qf-SXu"/>
                         <segue destination="H9n-EM-0Qh" kind="unwind" identifier="DeleteEngineUnwindSegue" unwindAction="unwindToAllEnginesTableWithSegue:" id="3Rx-Mb-BnT"/>
+                        <segue destination="H9n-EM-0Qh" kind="unwind" identifier="AddEditEngineUnwindSegue" unwindAction="unwindToAllEnginesTableWithSegue:" id="QIT-P6-vAT"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="azL-Vw-B0Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -198,10 +199,10 @@
             </objects>
             <point key="canvasLocation" x="3105" y="1151"/>
         </scene>
-        <!--Action Extension Url Details Table View Controller-->
+        <!--Url Details Table View Controller-->
         <scene sceneID="e4t-K9-QPr">
             <objects>
-                <tableViewController id="ZdH-wh-3Lf" customClass="ActionExtensionUrlDetailsTableViewController" customModule="LabsSearchAddEngineAction" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="ZdH-wh-3Lf" customClass="UrlDetailsTableViewController" customModule="Chears" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="CWp-tt-Jvk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -219,7 +220,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Link" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2Vn-9d-eDi" customClass="TableViewCellTextField" customModule="LabsSearchAddEngineAction" customModuleProvider="target">
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Link" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2Vn-9d-eDi" customClass="TableViewCellTextField" customModule="Chears" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -244,7 +245,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search word" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rZI-wk-SzI" customClass="TableViewCellTextField" customModule="LabsSearchAddEngineAction" customModuleProvider="target">
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search word" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rZI-wk-SzI" customClass="TableViewCellTextField" customModule="Chears" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -277,7 +278,7 @@
                                                     <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>

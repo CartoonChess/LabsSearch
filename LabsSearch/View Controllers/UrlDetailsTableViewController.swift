@@ -25,6 +25,11 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
     
     var engine: SearchEngine?
     
+    /// The URL sent from the host app, if using the action extension and if the URL exists.
+    ///
+    /// This will be `nil` if the host app didn't send a URL or if the user has already set their own.
+    var hostAppUrlString: String?
+    
     // Delegate-related properties
     weak var delegate: UrlDetailsTableViewControllerDelegate?
     var textFieldsDidChange: Bool = false
@@ -42,17 +47,6 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
     // Used for validating URL and accessing .magicWord
     var urlController = UrlController()
 
-    // Set to true when URL+magic word are all good
-//    var engineIsTestable: Bool = false {
-//        willSet {
-//            // Imitate enabled/disabled state in test button
-//            if newValue {
-//                testButtonLabel.textColor = view.tintColor
-//            } else {
-//                testButtonLabel.textColor = .gray
-//            }
-//        }
-//    }
     
     @IBOutlet weak var urlTextField: TableViewCellTextField!
     
@@ -79,6 +73,10 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             
             // Show the URL
             urlTextField.text = url.absoluteString
+        } else {
+            // Engine is nil; this will do nothing if not using the action extension
+            // Set URL to that which is provided by the host app if we haven't already made our own
+            urlTextField.text = hostAppUrlString
         }
         
         // Determine if initial values are good enough to allow a test to be run
@@ -141,109 +139,6 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         updateUrlTextField()
         updateMagicWordCell()
         updateTestButton()
-    }
-    
-//    /// Make changes to the view depending on whether the URL is valid and the magic word is found.
-//    func updateEngineTestableStatus() {
-//        // TODO: See if we can combine some logic:
-//        //- Consolodate detectMagicWord and updateMagicWord
-//        //- Note: engineIsTestable = url.isValid + detectMagicWord ... right?
-//        //- Plus: magicWord's `hide` is always true when the URL is valid and contains the default magicWord
-//        //- (Put another way: If looking for a custom word (whether present or not), this is false
-//
-//
-//        // First, check that URL itself is valid
-//        guard let url = urlController.validUrl(from: urlTextField.text, schemeIsValid: { schemeIsValid(url: $0) }) else {
-//            // URL field is empty or otherwise invalid
-//            urlController.urlIsValid = false
-//            urlController.engineIsTestable = false
-//            urlController.customMagicWordIsInUrl = false
-//            return
-//        }
-//
-//        // URL is valid; first, update URL text field to reflect this
-//        urlController.urlIsValid = true
-//
-//        // If the default magic word is there, the engine is already testable
-//        if urlController.detectMagicWord(in: url) {
-//            urlController.engineIsTestable = true
-//            urlController.customMagicWordIsInUrl = false
-//            return
-//        }
-//
-//        // URL is valid but default magic word isn't found, so check if the user has entered a custom word
-//        if let customMagicWord = magicWordTextField.text,
-//            !customMagicWord.isEmpty,
-//            urlController.detectMagicWord(in: url, magicWord: customMagicWord) {
-//            urlController.engineIsTestable = true
-//            urlController.customMagicWordIsInUrl = true
-//        } else {
-//            // If we make it here, there's no custom word, or it isn't in the URL
-//            urlController.engineIsTestable = false
-//            urlController.customMagicWordIsInUrl = false
-//        }
-//
-//    }
-    
-    
-//    /// Make changes to the view depending on whether the URL is valid and the magic word is found.
-//    func updateEngineTestableStatus() {
-//        // TODO: See if we can combine some logic:
-//        //- Consolodate detectMagicWord and updateMagicWord
-//        //- Note: engineIsTestable = url.isValid + detectMagicWord ... right?
-//        //- Plus: magicWord's `hide` is always true when the URL is valid and contains the default magicWord
-//        //- (Put another way: If looking for a custom word (whether present or not), this is false
-//
-//        // Begin ridiculous logic chain to determine if URL is valid and if magic word matches (= engine is testible)
-//
-////        let urlController = UrlController()
-//
-//        // First, check that URL itself is valid
-//        if let url = urlController.validUrl(from: urlTextField.text, schemeIsValid: { schemeIsValid(url: $0) }) {
-//
-//            // URL is valid; first, update URL text field to reflect this
-//            updateUrlTextField(urlIsValid: true)
-//
-//            // Next, see if the magic word is in the URL queries, starting with the default magic word
-//
-//            // If the default magic word is there, the engine is already testable
-//            engineIsTestable = urlController.detectMagicWord(in: url)
-//
-//            if engineIsTestable {
-//                // Default magic word found in URL
-//                updateMagicWordCell(hide: true)
-//
-//            // If the default magic word isn't found, check if the user has entered a custom word
-//            } else if let customMagicWord = magicWordTextField.text,
-//                !customMagicWord.isEmpty {
-//
-//                // There's a custom word, socheck for that in the URL
-//                // Engine testability depends on finding that word
-//                engineIsTestable = urlController.detectMagicWord(in: url, magicWord: customMagicWord)
-//                updateMagicWordCell(hide: false)
-//
-//            // Here, the default magic word wasn't found, but neither has the user entered a custom word
-//            } else {
-//                updateMagicWordCell(hide: false)
-//            }
-//
-//        // If we reach here, the URL field is empty or otherwise invalid
-//        } else {
-//            updateUrlTextField(urlIsValid: false)
-//            engineIsTestable = false
-//            updateMagicWordCell(hide: true)
-//        }
-//
-//    }
-    
-    /// Determines whether the URL can be tested from within the current view.
-    ///
-    /// - Parameter url: The URL to check.
-    /// - Returns: A boolean value based on whether the view will be able to load the URL.
-    ///
-    /// By default, this will only be true when the scheme is `http(s)`. While this is the only option for app extensions, the full app can and should override this method to return the value of `url.schemeIsValid` instead.
-    func schemeIsValid(url: URL) -> Bool {
-        return url.schemeIsCompatibleWithSafariView
     }
     
     
@@ -311,13 +206,6 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         }
     }
     
-    /// Provide the option for subclasses to open the URL in an external app, if available.
-    ///
-    /// App extensions cannot launch external apps, and so should not implement this method. Use `updateEngineTestibleStatus()` to check that URLs use the `http` or `https` schemes and update engineIsTestible accordingly. This method should never have to be called in app extensions.
-    func urlRequiresExternalApp(url: URL) {
-        print(.x, "Attempted to open URL but view controller provides no means to open URLs with scheme \(url.scheme ?? "nil").")
-    }
-    
     
     // Note that this is also called when testing, but that's not really a problem
     override func viewWillDisappear(_ animated: Bool) {
@@ -334,8 +222,6 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
                     delegate?.updateUrlDetails(baseUrl: baseUrl, queries: queries)
                 }
             }
-            
-//            delegate?.updateUrlDetails(baseUrl: baseUrl, queries: queries)
         }
     }
     

@@ -9,31 +9,16 @@
 import UIKit
 import MobileCoreServices // needed for kUTType
 
-class ActionExtensionAddEditEngineTableViewController: AddEditEngineTableViewController {
+extension AddEditEngineTableViewController {
     
-    // MARK: - Parameters
+    // MARK: - Properties
+    // They're in the main class declaration!
     
-    // These details will be provided by the host app
-    var hostAppEngineName: String?
-    var hostAppUrlString: String?
-//    var hostAppHtml: String?
-    
-    let urlController = UrlController()
     
     // MARK: - Methods
     
-    override func viewDidLoad() {
-        // In order to access allShortcuts, we must load up the engines plist
-        // In the main app, this is already taken care of in MainViewController
-        SearchEngines.shared.loadEngines()
-        
-        // As the parent class sets allEngines, we must call it AFTER loading engines above
-        super.viewDidLoad()
-        
-        // Get all the info about the current web page
-        loadUrl()
-    }
     
+    /// Retrieves the URL and page title from the host app via JavaScript.
     func loadUrl() {
         // TODO: Collapse all these into one guard statement after debugging
         
@@ -100,7 +85,7 @@ class ActionExtensionAddEditEngineTableViewController: AddEditEngineTableViewCon
                 // Set variables, if we can
                 let url = results["url"] as? String
                 let title = results["title"] as? String
-                // TODO: Shoud this be a string or something else?
+                // Not using source code currently; have to edit JS file as well if needing this
                 //let html = results["html"] as? String
                 
                 // Use web page title to fill in name field
@@ -113,27 +98,6 @@ class ActionExtensionAddEditEngineTableViewController: AddEditEngineTableViewCon
             
         })
         
-    }
-    
-    
-    // JSON appears to finish during viewDidLoad, viewWillAppear, or viewDidAppear.
-    // We are adding view population code here twice because it goes out of sync otherwise
-    //- It's redundant but hopefully it gives us a chance to populate before the viewer sees if quick
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // Update the URL and text fields with the fetched info
-        updateView()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        // Since we're calling this twice, quit if it worked the first time
-        if hostAppEngineName != nil {
-            print(.n, "Already attempted on time to create engine object in viewWillAppear.")
-            return
-        }
-        updateView()
     }
     
     
@@ -182,45 +146,7 @@ class ActionExtensionAddEditEngineTableViewController: AddEditEngineTableViewCon
     }
     
     
-    // MARK: - Navigation buttons
-    
-    /// Return to host app without doing anything else.
-    @IBAction func cancelButtonTapped() {
-        returnToHostApp()
-    }
-    
-    
-    /// Save the engine, then return to the host app.
-    @IBAction func saveButtonTapped() {
-        // Imitate the logic of the unwind from the main app
-        // This will supply the engine title and shortcut from the text fields to the object
-        // TODO: Could we use an exit (unwind) segue here instead?
-        prepareForAddEditEngineUnwind()
-        
-        // Double check the engine isn't nil (if it is, we've made a serious error!)
-        // Note that this creates `engine` BY VALUE, so it must happen AFTER the prepare function above
-        guard let engine = engine else {
-            print(.x, "Attempting to save engine when engine is nil")
-            return
-        }
-    
-        // TODO: This logic is shared with AllEnginesTable in addEngine(); refactor?
-        print(.o, "Adding engine \(engine.name).")
-        let shortcut = engine.shortcut
-        
-        // Add to shared object
-        SearchEngines.shared.allEngines[shortcut] = engine
-        
-        // Update save data
-        SearchEngines.shared.saveEngines()
-        
-        // Tell main app it needs to refresh data when returned to foreground
-        UserDefaults(suiteName: AppKeys.appGroup)?.set(true, forKey: SettingsKeys.extensionDidChangeData)
-        
-        
-        // Return to host app
-        returnToHostApp()
-    }
+    // MARK: - Navigation
     
     
     /// Dismiss the action extension and return to the host app.
@@ -228,23 +154,6 @@ class ActionExtensionAddEditEngineTableViewController: AddEditEngineTableViewCon
         // TODO: Do we need to call this? Or is there a simpler way to dismiss the view altogether?
         self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
 //        self.extensionContext!.completeRequest(returningItems: self.extensionContext!.inputItems, completionHandler: nil)
-    }
-    
-    
-    // MARK: - Navigation
-    
-    // Pass the host app's URL to the URL details view if we haven't yet set one
-    override func prepareForUrlDetailsSegue(_ segue: UIStoryboardSegue) {
-        super.prepareForUrlDetailsSegue(segue)
-        
-        guard let destination = segue.destination as? ActionExtensionUrlDetailsTableViewController else {
-            print(.x, "Expecting to segue to app extension URL details view but found different view type.")
-            return
-        }
-        
-        if engine == nil {
-            destination.hostAppUrlString = hostAppUrlString
-        }
     }
 
     

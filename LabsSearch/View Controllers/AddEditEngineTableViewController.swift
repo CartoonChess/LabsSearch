@@ -37,6 +37,16 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     // To be assigned in viewDidLoad
     var saveButton: UIBarButtonItem!
     
+    
+    // MARK: App extension properties
+    
+    // These details will be provided by the host app
+    var hostAppEngineName: String?
+    var hostAppUrlString: String?
+    
+    let urlController = UrlController()
+    
+    
     // MARK: IB properties
     
     @IBOutlet weak var engineIconView: EngineIconView!
@@ -55,6 +65,14 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // For app extension:
+        // In order to access allShortcuts, we must load up the engines plist
+        // In the main app, this is already taken care of in MainViewController
+        #if EXTENSION
+            print(.n, "Loading engines for app extension.")
+            SearchEngines.shared.loadEngines()
+        #endif
         
         // Note: Be sure to load up engines BEFORE calling this super in app extension
         allShortcuts = SearchEngines.shared.allShortcuts
@@ -94,23 +112,47 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // Even if editing, only let corners be rounded once
             viewDidAppear = true
         }
+        
+        #if EXTENSION
+            // Get the current web page's URL and title from the host app
+            loadUrl()
+        #endif
     }
+    
+    
+    // For app extension:
+    // JSON appears to finish during viewDidLoad, viewWillAppear, or viewDidAppear.
+    // We are adding view population code here twice because it goes out of sync otherwise
+    //- It's redundant but hopefully it gives us a chance to populate before the viewer sees if quick
     
     // The icon can change in this view, so we must set its corners here
     override func viewWillAppear(_ animated: Bool) {
-        print(.n, "view Will Appear")
         super.viewWillAppear(animated)
         if !viewDidAppear {
             updateIconCorners()
         }
+        
+        // In app extension: Update the URL and text fields with the fetched info
+        #if EXTENSION
+            updateView()
+        #endif
     }
     
     
     // Transition immediately to URL details view if adding an engine
     // Note: This cannot be placed in viewDidLoad or visual rendering errors could creep up
     override func viewDidAppear(_ animated: Bool) {
-        print(.n, "view Did Appear (parent)")
         super.viewDidAppear(animated)
+        
+        // For app extension (note this used to be called AFTER the segue; trying earlier for now):
+        // Since we're calling this twice, don't execute if it worked the first time
+        if hostAppEngineName != nil {
+            print(.n, "Already attempted on time to create engine object in viewWillAppear.")
+        } else {
+            #if EXTENSION
+                updateView()
+            #endif
+        }
         
         // Only segue automatically if adding and when first appearing
         if !viewDidAppear && engine == nil {
@@ -125,38 +167,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         // TODO: Check that name does not conflict with other names
         updateSaveButton()
     }
-    
-    
-//    /// Update the icon label when the shortcut changes if there's no image.
-//    @IBAction func shortcutChanged(_ sender: UITextField) {
-//        // FIXME: Don't let shortcuts contain characters that can't exist in filenames;
-//        //- we have to use the shortcut to name and save icon images!
-//
-//        // TODO: When shortcut conflicts/has illegal characters, make this text red
-//
-//        if engine?.getImage() == nil {
-//            engineIconLabel.setLetter(using: sender.text!)
-//        }
-//
-//        updateSaveButton()
-//    }
-//
-//
-//    /// Enable the save button when all fields are filled out correctly.
-//    func updateSaveButton() {
-//
-//        // Checking for nil engine will ensure URL has been set when adding engine
-//        if engine != nil,
-//            nameTextField.text != "",
-//            let shortcut = shortcutTextField.text,
-//            shortcut != "",
-//            !(allOtherShortcuts?.contains(shortcut) ?? allShortcuts.contains(shortcut)) {
-//            saveButton.isEnabled = true
-//        } else {
-//            saveButton.isEnabled = false
-//        }
-//
-//    }
+
     
     /// Update the shortcut text field colour, and icon label when the shortcut changes if there's no image.
     @IBAction func shortcutChanged() {
@@ -173,6 +184,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             shortcutTextField.textColor = .black
             updateSaveButton()
         } else {
+            print(.n, "Shortcut is invalid.")
             shortcutTextField.textColor = .red
             saveButton.isEnabled = false
         }
@@ -295,35 +307,55 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     
     // MARK: - Navigation
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case SegueKeys.addEditEngineUnwind:
-//            // baseUrl and queries should be included in `engine != nil` (SearchEngine can't have nil baseUrl/queries)
-//            // TODO: Include changes for remaining parameters as we add them to the view
-//            guard engine != nil,
-//                let name = nameTextField.text,
-//                let shortcut = shortcutTextField.text else {
-//                print(.x, "Error detecting engine or reading user entered information.")
-//                return
-//            }
-//
-//            // Update the object to be updated in the model in the all engines table
-//            engine?.name = name
-//            engine?.shortcut = shortcut
-            prepareForAddEditEngineUnwind()
-        case SegueKeys.urlDetails:
-            prepareForUrlDetailsSegue(segue)
-        case SegueKeys.deleteEngineUnwind:
-            // No action required here for delete
-            print(.n, "Leaving add/edit view to delete engine \(engine?.name ?? "nil").")
-            return
-        default:
-            // No action required for cancel
-            print(.n, "Add/edit cancelled.")
+    
+    /// Dismiss the view controller when cancelling the main app. For the app extension, return to the host app.
+    @IBAction func cancelButtonTapped() {
+        #if EXTENSION
+            returnToHostApp()
+        #else
+            dismiss(animated: true, completion: nil)
+        #endif
+    }
+    
+    
+    @IBAction func saveButtonTapped() {
+        // Check all fields and ready the final engine object
+        prepareForAddEditEngineUnwind()
+        
+        // We should never be attempting a save with a nil engine
+        guard let engine = engine else {
+            print(.x, "Mistakenly allowed save button to be tapped when engine is nil.")
             return
         }
+        
+        print(.o, "Adding engine \(engine.name).")
+        let shortcut = engine.shortcut
+        
+        // Add to shared object
+        SearchEngines.shared.allEngines[shortcut] = engine
+        
+        // Update save data
+        SearchEngines.shared.saveEngines()
+        
+        
+        #if EXTENSION
+            returnToHostApp()
+        #else
+            // Main app must pass engine object via unwind in order to update AllEngines table
+            performSegue(withIdentifier: SegueKeys.addEditEngineUnwind, sender: self)
+        #endif
     }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print(.n, "Preparing for segue.")
+
+        if segue.identifier == SegueKeys.urlDetails {
+            prepareForUrlDetailsSegue(segue)
+        }
+        
+    }
+    
     
     /// Update the engine object to include data from all fields.
     ///
@@ -345,6 +377,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         engine?.shortcut = shortcut
     }
     
+    
     /// Pass additional data from the host app when executing inside an app extension.
     ///
     /// - Parameter segue: The segue about to be performed.
@@ -355,7 +388,14 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             return
         }
         destination.delegate = self
-        destination.engine = engine
+        
+        // In the case of the app extension, this will pass the URL scraped from the host, if available
+        // If the engine already exists (main or extension), engine's URL will be passed
+        if engine == nil {
+            destination.hostAppUrlString = hostAppUrlString
+        } else {
+            destination.engine = engine
+        }
     }
     
 

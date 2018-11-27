@@ -16,15 +16,7 @@
 
 
 /*
- GetSharedUrl.prototype = {
- run: function(arguments) {
- arguments.completionFunction({
- "url": document.URL,
- "title": document.title,
  "html": document.documentElement.outerHTML
- );
- }
- };
  */
 
 var GetSharedUrl = function() {};
@@ -33,8 +25,7 @@ GetSharedUrl.prototype = {
     run: function(arguments) {
         arguments.completionFunction({
             "url": document.URL,
-            "title": document.title,
-            "html": document.documentElement.outerHTML
+            "title": document.title
          });
     }
 };

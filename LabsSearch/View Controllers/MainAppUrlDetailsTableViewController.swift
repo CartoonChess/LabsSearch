@@ -8,17 +8,17 @@
 
 import UIKit
 
-class MainAppUrlDetailsTableViewController: UrlDetailsTableViewController {
-    
+extension UrlDetailsTableViewController {
+
     // MARK: - Methods
-    
+
     // Main app is able to launch URLs with app-specific schemes, so override here.
-    override func schemeIsValid(url: URL) -> Bool {
+    func schemeIsValid(url: URL) -> Bool {
         return url.schemeIsValid
     }
-    
+
     // Main app is able to launch external apps from special URL schemes, so implement here.
-    override func urlRequiresExternalApp(url: URL) {
+    func urlRequiresExternalApp(url: URL) {
         print(.n, "Testing URL in external app because scheme is not http(s).")
         let searchController = SearchController()
         searchController.showSearchInExternalApp(for: url)
