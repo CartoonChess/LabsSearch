@@ -129,16 +129,70 @@ extension AddEditEngineTableViewController {
     }
     
     func updateNameTextField() {
-        self.nameTextField.text = hostAppEngineName
-        print(.o, "Populated name field with \"\(hostAppEngineName ?? "nil")\".")
+        let name: String
+        
+        // Get the host app URL. If this fails, set the whole page title in the name field
+        guard let url = hostAppUrlString,
+            let components = URLComponents(string: url),
+            let host = components.host else {
+            print(.x, "Failed to get host from host app URL; setting name field to page title.")
+            nameTextField.text = hostAppEngineName
+                name = ""
+            return
+        }
+        
+        // Split the host into an array by periods AND hyphens
+        var array = host.components(separatedBy: CharacterSet(charactersIn: ".-"))
+        
+        if array.isEmpty {
+            name = "New Engine"
+        } else if array.count == 1 {
+            // In the unlikely case of no period (like "localhost"), just capitalize that
+            name = array.first!.capitalized
+        } else {
+            // So long as there is more than one piece, delete the last item in the array (e.g. "com")
+            array.removeLast()
+            // If there is still more than one piece AND the first is www (e.g. wasn't "www.com"), delete the first item
+            if array.count > 1 && array.first == "www" {
+                array.removeFirst()
+            }
+            // Remove "m" (mobile)
+            if array.count > 1 {
+                array.removeAll { $0 == "m" }
+            }
+            // Set name as array items Capitalized and concatenated by spaces
+            name = array.joined(separator: " ").capitalized
+        }
+        
+        nameTextField.text = name
+        print(.o, "Populated name field with \"\(name)\".")
     }
     
     func updateShortcutTextField() {
-        // TODO: Once we connect to user defaults, make sure this doesn't conflict
-        //- (this will be written in the parent class)
         // TODO: Should this change even after it's been set once, if the user changes the name field?
-        self.shortcutTextField.text = hostAppEngineName?.first?.description
-        print(.o, "Automatically set shortcut to \"\(hostAppEngineName?.first?.description ?? "nil")\".")
+        
+        // Create an array from the (lowercase) name field
+        guard let name = nameTextField.text?.lowercased() else {
+            print(.x, "Could not generate shortcut because name could not be read.")
+            return
+        }
+        let nameCharacters = Array(name)
+        
+        var shortcut = ""
+        
+        // Add characters from the name one by one
+        for character in nameCharacters {
+            // Skip over spaces
+            if character == " " { continue }
+            
+            shortcut += String(character)
+            
+            // Once the shortcut is unique, stop adding characters
+            if shortcutIsValid(shortcut) { break }
+        }
+        
+        shortcutTextField.text = shortcut
+        print(.o, "Automatically set shortcut to \"\(shortcut)\".")
         
         // Update icon label
         print(.n, "Child: \"Shortcut changed.\"")

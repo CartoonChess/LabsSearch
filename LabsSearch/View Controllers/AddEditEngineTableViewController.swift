@@ -130,12 +130,12 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         super.viewWillAppear(animated)
         if !viewDidAppear {
             updateIconCorners()
+            
+            // In app extension: Update the URL and text fields with the fetched info
+            #if EXTENSION
+                updateView()
+            #endif
         }
-        
-        // In app extension: Update the URL and text fields with the fetched info
-        #if EXTENSION
-            updateView()
-        #endif
     }
     
     
@@ -146,13 +146,14 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         
         // For app extension (note this used to be called AFTER the segue; trying earlier for now):
         // Since we're calling this twice, don't execute if it worked the first time
-        if hostAppEngineName != nil {
-            print(.n, "Already attempted on time to create engine object in viewWillAppear.")
-        } else {
-            #if EXTENSION
+        #if EXTENSION
+            if hostAppEngineName != nil {
+                print(.n, "Already attempted on time to create engine object in viewWillAppear.")
+            } else if !viewDidAppear {
+                // This won't be tried again if it's not the first time the view appeared
                 updateView()
-            #endif
-        }
+            }
+        #endif
         
         // Only segue automatically if adding and when first appearing
         if !viewDidAppear && engine == nil {
@@ -194,8 +195,26 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     /// Checks that a shortcut can be used.
     ///
     /// - Returns: Returns `true` if the shortcut has at least one character, none of which are invalid for a filename, and that no other engine uses this shortcut.
-    func shortcutIsValid() -> Bool {
-        if let shortcut = shortcutTextField.text,
+//    func shortcutIsValid() -> Bool {
+//        if let shortcut = shortcutTextField.text,
+//            !shortcut.isEmpty,
+//            shortcut.isValidFileName(),
+//            !(allOtherShortcuts?.contains(shortcut) ?? allShortcuts?.contains(shortcut) ?? false) {
+//            // The above line is a hack now, but basically it should never get to "false"
+//            return true
+//        } else {
+//            return false
+//        }
+//    }
+    func shortcutIsValid(_ shortcut: String? = nil) -> Bool {
+        var shortcutToCheck = shortcut
+        
+        // Check against the shortcut text field if no argument is passed
+        if shortcutToCheck == nil {
+            shortcutToCheck = shortcutTextField.text
+        }
+        
+        if let shortcut = shortcutToCheck,
             !shortcut.isEmpty,
             shortcut.isValidFileName(),
             !(allOtherShortcuts?.contains(shortcut) ?? allShortcuts?.contains(shortcut) ?? false) {
@@ -318,6 +337,9 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     }
     
     
+    /// Save the newly added engine and dismiss the view controller.
+    ///
+    /// In the app extension, this will return to the host app. In the main app, this will pop to the AllEngines VC and update the table view.
     @IBAction func saveButtonTapped() {
         // Check all fields and ready the final engine object
         prepareForAddEditEngineUnwind()
