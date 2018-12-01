@@ -229,13 +229,33 @@
                                                         <action selector="urlTextFieldChanged" destination="ZdH-wh-3Lf" eventType="editingChanged" id="koi-3S-XPi"/>
                                                     </connections>
                                                 </textField>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pVI-E7-bqI">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="URL" smartDashesType="no" smartQuotesType="no" textContentType="url"/>
+                                                </textView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="2Vn-9d-eDi" firstAttribute="top" secondItem="NEI-0w-9B6" secondAttribute="top" id="1Ve-Ff-3Jh"/>
+                                                <constraint firstItem="pVI-E7-bqI" firstAttribute="top" secondItem="NEI-0w-9B6" secondAttribute="top" id="BeQ-XY-P48"/>
+                                                <constraint firstAttribute="bottom" secondItem="pVI-E7-bqI" secondAttribute="bottom" id="EAg-cf-xHg"/>
                                                 <constraint firstItem="2Vn-9d-eDi" firstAttribute="leading" secondItem="NEI-0w-9B6" secondAttribute="leading" id="UW3-YI-kqF"/>
+                                                <constraint firstAttribute="trailing" secondItem="pVI-E7-bqI" secondAttribute="trailing" id="ayJ-Vj-3t0"/>
                                                 <constraint firstAttribute="bottom" secondItem="2Vn-9d-eDi" secondAttribute="bottom" id="cyE-Te-7JJ"/>
                                                 <constraint firstAttribute="trailing" secondItem="2Vn-9d-eDi" secondAttribute="trailing" id="eTT-16-4Wb"/>
+                                                <constraint firstItem="pVI-E7-bqI" firstAttribute="leading" secondItem="NEI-0w-9B6" secondAttribute="leading" id="z0P-0l-mb1"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="subviews">
+                                                    <exclude reference="pVI-E7-bqI"/>
+                                                </mask>
+                                                <mask key="constraints">
+                                                    <exclude reference="BeQ-XY-P48"/>
+                                                    <exclude reference="EAg-cf-xHg"/>
+                                                    <exclude reference="ayJ-Vj-3t0"/>
+                                                    <exclude reference="z0P-0l-mb1"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Umz-hj-cQj">

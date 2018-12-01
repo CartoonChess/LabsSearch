@@ -19,8 +19,11 @@ protocol UrlDetailsTableViewControllerDelegate: class {
     func updateUrlDetails(baseUrl: URL?, queries: [String: String])
 }
 
+// Note: Code for UITextView is left here and in IB
+
+//class UrlDetailsTableViewController: UITableViewController, UITextViewDelegate, SFSafariViewControllerDelegate {
 class UrlDetailsTableViewController: UITableViewController, SFSafariViewControllerDelegate {
-    
+
     // MARK: - Properties
     
     var engine: SearchEngine?
@@ -49,6 +52,8 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
 
     
     @IBOutlet weak var urlTextField: TableViewCellTextField!
+//     // Reconnect the below in IB if using in the future
+//    @IBOutlet weak var urlTextView: UITextView!
     
     @IBOutlet weak var magicWordCell: UITableViewCell!
     @IBOutlet weak var magicWordTextField: TableViewCellTextField!
@@ -61,6 +66,11 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        // Sets size for URL text view
+//        tableView.estimatedRowHeight = 44
+//        urlTextView.delegate = self
+//        urlTextView.textContainerInset = UIEdgeInsets(top: 11, left: 11, bottom: 11, right: 11)
         
         // Set up the URL and search term fields
         if let engine = engine {
@@ -88,6 +98,22 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         textFieldsDidChange = true
         updateView()
     }
+    
+    
+    // Delegate function; allows cell to resize with text view (in conjunctionw ith tableView(heighForRowAt))
+//    func textViewDidChange(_ textView: UITextView) {
+//        UIView.setAnimationsEnabled(false)
+//        textView.sizeToFit()
+//        tableView.beginUpdates()
+//        tableView.endUpdates()
+//        UIView.setAnimationsEnabled(true)
+//    }
+//
+//    // This helps with textViewDidChange to resize cell with textview's size as contents change
+//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//            return UITableView.automaticDimension
+//    }
+    
     
     @IBAction func magicWordTextFieldChanged() {
         textFieldsDidChange = true
