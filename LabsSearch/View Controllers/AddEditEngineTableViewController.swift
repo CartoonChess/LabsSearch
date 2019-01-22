@@ -29,6 +29,11 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     // Determines if a new, usable URL was passed back from the URL details VC
     var didReceiveUpdatedUrl: Bool = false
     
+    // Object manipulated by UrlDetails to find an icon from the user's URL
+    let iconFetcher = IconFetcher()
+    // Keeps track of what website the current icon came from so that it isn't fetched again unnecessarily
+    var mostRecentHost: String?
+    
     // Index paths for cells
     enum Cell {
         static let deleteButton: IndexPath = [2, 0]
@@ -43,6 +48,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     // These details will be provided by the host app
     var hostAppEngineName: String?
     var hostAppUrlString: String?
+    var hostAppHtml: String?
     
     let urlController = UrlController()
     
@@ -139,6 +145,68 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     }
     
     
+    func makeEngineName(from url: String) -> String? {
+        // Get the host from the URL string, otherwise return nil
+        guard let components = URLComponents(string: url),
+            let host = components.host else {
+            print(.x, "Failed to get host from URL.")
+            return nil
+        }
+        
+        // Split the host into an array by periods AND hyphens
+        var array = host.components(separatedBy: CharacterSet(charactersIn: ".-"))
+        
+        if array.isEmpty {
+            return nil
+        } else if array.count == 1 {
+            // In the unlikely case of no period (like "localhost"), just capitalize that
+            return array.first!.capitalized
+        } else {
+            // So long as there is more than one piece, delete the last item in the array (e.g. "com")
+            array.removeLast()
+            // If there is still more than one piece AND the first is www (e.g. wasn't "www.com"), delete the first item
+            if array.count > 1 && array.first == "www" {
+                array.removeFirst()
+            }
+            // Remove "m" (mobile)
+            if array.count > 1 {
+                array.removeAll { $0 == "m" }
+            }
+            // Set name as array items Capitalized and concatenated by spaces
+            return array.joined(separator: " ").capitalized
+        }
+    }
+    
+    func makeEngineShortcut() -> String? {
+        // Create an array from the (lowercase) name field
+        guard let name = nameTextField.text?.lowercased() else {
+            print(.x, "Could not generate shortcut because name could not be read.")
+            return nil
+        }
+        let nameCharacters = Array(name)
+        
+        var shortcut = ""
+        
+        // Add characters from the name one by one
+        for character in nameCharacters {
+            // Skip over spaces
+            if character == " " { continue }
+            
+            shortcut += String(character)
+            
+            // Once the shortcut is unique, stop adding characters
+            if shortcutIsValid(shortcut) { break }
+        }
+
+        print(.o, "Automatically set shortcut to \"\(shortcut)\".")
+        
+//        // Update icon label
+//        shortcutChanged()
+        
+        return shortcut
+    }
+    
+    
     // Transition immediately to URL details view if adding an engine
     // Note: This cannot be placed in viewDidLoad or visual rendering errors could creep up
     override func viewDidAppear(_ animated: Bool) {
@@ -174,8 +242,13 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     @IBAction func shortcutChanged() {
         print(.n, "Parent: \"Shortcut changed.\"")
         // Set icon label to reflect shortcut, but only if there's no image already supplied
-        if engine?.getImage() == nil {
-            engineIconLabel.setLetter(using: shortcutTextField.text ?? "")
+//        if engine?.getImage() == nil {
+//            print(.i, "\(engine)")
+//            engineIconLabel.setLetter(using: shortcutTextField.text ?? "")
+//        }
+        if engineIconImage.image == nil,
+            let shortcut = shortcutTextField.text {
+            engineIconLabel.setLetter(using: shortcut)
         }
 
         // Set text colour based on validity
@@ -299,6 +372,53 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     }
     
     
+    func updateFields(for url: String) {
+        if let name = nameTextField.text,
+            name.isEmpty {
+            nameTextField.text = makeEngineName(from: url)
+        }
+        
+        if let shortcut = shortcutTextField.text,
+            shortcut.isEmpty {
+            shortcutTextField.text = makeEngineShortcut()
+            shortcutChanged()
+        }
+        
+        updateSaveButton()
+    }
+    
+    
+    func updateIcon(for url: URL, host: String) {
+        // Only look for an icon if icons from this host haven't already been scraped
+        if host != mostRecentHost {
+            mostRecentHost = host
+            
+            // Show network activity indicator
+            #if !EXTENSION
+                UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            #endif
+            
+            iconFetcher.fetchIcon(for: url) { (icon) in
+                DispatchQueue.main.async {
+                    // FIXME: We're now overriding EngineIcon functions and checks
+                    //- But as they require an engine object and a saved image, what else can we do?
+                    // FIXME: Mutliple calls stack up; need to cancel existing if this happens
+                    // TODO: Animate this?
+                    self.engineIconImage.image = icon
+                    self.engineIconImage.alpha = 1
+                    self.engineIconLabel.isHidden = true
+                    
+                    #if !EXTENSION
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    #endif
+                }
+                // TODO: Still need to get name and shortcut from URL!
+            }
+            
+        }
+    }
+    
+    
     // MARK: - Table view
     
     // MARK: Simulate button tap for delete button
@@ -359,6 +479,10 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         // Update save data
         SearchEngines.shared.saveEngines()
         
+        // Save icon, if found
+        if let icon = engineIconImage.image {
+            saveIcon(icon)
+        }
         
         #if EXTENSION
             returnToHostApp()
@@ -366,6 +490,49 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // Main app must pass engine object via unwind in order to update AllEngines table
             performSegue(withIdentifier: SegueKeys.addEditEngineUnwind, sender: self)
         #endif
+    }
+    
+    // TODO: This is copied from SearchEngine copyDefaultImages(); refactor
+    func saveIcon(_ icon: UIImage) {
+        // We will save icon images to the folder "Icons" in the user directory
+        guard let userImagesUrl = DirectoryKeys.userImagesUrl else {
+            print(.x, "Failed to unwrap user images URL.")
+            return
+        }
+        
+        if FileManager.default.fileExists(atPath: userImagesUrl.path) {
+            print(.i, "Found user images directory at \(userImagesUrl).")
+        } else {
+            // Try to create the directory
+            do {
+                try FileManager.default.createDirectory(at: userImagesUrl, withIntermediateDirectories: true, attributes: nil)
+                print(.o, "Created user images directory at \(userImagesUrl).")
+            } catch {
+                print(.x, "Could not locate user images directory at \(userImagesUrl) and subsequently failed to create it; error: \(error)")
+            }
+        }
+        
+        // All images are named after the search shortcut
+        guard let imageName = engine?.shortcut else {
+            print(.x, "Could not save icon image because engine doesn't appear to have a shortcut.")
+            return
+        }
+        
+        let destinationPath = userImagesUrl.appendingPathComponent(imageName)
+        
+        // Convert PNG to raw data
+        // TODO: Will this take care of .ico?
+        if let data = icon.pngData() {
+            // Try to write data to user directory
+            do {
+                try data.write(to: destinationPath)
+                print(.o, "Saved image to \(destinationPath).")
+            } catch {
+                print(.x, "Failed to write image data to user directory; error: \(error)")
+            }
+        } else {
+            print(.x, "Failed to convert image to PNG data.")
+        }
     }
     
     
@@ -397,6 +564,9 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         // Update the object to be updated in the model in the all engines table
         engine?.name = name
         engine?.shortcut = shortcut
+        
+        // TODO: If we aren't going to continue looking for icons after this is dismissed, kill icon fetcher
+        // URLSession.shared.invalidateAndCancel()
     }
     
     

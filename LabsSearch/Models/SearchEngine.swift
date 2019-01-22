@@ -20,17 +20,10 @@ struct SearchEngine: Equatable, Codable {
     var isEnabled: Bool = true // TODO: Enable/disable from preferences view
     
     func getImage() -> UIImage? {
-        // FIXME: How do we handle this in AddEdit so that we don't show another engine's icon image?
-        
-        // Get image location; images have same name as engine shortcut
-//        let imageUrl = DirectoryKeys.userImagesUrl.appendingPathComponent(shortcut)
-        
         // Make sure the image actually exists; otherwise give up
         // NOTE: .absoluteString returns false here
-//        guard FileManager.default.fileExists(atPath: imageUrl.path) else {
         guard let imageUrl = DirectoryKeys.userImagesUrl?.appendingPathComponent(shortcut),
             FileManager.default.fileExists(atPath: imageUrl.path) else {
-//            print(.n, "Could not find image at \(imageUrl.path).")
             print(.n, "Could not find image for shortcut \"\(shortcut)\".")
             return nil
         }
@@ -247,24 +240,20 @@ struct SearchEngines {
     func copyDefaultImages() {
         
         // We will save icon images to the folder "Icons" in the user directory
-//        let userImagesUrl = SearchEngines.documentsDirectory.appendingPathComponent("Icons", isDirectory: true)
-        
         guard let userImagesUrl = DirectoryKeys.userImagesUrl else {
             print(.x, "Failed to unwrap user images URL.")
             return
         }
         
-//        if SearchEngines.fileManager.fileExists(atPath: userImagesUrl.absoluteString) {
-        if FileManager.default.fileExists(atPath: userImagesUrl.absoluteString) {
-            print(.o, "Found user images directory at \(userImagesUrl.absoluteString).")
+        if FileManager.default.fileExists(atPath: userImagesUrl.path) {
+            print(.i, "Found user images directory at \(userImagesUrl).")
         } else {
             // Try to create the directory
             do {
-//                try SearchEngines.fileManager.createDirectory(at: userImagesUrl, withIntermediateDirectories: true, attributes: nil)
                 try FileManager.default.createDirectory(at: userImagesUrl, withIntermediateDirectories: true, attributes: nil)
-                print(.o, "Created user images directory at \(userImagesUrl.absoluteString).")
+                print(.o, "Created user images directory at \(userImagesUrl).")
             } catch {
-                print(.x, "Could not locate user images directory at \(userImagesUrl.absoluteString) and subsequently failed to create it; error: \(error)")
+                print(.x, "Could not locate user images directory at \(userImagesUrl) and subsequently failed to create it; error: \(error)")
             }
         }
         

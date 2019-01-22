@@ -69,24 +69,27 @@ class AllEnginesTableViewController: EngineTableViewController {
         // Update image, if necessary
 
         let oldImageUrl = DirectoryKeys.userImagesUrl?.appendingPathComponent(engineBeforeUpdates.shortcut)
-        let newImageUrl = DirectoryKeys.userImagesUrl?.appendingPathComponent(engineAfterUpdates.shortcut)
+//        let newImageUrl = DirectoryKeys.userImagesUrl?.appendingPathComponent(engineAfterUpdates.shortcut)
         
-        if let oldImageUrl = oldImageUrl,
-            let newImageUrl = newImageUrl,
+        // New/updated images are saved in AddEdit; here, we only remove an image if the shortcut has changed
+        if engineBeforeUpdates.shortcut != engineAfterUpdates.shortcut,
+            let oldImageUrl = oldImageUrl,
+//            let newImageUrl = newImageUrl,
             FileManager.default.fileExists(atPath: oldImageUrl.path) {
             do {
-                try FileManager.default.moveItem(at: oldImageUrl, to: newImageUrl)
-                print(.o, "Renamed icon image from \"\(engineBeforeUpdates.shortcut)\" to \"\(engineAfterUpdates.shortcut)\".")
+//                try FileManager.default.moveItem(at: oldImageUrl, to: newImageUrl)
+                try FileManager.default.removeItem(at: oldImageUrl)
+//                print(.o, "Renamed icon image from \"\(engineBeforeUpdates.shortcut)\" to \"\(engineAfterUpdates.shortcut)\".")
+                print(.o, "Deleted old icon image \"\(engineBeforeUpdates.shortcut)\".")
             } catch {
-                print(.x, "Icon image could not be renamed; error: \(error)")
+                print(.x, "Icon image could not be deleted; error: \(error)")
             }
         } else {
-            print(.n, "No matching image was found, so we are not trying to rename one.")
+            print(.i, "No old icon image was found, so we are not trying to delete one.")
         }
         
         
         // If this is the default engine, reflect our shared object (updates preferences automatically)
-//        if UserDefaults.string(forKey: SettingsKeys.defaultEngineShortcut) == engineBeforeUpdates.shortcut
         if UserDefaults(suiteName: AppKeys.appGroup)?.string(forKey: SettingsKeys.defaultEngineShortcut) == engineBeforeUpdates.shortcut
             && engineBeforeUpdates.shortcut != engineAfterUpdates.shortcut {
             print(.n, "Changed default engine shortcut; updating default engine settings.")

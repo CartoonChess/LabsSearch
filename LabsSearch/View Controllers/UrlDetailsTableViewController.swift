@@ -11,18 +11,21 @@ import SafariServices
 
 /// Allows the add/edit engine table view controller to receive details about the URL status.
 protocol UrlDetailsTableViewControllerDelegate: class {
+    var iconFetcher: IconFetcher { get }
     /// After the user has modified the URL or magic word, decide whether to prepare to save the changes to the engine object. If the URL and magic word are valid, mark the URL as changed, so that it can be saved later. If either value is invalid, mark the URL as unchanged, so that it will revert back to its original value.
     ///
     /// - Parameters:
     ///   - baseUrl: The URL without queries.
     ///   - queries: A key-value dictionary of query items.
     func updateUrlDetails(baseUrl: URL?, queries: [String: String])
+    func updateFields(for url: String)
+    func updateIcon(for url: URL, host: String)
 }
 
 // Note: Code for UITextView is left here and in IB
 
 //class UrlDetailsTableViewController: UITableViewController, UITextViewDelegate, SFSafariViewControllerDelegate {
-class UrlDetailsTableViewController: UITableViewController, SFSafariViewControllerDelegate {
+class UrlDetailsTableViewController: UITableViewController, SFSafariViewControllerDelegate, XMLParserDelegate {
 
     // MARK: - Properties
     
@@ -96,6 +99,9 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
     
     @IBAction func urlTextFieldChanged() {
         textFieldsDidChange = true
+        
+        // TODO: Add http(s?):// if the user didn't type in any protocol
+        
         updateView()
     }
     
@@ -165,6 +171,8 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         updateUrlTextField()
         updateMagicWordCell()
         updateTestButton()
+        
+        updateIcon()
     }
     
     
@@ -209,6 +217,23 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         }
     }
     
+    /// Tell the AddEditEngine VC to update its icon
+    func updateIcon() {
+        if urlController.engineIsTestable {
+            // Load the page in the background to look for engine name, shortcut, and icon
+            
+            guard let urlString = urlTextField.text,
+                let (url, host) = delegate?.iconFetcher.getUrlComponents(urlString) else {
+                return
+            }
+            
+            // Tell AddEditEngine VC to use the IconFetcher and update its view after fetching icon from server
+            delegate?.updateIcon(for: url, host: host)
+            
+            // TODO: Look in urlTextFieldChanged() for adding http://
+        }
+    }
+    
     
     /// Shows the URL in the Safari view, unless the view is unable to display it, in which case an external app will handle it, if desired.
     func openUrl() {
@@ -243,9 +268,11 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         // No need to call delegate function unless something has been updated
         if textFieldsDidChange {
             // Pass new URL if everything is working, otherwise we'll pass nil
-            if urlController.engineIsTestable {
-                urlController.willUpdateUrlDetails(url: urlTextField.text, magicWord: magicWordTextField.text) { (baseUrl, queries) in
+            if urlController.engineIsTestable,
+                let url = urlTextField.text {
+                urlController.willUpdateUrlDetails(url: url, magicWord: magicWordTextField.text) { (baseUrl, queries) in
                     delegate?.updateUrlDetails(baseUrl: baseUrl, queries: queries)
+                    delegate?.updateFields(for: url)
                 }
             }
         }

@@ -85,15 +85,25 @@ extension AddEditEngineTableViewController {
                 // Set variables, if we can
                 let url = results["url"] as? String
                 let title = results["title"] as? String
-                // Not using source code currently; have to edit JS file as well if needing this
-                //let html = results["html"] as? String
+                let html = results["html"] as? String
                 
                 // Use web page title to fill in name field
-                // TODO: We should parse this to try harder
                 self.hostAppEngineName = title
                 
                 // Get URL to pass to URL details view
                 self.hostAppUrlString = url
+                
+                // Save HTML to try and find favicon or similar
+                self.hostAppHtml = html
+                
+                // Pass URL to the icon fetcher
+                guard let urlString = url,
+                    let (fetchableUrl, host) = self.iconFetcher.getUrlComponents(urlString) else {
+                        return
+                }
+                
+                // Tell AddEditEngine VC to use the IconFetcher and update its view after fetching icon from server
+                self.updateIcon(for: fetchableUrl, host: host)
             }
             
         })
@@ -122,81 +132,20 @@ extension AddEditEngineTableViewController {
         }
         
         // Update text fields
-        updateNameTextField()
-        updateShortcutTextField()
-        
-        updateSaveButton()
-    }
-    
-    func updateNameTextField() {
-        let name: String
         
         // Get the host app URL. If this fails, set the whole page title in the name field
-        guard let url = hostAppUrlString,
-            let components = URLComponents(string: url),
-            let host = components.host else {
+        if let url = hostAppUrlString,
+            let name = makeEngineName(from: url) {
+            nameTextField.text = name
+        } else {
             print(.x, "Failed to get host from host app URL; setting name field to page title.")
             nameTextField.text = hostAppEngineName
-                name = ""
-            return
         }
+        shortcutTextField.text = makeEngineShortcut()
         
-        // Split the host into an array by periods AND hyphens
-        var array = host.components(separatedBy: CharacterSet(charactersIn: ".-"))
-        
-        if array.isEmpty {
-            name = "New Engine"
-        } else if array.count == 1 {
-            // In the unlikely case of no period (like "localhost"), just capitalize that
-            name = array.first!.capitalized
-        } else {
-            // So long as there is more than one piece, delete the last item in the array (e.g. "com")
-            array.removeLast()
-            // If there is still more than one piece AND the first is www (e.g. wasn't "www.com"), delete the first item
-            if array.count > 1 && array.first == "www" {
-                array.removeFirst()
-            }
-            // Remove "m" (mobile)
-            if array.count > 1 {
-                array.removeAll { $0 == "m" }
-            }
-            // Set name as array items Capitalized and concatenated by spaces
-            name = array.joined(separator: " ").capitalized
-        }
-        
-        nameTextField.text = name
-        print(.o, "Populated name field with \"\(name)\".")
-    }
-    
-    func updateShortcutTextField() {
-        // TODO: Should this change even after it's been set once, if the user changes the name field?
-        
-        // Create an array from the (lowercase) name field
-        guard let name = nameTextField.text?.lowercased() else {
-            print(.x, "Could not generate shortcut because name could not be read.")
-            return
-        }
-        let nameCharacters = Array(name)
-        
-        var shortcut = ""
-        
-        // Add characters from the name one by one
-        for character in nameCharacters {
-            // Skip over spaces
-            if character == " " { continue }
-            
-            shortcut += String(character)
-            
-            // Once the shortcut is unique, stop adding characters
-            if shortcutIsValid(shortcut) { break }
-        }
-        
-        shortcutTextField.text = shortcut
-        print(.o, "Automatically set shortcut to \"\(shortcut)\".")
-        
-        // Update icon label
-        print(.n, "Child: \"Shortcut changed.\"")
+        // Must call this after to make sure the shortcut field is validated properly
         shortcutChanged()
+        updateSaveButton()
     }
     
     

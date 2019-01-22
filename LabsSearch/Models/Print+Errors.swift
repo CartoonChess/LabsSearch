@@ -13,8 +13,9 @@ import Foundation
 /// The shortest notation is `x`, `n`, `o`.
 enum PrintLevel {
     case error, x, bad, warning, fail, red
-    case note, n, notice, issue, yellow
+    case notice, n, issue, yellow
     case ok, o, okay, good, np, pass, success, green
+    case comment, i, info, information, note, white
 }
 
 /// Extends the basic `print` function to add an emoji in front for readability in console logs.
@@ -31,10 +32,12 @@ func print(_ level: PrintLevel, _ message: String) {
         switch level {
         case .error, .x, .bad, .warning, .fail, .red:
             symbol = "🛑"
-        case .note, .n, .notice, .issue, .yellow:
+        case .notice, .n, .issue, .yellow:
             symbol = "⚠️"
         case .ok, .o, .okay, .good, .np, .pass, .success, .green:
             symbol = "✅"
+        case .comment, .i, .info, .information, .note, .white:
+            symbol = "💬"
         }
         
         print(symbol + " " + message)
