@@ -73,7 +73,7 @@ struct UrlController {
     }
     
     
-    /// Tries to find the magic word in the URL query.
+    /// Tries to find the magic word in the URL.
     ///
     /// - Parameters:
     ///   - url: Full URL.
@@ -81,24 +81,35 @@ struct UrlController {
     /// - Returns: `true` or `false`, depending on whether the magic word is found.
     func detectMagicWord(in url: URL, magicWord customMagicWord: String? = nil) -> Bool {
         // Get queries as dictionary
-        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-            let queries = components.queryDictionary() else {
-                print(.x, "Failed to split URL into components, or couldn't create query dictionary.")
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                print(.x, "Failed to split URL into components.")
                 return false
         }
-        
+        let queries = components.queryDictionary()
+
         // Use the default magic word, unless a custom one was provided
         let magicWord = customMagicWord ?? self.magicWord
-        
+
         // If no query items are detected, let this run once and then silently fail
         for (_, value) in queries {
             if value == magicWord {
                 return true
             }
         }
+
+        // If we make it through the loop without returning, check for magic word in base URL
         
-        // If we make it through the loop without falling through, the magic word is missing
-        return false
+//        if url.absoluteString.contains(magicWord) {
+        guard let baseUrl = components.withoutQueries() else {
+            print(.x, "Failed to remove queries from base URL.")
+            return false
+        }
+        
+        if baseUrl.absoluteString.contains(magicWord) {
+            return true
+        } else {
+            return false
+        }
     }
     
     
@@ -137,20 +148,35 @@ struct UrlController {
         }
         
         // Split text field into URL components and get queries
-        guard let urlComponents = URLComponents(url: urlWithMagicWord, resolvingAgainstBaseURL: true),
-            let queryDictionary = urlComponents.queryDictionary() else {
-                print(.x, "Could not get URL components, or failed to extract queries.")
+//        guard let urlComponents = URLComponents(url: urlWithMagicWord, resolvingAgainstBaseURL: true),
+//            let queryDictionary = urlComponents.queryDictionary() else {
+//                print(.x, "Could not get URL components, or failed to extract queries.")
+//                return
+//        }
+        guard let urlComponents = URLComponents(url: urlWithMagicWord, resolvingAgainstBaseURL: true) else {
+                print(.x, "Could not get URL components.")
                 return
         }
+        // This function no longer returns a nil value; it should return an empty dictionary when no queries present
+        let queryDictionary = urlComponents.queryDictionary()
         
-        // Take out the magic word before passing it back
-        let queries = queryDictionary.withValueReplaced(magicWord, replaceWith: "")
+        // Replace the magic word in query (if present) with the terms placeholder before passing it back
+        let queries = queryDictionary.withValueReplaced(magicWord, replaceWith: SearchEngines.shared.termsPlaceholder)
         
-        // Get URL without queries
-        let baseUrl = urlComponents.withoutQueries()
+        // Get URL without queries and replace magic word (if present)
+        // TODO: This seems likely to break things. Perhaps it should be done earlier?
+        guard let baseUrl = urlComponents.withoutQueries() else {
+            print(.x, "Failed to remove queries from base URL.")
+            return
+        }
+        let baseUrlString = baseUrl.absoluteString.replacingOccurrences(of: magicWord, with: SearchEngines.shared.termsPlaceholder)
+        guard let baseUrlWithTermsPlaceholder = URL(string: baseUrlString) else {
+            print("Failed to create URL with terms placeholder.")
+            return
+        }
         
         // Call completion handler, which should call updateUrlDetails()
-        completion(baseUrl, queries)
+        completion(baseUrlWithTermsPlaceholder, queries)
     }
     
     

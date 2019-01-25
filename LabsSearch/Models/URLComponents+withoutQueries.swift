@@ -23,11 +23,11 @@ extension URLComponents {
     /// Converts the `URLQueryItem` object array into a `[String: String]` dictionary.
     ///
     /// - Returns: The query, divided as `[key: value]`.
-    func queryDictionary() -> [String: String]? {
-        // If the URL components don't include a query, return nil
-        guard let queryItems = self.queryItems else { return nil }
-        
+    func queryDictionary() -> [String: String] {
         var queries = [String: String]()
+        
+        // If the URL components don't include a query, return empty dictionary (for legacy reasons)
+        guard let queryItems = self.queryItems else { return queries }
         
         for queryItem in queryItems {
             //URLQueryItem(name, value)

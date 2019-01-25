@@ -78,7 +78,7 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         // Set up the URL and search term fields
         if let engine = engine {
             // Get the URL from the model, adding in the default search term
-            let url = engine.baseUrl.withSearchTerms(urlController.magicWord, using: engine.queries)!
+            let url = engine.baseUrl.withSearchTerms(urlController.magicWord, using: engine.queries, replacing: SearchEngines.shared.termsPlaceholder)!
             print(.o, "Using URL \(url).")
             
             // If we want to set magic world field placeholder text ...
@@ -106,7 +106,7 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
     }
     
     
-    // Delegate function; allows cell to resize with text view (in conjunctionw ith tableView(heighForRowAt))
+    // Delegate function; allows cell to resize with text view (in conjunction with tableView(heighForRowAt))
 //    func textViewDidChange(_ textView: UITextView) {
 //        UIView.setAnimationsEnabled(false)
 //        textView.sizeToFit()

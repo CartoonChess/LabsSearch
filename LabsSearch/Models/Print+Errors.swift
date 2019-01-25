@@ -21,7 +21,7 @@ enum PrintLevel {
 /// Extends the basic `print` function to add an emoji in front for readability in console logs.
 ///
 /// - Parameters:
-///   - level: Three levels available with various synonyms, shortest being `x` (error), `n` (note), and `o` (okay).
+///   - level: Four levels available with various synonyms, shortest being `x` (error), `n` (note), `o` (okay), and `i` (comment).
 ///   - message: The string to be output to the console.
 ///
 /// Messages printed with this function will only output in debug mode.

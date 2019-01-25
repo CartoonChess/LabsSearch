@@ -242,10 +242,6 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     @IBAction func shortcutChanged() {
         print(.n, "Parent: \"Shortcut changed.\"")
         // Set icon label to reflect shortcut, but only if there's no image already supplied
-//        if engine?.getImage() == nil {
-//            print(.i, "\(engine)")
-//            engineIconLabel.setLetter(using: shortcutTextField.text ?? "")
-//        }
         if engineIconImage.image == nil,
             let shortcut = shortcutTextField.text {
             engineIconLabel.setLetter(using: shortcut)
@@ -268,17 +264,6 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     /// Checks that a shortcut can be used.
     ///
     /// - Returns: Returns `true` if the shortcut has at least one character, none of which are invalid for a filename, and that no other engine uses this shortcut.
-//    func shortcutIsValid() -> Bool {
-//        if let shortcut = shortcutTextField.text,
-//            !shortcut.isEmpty,
-//            shortcut.isValidFileName(),
-//            !(allOtherShortcuts?.contains(shortcut) ?? allShortcuts?.contains(shortcut) ?? false) {
-//            // The above line is a hack now, but basically it should never get to "false"
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
     func shortcutIsValid(_ shortcut: String? = nil) -> Bool {
         var shortcutToCheck = shortcut
         

@@ -133,13 +133,6 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         guard let searchTerms = sender.text else { return }
         searchController.search(searchTerms) { (url) in
             // Display in Safari view controller if preference is set
-//            if let url = url {
-//                print(.o, "Opening URL in Safari web view: \(url)")
-//                showSafariViewController(for: url)
-//            }
-            
-//            if defaults.bool(forKey: SettingsKeys.stayInApp)
-//                && url.schemeIsCompatibleWithSafariView {
             if let stayInApp = defaults?.bool(forKey: SettingsKeys.stayInApp),
                 stayInApp,
                 url.schemeIsCompatibleWithSafariView {

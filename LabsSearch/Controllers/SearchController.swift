@@ -116,13 +116,13 @@ struct SearchController {
         }
     }
     
+    
     /// Perform a search for a string of terms using a given search engine.
     ///
     /// - Parameters:
     ///   - unsplitText: The full string provided by the user, including engine shortcut and search terms.
-    ///   - completeUsingSafariViewController: When `true`, the search will be performed in a web view, rather than launching a separate app.
-    ///   - url: The URL sent to the completion enclosure. The closure is called when showing results in a Safari view, meaning the view controller which called this function must handle displaying the URL.
-//    func search(_ unsplitText: String, completeUsingSafariViewController: (_ url: URL?) -> Void) {
+    ///   - completion: The completion handler which will handle displaying the URL.
+    ///   - url: The URL sent to the completion enclosure. The view controller which called this function must handle displaying the URL in a Safari view or external app.
     func search(_ unsplitText: String, completion: (_ url: URL) -> Void) {
         var shortcut: String? = nil
         var terms = unsplitText
@@ -160,22 +160,15 @@ struct SearchController {
             searchEngine = defaultEngine
         }
         
-        // This is sorta hacky, but basically it replaces any empty query with the search terms
-        let queries = searchEngine.queries
-//        for (key, value) in queries {
-//            if value.isEmpty {
-//                queries[key] = terms
-//            }
-//        }
-//        let url = searchEngine.baseUrl.withQueries(queries)!
-        let url = searchEngine.baseUrl.withSearchTerms(terms, using: queries)!
+//        // This is sorta hacky, but basically it replaces any empty query with the search terms
+//        let queries = searchEngine.queries
+//        let url = searchEngine.baseUrl.withSearchTerms(terms, using: queries)!
         
-//        // Safari view must be handled by subclass of UIViewController
-//        if defaults.bool(forKey: SettingsKeys.stayInApp) {
-//            completeUsingSafariViewController(url)
-//        } else {
-//            showSearchInExternalApp(for: url)
-//        }
+        // Check for placeholder in queries and base URL
+        guard let url = searchEngine.baseUrl.withSearchTerms(terms, using: searchEngine.queries, replacing: SearchEngines.shared.termsPlaceholder) else {
+            print(.x, "Failed to inject search terms into URL.")
+            return
+        }
         
         // Safari view must be handled by subclass of UIViewController
         completion(url)
@@ -183,31 +176,12 @@ struct SearchController {
     }
     
     
-    // We had move this function to a struct extension because action extensions can't access UIApplication.shared.
+    // We had move showSearchInExternalApp to a struct extension because action extensions can't access UIApplication.shared.
     //- However, our main app had trouble accessing the struct extension, so we changed the following setting instead:
     //- [Project] > Targets > [Action Extension] > Build Settings > Build Options >>
     //- >> Require Only App-Extension-Safe API -> changed to NO
     //- Of course, we must be careful never to access showSearchInExternalApp in the action extension,
     //- or everything will blow up, presumably.
-    
-//    /// Open search results in external app (fallback to Safari app)
-//    ///
-//    /// - Parameter url: The URL, with queries, to display.
-//    func showSearchInExternalApp(for url: URL){
-//        if #available(iOS 10.0, *) {
-//            UIApplication.shared.open(url, options: [:]) { (success) in
-//                if success {
-//                    print(.o, "URL successfully opened in external app: \(url)")
-//                } else {
-//                    print(.x, "Failed to open URL in external app: \(url)")
-//                }
-//            }
-//        } else {
-//            // Support for iOS below 10.0
-//            print(.n, "Opening URL using deprecated method for older OS versions.")
-//            UIApplication.shared.openURL(url)
-//        }
-//    }
     
     
     /// Isolate the search shortcut from the user's search terms.

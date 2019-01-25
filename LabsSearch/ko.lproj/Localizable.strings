@@ -12,6 +12,7 @@
 
 "SearchEngine.defaultEngines-Google" = "구글";
 "SearchEngine.defaultEngines-AppleMaps" = "애플 지도";
+"SearchEngine.defaultEngines-NamuWiki" = "나무위키";
 "SearchEngine.defaultEngines-Naver" = "네이버";
 "SearchEngine.defaultEngines-NaverKoEnDictionary" = "네이버 한영사전";
 "SearchEngine.defaultEngines-QDWiki" = "QD Wiki";

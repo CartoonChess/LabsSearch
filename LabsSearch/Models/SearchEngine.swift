@@ -14,6 +14,8 @@ struct SearchEngine: Equatable, Codable {
     var name: String
     var shortcut: String
     var baseUrl: URL
+    // For backward compatibility reasons, queries is not optional
+    // URLs which do not contain queries should be defined as an empty dictionary (`[:]`)
     var queries: [String: String]
 //    var image: UIImage? = nil
 //    var image: Data? = nil
@@ -83,6 +85,10 @@ struct SearchEngines {
             return array.sorted()
         }
     }
+    
+    // This unlikely string will be the placeholder for the user's search terms
+//    let termsPlaceholder: String = "F@r=z&L;e/h?Q:M p\"T`O<P]w[s>I#p%z}z{T\\|^a~"
+    let termsPlaceholder = "5C5WRbhx88ax8e7Xb7cOVXSjAFJgtKHs09DKd7E4IvemJRKEIwdqglpAvhvksgo9GjPI5cW8uWcOelAVwzt2ErQFijKUap5UdIjy"
     
     // MARK: - Saving and loading properties and methods
     
@@ -169,29 +175,31 @@ struct SearchEngines {
                 name: NSLocalizedString("SearchEngine.defaultEngines-Google", comment: ""),
                 shortcut: "g",
                 baseUrl: URL(string: "https://www.google.com/search")!,
-                queries: ["q": String()],
-//                image: nil,
+                queries: ["q": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-AppleMaps", comment: ""),
                 shortcut: "m",
                 baseUrl: URL(string: "https://maps.apple.com/")!,
-                queries: ["q": String()],
-//                image: nil,
+                queries: ["q": termsPlaceholder],
+                isEnabled: true),
+            SearchEngine(
+                name: NSLocalizedString("SearchEngine.defaultEngines-NamuWiki", comment: ""),
+                shortcut: "nw",
+                baseUrl: URL(string: "https://namu.wiki/go/\(termsPlaceholder)")!,
+                queries: [:],
                 isEnabled: true),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-Naver", comment: ""),
                 shortcut: "n",
                 baseUrl: URL(string: "https://search.naver.com/search.naver")!,
-                queries: ["query": String()],
-//                image: nil,
+                queries: ["query": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-NaverKoEnDictionary", comment: ""),
                 shortcut: "nd",
                 baseUrl: URL(string: "https://endic.naver.com/search.nhn")!,
-                queries: ["query": String()],
-//                image: nil,
+                queries: ["query": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-QDWiki", comment: ""),
@@ -199,22 +207,19 @@ struct SearchEngines {
                 baseUrl: URL(string: "http://www.qetuodesigns.com/wiki/")!,
                 queries: [
                     "pagename": "Site.Search",
-                    "q": String()],
-//                image: nil,
+                    "q": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-Wikipedia", comment: ""),
                 shortcut: "w",
                 baseUrl: URL(string: NSLocalizedString("SearchEngine.defaultEngines-WikipediaURL", comment: ""))!,
-                queries: ["search": String()],
-//                image: nil,
+                queries: ["search": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-YouTube", comment: ""),
                 shortcut: "y",
                 baseUrl: URL(string: "https://www.youtube.com/results")!,
-                queries: ["search_query": String()],
-//                image: nil,
+                queries: ["search_query": termsPlaceholder],
                 isEnabled: true)
         ]
         
