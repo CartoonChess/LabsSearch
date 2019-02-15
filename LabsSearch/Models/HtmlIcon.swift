@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// A <link> element and its attributes, including its image data, if available.
+/// A `<link>` element and its attributes, including its image data, if available.
 struct HtmlIcon {
     let href: String
     let rel: String

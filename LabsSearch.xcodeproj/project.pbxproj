@@ -32,6 +32,8 @@
 		AE093F1F2194A4AD00CF3361 /* URL+schemeIsValidForSafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE093F1E2194A4AD00CF3361 /* URL+schemeIsValidForSafariView.swift */; };
 		AE093F202194A4E200CF3361 /* URL+schemeIsValidForSafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE093F1E2194A4AD00CF3361 /* URL+schemeIsValidForSafariView.swift */; };
 		AE093F222194AC3400CF3361 /* UrlDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE093F212194AC3400CF3361 /* UrlDetailsTableViewController.swift */; };
+		AE0A15C221FD8EB300B5A07A /* OpenSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0A15C121FD8EB300B5A07A /* OpenSearchController.swift */; };
+		AE0A15C321FD8EB300B5A07A /* OpenSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0A15C121FD8EB300B5A07A /* OpenSearchController.swift */; };
 		AE2FFD56218198730081F2EB /* EngineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2FFD55218198730081F2EB /* EngineTableViewCell.swift */; };
 		AE2FFD582181E4DA0081F2EB /* EngineIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2FFD572181E4DA0081F2EB /* EngineIconView.swift */; };
 		AE2FFD5A2181F14A0081F2EB /* DefaultEngineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2FFD592181F14A0081F2EB /* DefaultEngineTableViewController.swift */; };
@@ -106,6 +108,7 @@
 		AE093EE721932AA900CF3361 /* SearchController+showSearchInExternalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchController+showSearchInExternalApp.swift"; sourceTree = "<group>"; };
 		AE093F1E2194A4AD00CF3361 /* URL+schemeIsValidForSafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+schemeIsValidForSafariView.swift"; sourceTree = "<group>"; };
 		AE093F212194AC3400CF3361 /* UrlDetailsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlDetailsTableViewController.swift; sourceTree = "<group>"; };
+		AE0A15C121FD8EB300B5A07A /* OpenSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSearchController.swift; sourceTree = "<group>"; };
 		AE2FFD55218198730081F2EB /* EngineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineTableViewCell.swift; sourceTree = "<group>"; };
 		AE2FFD572181E4DA0081F2EB /* EngineIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineIconView.swift; sourceTree = "<group>"; };
 		AE2FFD592181F14A0081F2EB /* DefaultEngineTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultEngineTableViewController.swift; sourceTree = "<group>"; };
@@ -257,6 +260,7 @@
 				AEF665E92178263A00DB310D /* SearchController.swift */,
 				AE093EE721932AA900CF3361 /* SearchController+showSearchInExternalApp.swift */,
 				AE830D0F219807FD00CD8257 /* UrlController.swift */,
+				AE0A15C121FD8EB300B5A07A /* OpenSearchController.swift */,
 				AE782B0621C342B70021E963 /* IconFetcher.swift */,
 			);
 			path = Controllers;
@@ -413,6 +417,7 @@
 				AE093ED6219325E200CF3361 /* ActionExtensionUrlDetailsTableViewController.swift in Sources */,
 				AE093EDA2193270000CF3361 /* URL+withQueries.swift in Sources */,
 				AE94B5202195907400616860 /* AddEditEngineTableViewController.swift in Sources */,
+				AE0A15C321FD8EB300B5A07A /* OpenSearchController.swift in Sources */,
 				AE093EEA2193305F00CF3361 /* String+removeLeadingSpaces.swift in Sources */,
 				AE093ED82193263C00CF3361 /* TableCellTextField.swift in Sources */,
 				AE093ED9219326E500CF3361 /* PropertyKeys.swift in Sources */,
@@ -427,6 +432,7 @@
 			files = (
 				AE093F222194AC3400CF3361 /* UrlDetailsTableViewController.swift in Sources */,
 				AE782B0721C342B70021E963 /* IconFetcher.swift in Sources */,
+				AE0A15C221FD8EB300B5A07A /* OpenSearchController.swift in Sources */,
 				AEF665E8217825BF00DB310D /* URL+withQueries.swift in Sources */,
 				AEF665E221781E1B00DB310D /* MainViewController.swift in Sources */,
 				AE2FFD56218198730081F2EB /* EngineTableViewCell.swift in Sources */,
