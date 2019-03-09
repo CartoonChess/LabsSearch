@@ -25,6 +25,7 @@ import UIKit
 
 protocol EngineIconViewController {
     // All three views MUST be set when conforming to this protocol; IBOutlet is fine.
+    // TODO: Are those exclamation marks necessary?
     var engineIconView: EngineIconView! { get }
     var engineIconImage: EngineIconImageView! { get }
     var engineIconLabel: EngineIconLabel! { get }
@@ -37,17 +38,25 @@ extension EngineIconViewController {
     
     /// Set up the icon for display.
     ///
-    /// Views which will change the icon based on user input should use `updateIconEngine()` to avoid recalculating the corners every time.
+    /// Views which will change the icon based on user input should use `updateIconEngine()` to avoid recalculating the corners and border every time.
     func setIcon() {
-        updateIconCorners()
+        updateIconLayout()
         if engine != nil {
             updateIconEngine()
         }
     }
     
-    /// Sets corner roundness of the engine icon based on the user's `stayInApp` preference.
+    
+    /// Sets up the initial layout of the view--basically everything but the engine's specific icon.
     ///
     /// Call during `viewWillAppear` in views beneath the settings view to make sure this is always udpated. Note that clip to bounds must be set in Interface Builder to see any effect.
+    func updateIconLayout() {
+        updateIconCorners()
+        drawBorder()
+    }
+    
+    
+    /// Sets corner roundness of the engine icon based on the user's `stayInApp` preference.
     func updateIconCorners() {
         // 16.0 imitates Safari bookmarks; 4.0 imitates home screen icons
         let engineIconCornerRadiusFactor: CGFloat
@@ -66,6 +75,19 @@ extension EngineIconViewController {
         // Note on icon size: 60 imitates iPhone home screen/bookmark sizes
         // 144 looks nice but most icons appear to be aliased
     }
+    
+    
+    /// Creates a slight border around the icon view for aesthetic purposes (especially useful on white backgrounds).
+    func drawBorder() {
+        let layer = engineIconView.layer
+
+//        layer.borderColor = UIColor(white: 0, alpha: 0.4).cgColor
+//        layer.borderWidth = 0.1
+        // This seems to be closest to as it appears in iOS Settings app.
+        layer.borderColor = UIColor(white: 0, alpha: 0.8).cgColor
+        layer.borderWidth = 0.05
+    }
+    
     
     /// Updates the icon to use the appropriate image or label.
     ///
@@ -115,7 +137,12 @@ class EngineIconView: UIView {
     // Prevent background colour from being changed by table cell when selected
     override var backgroundColor: UIColor? {
         didSet {
-            if backgroundColor != nil && backgroundColor!.cgColor.alpha == 0 {
+//            if backgroundColor != nil && backgroundColor!.cgColor.alpha == 0 {
+//                backgroundColor = oldValue
+//            }
+            
+            if let color = backgroundColor,
+                color.cgColor.alpha == 0 {
                 backgroundColor = oldValue
             }
         }

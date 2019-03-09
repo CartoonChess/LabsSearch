@@ -219,7 +219,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if !viewDidAppear {
-            updateIconCorners()
+            updateIconLayout()
             
             // In app extension: Update the URL and text fields with the fetched info
             #if EXTENSION
