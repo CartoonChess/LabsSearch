@@ -48,7 +48,8 @@
 "WBH-Ed-IeJ.text" = "Engine Name";
 
 /* Class = "UIButton"; normalTitle = "• • •"; ObjectID = "XrU-wc-PB0"; */
-"XrU-wc-PB0.normalTitle" = "• • •";
+//"XrU-wc-PB0.normalTitle" = "• • •"; // this was system font size 17.0
+"XrU-wc-PB0.normalTitle" = "☰";
 
 /* Class = "UILabel"; text = "Remove"; ObjectID = "aEb-i6-kyU"; */
 "aEb-i6-kyU.text" = "Remove";

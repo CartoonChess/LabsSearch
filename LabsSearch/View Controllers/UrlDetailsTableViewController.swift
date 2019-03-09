@@ -293,7 +293,12 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
         case Section.instructions:
-            return String(format: NSLocalizedString("UrlDetails.firstSection-Instructions", comment: ""), urlController.magicWord)
+            var instructions = String(format: NSLocalizedString("UrlDetails.firstSection-InstructionsStart", comment: ""), urlController.magicWord)
+            // Explain about copying URL if we're in the main app
+            #if !EXTENSION
+                instructions += " " + NSLocalizedString("UrlDetails.firstSection-InstructionsExtraForMainApp", comment: "")
+            #endif
+            return instructions
         default:
             // We have to let this fail silently because it's called every time the view scrolls...
             return nil

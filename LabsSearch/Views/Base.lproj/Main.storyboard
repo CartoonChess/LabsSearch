@@ -29,9 +29,9 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XrU-wc-PB0">
-                                <rect key="frame" x="327" y="36" width="32" height="33"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="• • •"/>
+                                <rect key="frame" x="329" y="36" width="30" height="46"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <state key="normal" title="☰"/>
                                 <connections>
                                     <segue destination="TJL-X2-Mk5" kind="show" identifier="SettingsSegue" id="ykC-cQ-d00"/>
                                 </connections>
@@ -503,6 +503,39 @@
                                                 <constraint firstAttribute="trailingMargin" secondItem="dXy-RU-2g9" secondAttribute="trailing" id="oe4-GI-qgS"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="31A-fw-nCG" secondAttribute="bottom" id="vyJ-Oo-ECn"/>
                                                 <constraint firstItem="31A-fw-nCG" firstAttribute="top" secondItem="SbK-Af-trx" secondAttribute="topMargin" id="ysC-kP-Ell"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection footerTitle="[note about extension]" id="dS0-Lj-OcC">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="uX4-4q-L1q">
+                                        <rect key="frame" x="0.0" y="243" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uX4-4q-L1q" id="083-aB-sFh">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Next" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ouC-mJ-JLq">
+                                                    <rect key="frame" x="16" y="11" width="343" height="22"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="YA4-At-lOC">
+                                                    <rect key="frame" x="16" y="11" width="343" height="22"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="ouC-mJ-JLq" secondAttribute="bottom" id="BHi-uJ-ohR"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ouC-mJ-JLq" secondAttribute="trailing" id="CqZ-TO-ANK"/>
+                                                <constraint firstItem="ouC-mJ-JLq" firstAttribute="top" secondItem="083-aB-sFh" secondAttribute="topMargin" id="a3Z-ji-4lg"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="YA4-At-lOC" secondAttribute="trailing" id="ef8-XR-WzQ"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="YA4-At-lOC" secondAttribute="bottom" id="kmE-a5-Gpm"/>
+                                                <constraint firstItem="ouC-mJ-JLq" firstAttribute="leading" secondItem="083-aB-sFh" secondAttribute="leadingMargin" id="qQa-Gw-LEq"/>
+                                                <constraint firstItem="YA4-At-lOC" firstAttribute="top" secondItem="083-aB-sFh" secondAttribute="topMargin" id="uWK-Tp-THl"/>
+                                                <constraint firstItem="YA4-At-lOC" firstAttribute="leading" secondItem="083-aB-sFh" secondAttribute="leadingMargin" id="xx4-Jt-XQ7"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>

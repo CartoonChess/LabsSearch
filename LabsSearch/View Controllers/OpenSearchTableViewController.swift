@@ -32,6 +32,7 @@ class OpenSearchTableViewController: UITableViewController {
     // Table sections
     enum Section {
         static let instructions = 0
+        static let noteAboutAppExtension = 3
     }
     
     // Index paths for cells
@@ -182,6 +183,8 @@ class OpenSearchTableViewController: UITableViewController {
         switch section {
         case Section.instructions:
             return NSLocalizedString("OpenSearch.firstSection-Instructions", comment: "")
+        case Section.noteAboutAppExtension:
+            return NSLocalizedString("OpenSearch.lastSection-NoteAboutAppExtension", comment: "")
         default:
             // We have to let this fail silently because it's called every time the view scrolls...
             return nil

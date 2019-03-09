@@ -95,7 +95,7 @@
 "WBH-Ed-IeJ.text" = "Engine Name";
 
 /* Class = "UIButton"; normalTitle = "Settings"; ObjectID = "XrU-wc-PB0"; */
-"XrU-wc-PB0.normalTitle" = "• • •";
+"XrU-wc-PB0.normalTitle" = "☰";
 
 /* Class = "UITextField"; placeholder = "Name"; ObjectID = "y8L-a9-9iD"; */
 "y8L-a9-9iD.placeholder" = "이름";

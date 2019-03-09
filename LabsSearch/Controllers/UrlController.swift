@@ -66,10 +66,10 @@ struct UrlController {
             let url = urlText.encodedUrl(),
             schemeIsValid(url) {
             return url
+        } else {
+            // Return nil if any conditions are not met
+            return nil
         }
-        
-        // Return nil if any conditions are not met
-        return nil
     }
     
     

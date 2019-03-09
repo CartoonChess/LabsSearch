@@ -19,15 +19,16 @@ extension URL {
     func withQueries(_ queries: [String: String]) -> URL? {
         // Don't make any changes unless there are actually queries
         // This is done for backward compatibility reasons
-        if queries.isEmpty {
+        guard !queries.isEmpty else {
             return self
-        } else {
-            var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
-            components?.queryItems = queries.map {
-                URLQueryItem(name: $0.0, value: $0.1)
-            }
-            return components?.url
         }
+        
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
+        components?.queryItems = queries.map {
+            URLQueryItem(name: $0.0, value: $0.1)
+        }
+        
+        return components?.url
     }
     
     
@@ -39,10 +40,12 @@ extension URL {
     ///   - textToReplace: The value to replace with `terms`. This parameter is optional; omitting it will set the search term string as the value to any passed query keys which lack one.
     /// - Returns: The synthesized URL, or `nil` if there are any issues.
     func withSearchTerms(_ terms: String, using queries: [String: String], replacing textToReplace: String = "") -> URL? {
-        // Make queries mutable
-        var queries = queries
+        // Replace any "+" in user's terms with unlikely string
+        //- We will replace this with the proper "%2B" encoding at the end of this function
+        let plusPlaceholder = String(SearchEngines.shared.termsPlaceholder.reversed())
+        let terms = terms.replacingOccurrences(of: "+", with: plusPlaceholder)
         
-        queries.replaceValue(textToReplace, with: terms)
+        let queries = queries.withValueReplaced(textToReplace, replaceWith: terms)
         
 //        return self.withQueries(queries)
         // First, check for placeholder in queries (most typical case)
@@ -57,7 +60,13 @@ extension URL {
             return url
         }
         // TODO: Should this be `.path` instead?
-        let urlString = url.absoluteString.replacingOccurrences(of: SearchEngines.shared.termsPlaceholder, with: encodedTerms)
+        var urlString = url.absoluteString.replacingOccurrences(of: SearchEngines.shared.termsPlaceholder, with: encodedTerms)
+        
+        // Replace "+" with "%2B", as URLComponents and addingPercentEncoding will miss this
+        //- This finishes the process started at the beginning of this function
+        // TODO: Provide option in UrlDetails to toggle this on a per-engine basis
+        urlString = urlString.replacingOccurrences(of: plusPlaceholder, with: "%2B")
+        
         return URL(string: urlString)
     }
     
