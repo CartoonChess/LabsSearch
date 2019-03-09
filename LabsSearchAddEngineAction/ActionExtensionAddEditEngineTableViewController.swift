@@ -96,14 +96,17 @@ extension AddEditEngineTableViewController {
                 // Save HTML to try and find favicon or similar
                 self.hostAppHtml = html
                 
-                // Pass URL to the icon fetcher
-                guard let urlString = url,
-                    let (fetchableUrl, host) = self.iconFetcher.getUrlComponents(urlString) else {
-                        return
-                }
+//                // Pass URL to the icon fetcher
+//                guard let urlString = url,
+//                    let (fetchableUrl, host) = self.iconFetcher.getUrlComponents(urlString) else {
+//                        return
+//                }
+//
+//                // Tell AddEditEngine VC to use the IconFetcher and update its view after fetching icon from server
+//                self.updateIcon(for: fetchableUrl, host: host)
                 
-                // Tell AddEditEngine VC to use the IconFetcher and update its view after fetching icon from server
-                self.updateIcon(for: fetchableUrl, host: host)
+                // Pass URL to the icon fetch
+                self.prepareToUpdateIcon(for: url)
             }
             
         })
@@ -111,42 +114,42 @@ extension AddEditEngineTableViewController {
     }
     
     
-    func updateView() {
-        // Create an engine object with the URL, if it's testable
-        // This will prevent pushing to the URL details view
-        // FIXME: This can still probably fail and cause the URL details view to push when the JSON is slow
-        
-        // First, see if the URL is valid and that it contains the default magic word
-        print(.o, "URL loaded from host app; checking validity.")
-        if let url = urlController.validUrl(from: hostAppUrlString, schemeIsValid: { (url) -> Bool in
-            return url.schemeIsCompatibleWithSafariView
-        }),
-            urlController.detectMagicWord(in: url) {
-            
-            print(.o, "URL and default magic word detected; creating engine object.")
-            // Create engine object with URL, awaiting further details
-            urlController.willUpdateUrlDetails(url: url.absoluteString) { (baseUrl, queries) in
-                updateUrlDetails(baseUrl: baseUrl, queries: queries)
-            }
-            
-        }
-        
-        // Update text fields
-        
-        // Get the host app URL. If this fails, set the whole page title in the name field
-        if let url = hostAppUrlString,
-            let name = makeEngineName(from: url) {
-            nameTextField.text = name
-        } else {
-            print(.x, "Failed to get host from host app URL; setting name field to page title.")
-            nameTextField.text = hostAppEngineName
-        }
-        shortcutTextField.text = makeEngineShortcut()
-        
-        // Must call this after to make sure the shortcut field is validated properly
-        shortcutChanged()
-        updateSaveButton()
-    }
+//    func updateView() {
+//        // Create an engine object with the URL, if it's testable
+//        // This will prevent pushing to the URL details view
+//        // FIXME: This can still probably fail and cause the URL details view to push when the JSON is slow
+//        
+//        // First, see if the URL is valid and that it contains the default magic word
+//        print(.o, "URL loaded from host app; checking validity.")
+//        if let url = urlController.validUrl(from: hostAppUrlString, schemeIsValid: { (url) -> Bool in
+//            return url.schemeIsCompatibleWithSafariView
+//        }),
+//            urlController.detectMagicWord(in: url) {
+//            
+//            print(.o, "URL and default magic word detected; creating engine object.")
+//            // Create engine object with URL, awaiting further details
+//            urlController.willUpdateUrlDetails(url: url.absoluteString) { (baseUrl, queries) in
+//                updateUrlDetails(baseUrl: baseUrl, queries: queries)
+//            }
+//            
+//        }
+//        
+//        // Update text fields
+//        
+//        // Get the host app URL. If this fails, set the whole page title in the name field
+//        if let url = hostAppUrlString,
+//            let name = makeEngineName(from: url) {
+//            nameTextField.text = name
+//        } else {
+//            print(.x, "Failed to get host from host app URL; setting name field to page title.")
+//            nameTextField.text = hostAppEngineName
+//        }
+//        shortcutTextField.text = makeEngineShortcut()
+//        
+//        // Must call this after to make sure the shortcut field is validated properly
+//        shortcutChanged()
+//        updateSaveButton()
+//    }
     
     
     // MARK: - Navigation

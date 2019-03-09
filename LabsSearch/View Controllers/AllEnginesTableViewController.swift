@@ -12,9 +12,26 @@ import UIKit
 
 /// Shows a list of all search engines in detail for editing.
 class AllEnginesTableViewController: EngineTableViewController {
+    
+    // This VC can receive the details of an OpenSearch from the OpenSearch VC
+    //- It will then pass the object on to AddEdit via viewDidAppear
+    var openSearch: OpenSearch? = nil
         
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // In case we're coming back from OpS VC, kill the activity indicator
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+        
+        // If an OpS engine is received, segue immediately to AddEdit VC
+        if openSearch != nil {
+            performSegue(withIdentifier: SegueKeys.addEngine, sender: nil)
+        }
+        
     }
     
     // MARK: - Table view data source
@@ -159,31 +176,78 @@ class AllEnginesTableViewController: EngineTableViewController {
         // TODO: Maybe we should have one segue and look for a selected cell instead
         // Actually, with no data to pass, AddEngineSegue is all handled through the storyboard
         
-        if segue.identifier == "EditEngineSegue" {
-            // Get the new view controller using segue.destination
-            guard let destinationNavigationController = segue.destination as? UINavigationController,
-                let destination = destinationNavigationController.topViewController as? AddEditEngineTableViewController else {
-                print(.x, "Add/edit view or its parent navigation controller could not be loaded.")
-                return
-            }
-            
-            // Detect the engine the user tapped
-            guard let indexPath = tableView.indexPathForSelectedRow,
-                let cell = tableView.cellForRow(at: indexPath) as? AllEnginesTableViewCell,
-                let engine = cell.engine else {
-                    print(.x, "Could not determine selected row, row's cell, or cell's engine.")
-                    return
-            }
-            
-            // Pass the selected object to the new view controller
-            destination.engine = engine
+        // FIXME: This error shouldn't throw up if we're just going over to OpS VC
+        // Get the new view controller using segue.destination
+//        guard let destinationNavigationController = segue.destination as? UINavigationController,
+//            let destination = destinationNavigationController.topViewController as? AddEditEngineTableViewController else {
+//                print(.x, "Add/edit view or its parent navigation controller could not be loaded.")
+//                return
+//        }
+        
+        guard let destinationNavigationController = segue.destination as? UINavigationController else {
+            print(.x, "Attempted to segue from AllEngines VC to wrong view.")
+            return
         }
+        
+        if let _ = destinationNavigationController.topViewController as? OpenSearchTableViewController {
+            // No special prep required
+        } else if let destination = destinationNavigationController.topViewController as? AddEditEngineTableViewController {
+            
+            switch segue.identifier {
+            case SegueKeys.editEngine:
+                // Detect the engine the user tapped
+                guard let indexPath = tableView.indexPathForSelectedRow,
+                    let cell = tableView.cellForRow(at: indexPath) as? AllEnginesTableViewCell,
+                    let engine = cell.engine else {
+                        print(.x, "Could not determine selected row, row's cell, or cell's engine.")
+                        return
+                }
+                
+                // Pass the selected object to the new view controller
+                destination.engine = engine
+            case SegueKeys.addEngine:
+                print(.o, "Segueing to AddEdit view using OpenSearch engine named \"\(openSearch?.name ?? "nil")\".")
+                destination.openSearch = openSearch
+                // Set AllEngine view's copy to nil so that it doesn't loop when AddEdit is dismissed
+                openSearch = nil
+            default:
+                print(.x, "Attempted to perform segue with no identifier.")
+            }
+            
+        } else {
+                print(.x, "OpenSearch or AddEdit view controller could not be loaded.")
+                return
+        }
+        
     }
     
     
     @IBAction func unwindToAllEnginesTable(segue: UIStoryboardSegue) {
-        print(.n, "Unwinding from add/edit view.")
+        print(.n, "Unwinding to AllEngines view.")
         
+//        // First, copy over the OpS engine object if coming back from the VC and the object exists
+//        if let source = segue.source as? OpenSearchTableViewController {
+//            openSearch = source.openSearch
+//            return
+//        }
+        
+        // First, copy over the OpS engine object if coming back from the VC and the object exists
+        if let source = segue.source as? OpenSearchTableViewController {
+            switch segue.identifier {
+            case SegueKeys.cancelOpenSearchUnwind:
+                print(.i, "Cancelled adding via OpenSearch.")
+            case SegueKeys.skipOpenSearchUnwind:
+                // If user tapped skip button, segue to AddEdit VC with dummy object
+                openSearch = OpenSearch(name: "", url: nil)
+            default:
+                // An OpS search was attempted, so pass the OpS object to AddEdit
+                openSearch = source.openSearch
+            }
+            // Don't execute AddEdit segues below
+            return
+        }
+        
+        // If we aren't coming back from OpS VC, make sure it's AddEdit
         guard let source = segue.source as? AddEditEngineTableViewController else {
             print(.x, "Error returning from add/edit engine view.")
             return
@@ -229,7 +293,7 @@ class AllEnginesTableViewController: EngineTableViewController {
             
         default:
             // Unwind with no further action if cancel is tapped
-            print(.n, "Cancel button was tapped.")
+            print(.i, "Cancel button was tapped.")
         }
         
     }

@@ -15,7 +15,7 @@
 "Kt4-5b-gNP.footerTitle" = "[instructions]";
 
 /* Class = "UITableViewSection"; headerTitle = "Instructions"; ObjectID = "Kt4-5b-gNP"; */
-"Kt4-5b-gNP.headerTitle" = "검색 엔진 추가 방법";
+//"Kt4-5b-gNP.headerTitle" = "검색 엔진 추가 방법";
 
 /* Class = "UILabel"; text = "Link Details"; ObjectID = "W2a-yn-IkE"; */
 "W2a-yn-IkE.text" = "세부사항";

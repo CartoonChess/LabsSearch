@@ -36,6 +36,9 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
     /// This will be `nil` if the host app didn't send a URL or if the user has already set their own.
     var hostAppUrlString: String?
     
+    // The URL sent from an unsuccessful OpenSearch attempt.
+    var openSearchUrl: String?
+    
     // Delegate-related properties
     weak var delegate: UrlDetailsTableViewControllerDelegate?
     var textFieldsDidChange: Bool = false
@@ -86,10 +89,15 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             
             // Show the URL
             urlTextField.text = url.absoluteString
+        } else if let openSearchUrl = openSearchUrl {
+            // This happens when OpS was used but the URL wasn't valid
+            urlTextField.text = openSearchUrl
         } else {
             // Engine is nil; this will do nothing if not using the action extension
             // Set URL to that which is provided by the host app if we haven't already made our own
             urlTextField.text = hostAppUrlString
+            
+            // FIXME: If receiving the URL of a failed OpS search with no magic word, fill it in here
         }
         
         // Determine if initial values are good enough to allow a test to be run

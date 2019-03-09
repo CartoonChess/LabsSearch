@@ -244,6 +244,9 @@ class IconFetcher: NSObject, XMLParserDelegate {
                 // TODO: Encoding detection? Possibly from response header Content-Type
                 var html = String(data: data, encoding: .utf8)
                 let components = html?.components(separatedBy: "<head")
+
+                /* *** DEBUG *** */
+//                print(html ?? "no html!!!")
                 
                 // If the split work, we've got a <head> tag, or possibly <header>
                 if let components = components,
@@ -256,7 +259,7 @@ class IconFetcher: NSObject, XMLParserDelegate {
                         html = "<head\(head[0])</head>)"
                     default:
                         // No head tag was found; we'll just use the full HTML
-                        print(.i, "no head; use full")
+                        print(.i, "No head tag found; using full HTML source code.")
                         break
                     }
                 }
@@ -299,6 +302,10 @@ class IconFetcher: NSObject, XMLParserDelegate {
     
     // Parses each XML tag to look for <link> items with icon-related rels
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+//        /* *** DEBUG *** */
+//        print("***** ELEMENT NAME: \(elementName)")
+//        print("***** ATTRIBUTES: \(attributeDict)")
+        
         // We're only concerned with <link> tags
         if elementName == "link" {
             // We only want those with icon rel attributes

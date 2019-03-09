@@ -41,12 +41,18 @@ struct SegueKeys {
     static let settings = "SettingsSegue"
     static let defaultEngine = "DefaultEngineSegue"
     static let allEngines = "AllEnginesSegue"
+    static let openSearch = "OpenSearchSegue"
     // TODO: Do these two need to be unique? We can probably just test for a selected cell
     static let addEngine = "AddEngineSegue" //
     static let editEngine = "EditEngineSegue" //
     static let urlDetails = "UrlDetailsSegue"
     
-    // Unwinds
+    // OpenSearch VC unwinds
+    static let cancelOpenSearchUnwind = "CancelOpenSearchUnwindSegue"
+    static let skipOpenSearchUnwind = "SkipOpenSearchUnwindSegue"
+    static let attemptedOpenSearchUnwind = "AttemptedOpenSearchUnwindSegue"
+    
+    // AddEdit -> AllEngines unwinds
     static let addEditEngineUnwind = "AddEditEngineUnwindSegue"
     static let cancelAddEditEngineUnwind = "CancelAddEditEngineUnwindSegue"
     static let deleteEngineUnwind = "DeleteEngineUnwindSegue"

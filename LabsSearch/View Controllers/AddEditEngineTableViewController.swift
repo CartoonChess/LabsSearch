@@ -26,6 +26,8 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     // When adding, this value will be nil on load
     var engine: SearchEngine?
+    // When adding, an OpenSearch object may have been passed in
+    var openSearch: OpenSearch?
     // Determines if a new, usable URL was passed back from the URL details VC
     var didReceiveUpdatedUrl: Bool = false
     
@@ -78,6 +80,9 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         #if EXTENSION
             print(.n, "Loading engines for app extension.")
             SearchEngines.shared.loadEngines()
+        
+            // Get the current web page's URL and title from the host app
+            loadUrl()
         #endif
         
         // Note: Be sure to load up engines BEFORE calling this super in app extension
@@ -97,6 +102,14 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             urlDetailsChangedLabel.isHidden = false
             // Hide the delete button
             deleteButtonCell.isHidden = true
+            
+            // Check if an OpS object has been passed in and if so use the URL and name
+            if let openSearch = openSearch {
+                print(.o, "Using OpenSearch engine named \"\(openSearch.name)\".")
+                updateUsingOpenSearch(openSearch)
+            } else {
+                print(.n, "No OpenSearch object found; proceeding for manual engine creation.")
+            }
         } else {
             // Editing
             guard let engine = engine else {
@@ -118,11 +131,82 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // Even if editing, only let corners be rounded once
             viewDidAppear = true
         }
+    }
+    
+    
+    func updateUsingOpenSearch(_ openSearch: OpenSearch) {
+        updateView()
         
-        #if EXTENSION
-            // Get the current web page's URL and title from the host app
-            loadUrl()
-        #endif
+        let urlString = openSearch.url?.absoluteString
+        prepareToUpdateIcon(for: urlString)
+    }
+    
+    func updateView() {
+        // Create an engine object with the URL, if it's testable
+        // This will prevent pushing to the URL details view
+        // FIXME: This can still probably fail and cause the URL details view to push when the JSON is slow
+        
+        // Set up variables and set them based on OpS or app ext
+        let urlString: String?
+        
+        if let openSearch = openSearch {
+            print(.i, "URL loaded from OpenSearch; checking validity.")
+            urlString = openSearch.url?.absoluteString
+        } else {
+            print(.i, "URL loaded from host app; checking validity.")
+            urlString = hostAppUrlString
+        }
+        
+        // First, see if the URL is valid and that it contains the default magic word
+        if let url = urlController.validUrl(from: urlString, schemeIsValid: { (url) -> Bool in
+            // TODO: Have this check compatibility differently if using OpS
+            return url.schemeIsCompatibleWithSafariView
+        }),
+            urlController.detectMagicWord(in: url) {
+            
+            print(.o, "URL and default magic word detected; creating engine object.")
+            // Create engine object with URL, awaiting further details
+            urlController.willUpdateUrlDetails(url: url.absoluteString) { (baseUrl, queries) in
+                updateUrlDetails(baseUrl: baseUrl, queries: queries)
+            }
+            
+        }
+        
+        // Update text fields
+        
+        // Get the host app URL. If this fails, set the whole page title in the name field
+        if let openSearch = openSearch,
+            let url = openSearch.url,
+            let name = makeEngineName(from: url.absoluteString) {
+            nameTextField.text = name
+        } else if let url = hostAppUrlString,
+            let name = makeEngineName(from: url) {
+            nameTextField.text = name
+        } else {
+            print(.x, "Failed to get host from OpenSearch object or host app URL; setting name field to page title or nil.")
+            nameTextField.text = hostAppEngineName
+        }
+        shortcutTextField.text = makeEngineShortcut()
+        
+        // Must call this after to make sure the shortcut field is validated properly
+        shortcutChanged()
+        updateSaveButton()
+    }
+    
+    /// Checks that the URL is valid, then calls `IconFetcher`.
+    ///
+    /// - Parameter url: The URL as a string. This parameter will accept a `nil` value, but this will cause the function to fail silently.
+    ///
+    /// This function is used when adding via OpenSearch as well as via the action extension.
+    func prepareToUpdateIcon(for url: String?) {
+        // Pass URL to the icon fetcher
+        guard let urlString = url,
+            let (fetchableUrl, host) = iconFetcher.getUrlComponents(urlString) else {
+                return
+        }
+        
+        // Tell AddEditEngine VC to use the IconFetcher and update its view after fetching icon from server
+        updateIcon(for: fetchableUrl, host: host)
     }
     
     
@@ -145,6 +229,34 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     }
     
     
+    // Transition immediately to URL details view if adding an engine
+    // Note: This cannot be placed in viewDidLoad or visual rendering errors could creep up
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // For app extension (note this used to be called AFTER the segue; trying earlier for now):
+        // Since we're calling this twice, don't execute if it worked the first time
+        #if EXTENSION
+        if hostAppEngineName != nil {
+            print(.n, "Already attempted on time to create engine object in viewWillAppear.")
+        } else if !viewDidAppear {
+            // This won't be tried again if it's not the first time the view appeared
+            updateView()
+        }
+        #endif
+        
+        // Only segue automatically if adding and when first appearing
+        if !viewDidAppear && engine == nil {
+            viewDidAppear.toggle()
+            performSegue(withIdentifier: SegueKeys.urlDetails, sender: nil)
+        }
+    }
+    
+    
+    /// Generates an engine name based on the domain name.
+    ///
+    /// - Parameter url: The URL, as a string.
+    /// - Returns: A string, if the URL can be parsed correctly, otherwise `nil`.
     func makeEngineName(from url: String) -> String? {
         // Get the host from the URL string, otherwise return nil
         guard let components = URLComponents(string: url),
@@ -177,9 +289,13 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         }
     }
     
+    /// Generates a shortcut based on the first character(s) of the engine name.
+    ///
+    /// - Returns: A string of lowercase letter(s), if possible, otherwise `nil`.
     func makeEngineShortcut() -> String? {
         // Create an array from the (lowercase) name field
-        guard let name = nameTextField.text?.lowercased() else {
+//        guard let name = nameTextField.text?.lowercased() else {
+        guard let name = nameTextField.text?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) else {
             print(.x, "Could not generate shortcut because name could not be read.")
             return nil
         }
@@ -197,6 +313,8 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // Once the shortcut is unique, stop adding characters
             if shortcutIsValid(shortcut) { break }
         }
+        
+        // TODO: Add incremental number until unique
 
         print(.o, "Automatically set shortcut to \"\(shortcut)\".")
         
@@ -204,30 +322,6 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
 //        shortcutChanged()
         
         return shortcut
-    }
-    
-    
-    // Transition immediately to URL details view if adding an engine
-    // Note: This cannot be placed in viewDidLoad or visual rendering errors could creep up
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        // For app extension (note this used to be called AFTER the segue; trying earlier for now):
-        // Since we're calling this twice, don't execute if it worked the first time
-        #if EXTENSION
-            if hostAppEngineName != nil {
-                print(.n, "Already attempted on time to create engine object in viewWillAppear.")
-            } else if !viewDidAppear {
-                // This won't be tried again if it's not the first time the view appeared
-                updateView()
-            }
-        #endif
-        
-        // Only segue automatically if adding and when first appearing
-        if !viewDidAppear && engine == nil {
-            viewDidAppear.toggle()
-            performSegue(withIdentifier: SegueKeys.urlDetails, sender: nil)
-        }
     }
     
     
@@ -240,7 +334,10 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     /// Update the shortcut text field colour, and icon label when the shortcut changes if there's no image.
     @IBAction func shortcutChanged() {
-        print(.n, "Parent: \"Shortcut changed.\"")
+        // Make sure any user-entered shortcut never contains spaces
+        shortcutTextField.text = shortcutTextField.text?.components(separatedBy: .whitespacesAndNewlines).joined()
+        
+//        print(.n, "Parent: \"Shortcut changed.\"")
         // Set icon label to reflect shortcut, but only if there's no image already supplied
         if engineIconImage.image == nil,
             let shortcut = shortcutTextField.text {
@@ -538,7 +635,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         // baseUrl and queries should be included in `engine != nil` (SearchEngine can't have nil baseUrl/queries)
         // TODO: Include changes for remaining parameters as we add them to the view
         guard engine != nil,
-            let name = nameTextField.text,
+            let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
             let shortcut = shortcutTextField.text else {
                 print(.x, "Error detecting engine or reading user entered information.")
                 return
@@ -566,9 +663,14 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         }
         destination.delegate = self
         
-        // In the case of the app extension, this will pass the URL scraped from the host, if available
-        // If the engine already exists (main or extension), engine's URL will be passed
-        if engine == nil {
+        // If we're using details from an incomplete OpenSearch attempt, use that URL.
+        // In the case of the app extension, this will pass the URL scraped from the host, if available.
+        // If the engine already exists (main or extension), engine's URL will be passed.
+        if let openSearch = openSearch,
+            let openSearchUrl = openSearch.url,
+            engine == nil {
+            destination.openSearchUrl = openSearchUrl.absoluteString
+        } else if engine == nil {
             destination.hostAppUrlString = hostAppUrlString
         } else {
             destination.engine = engine

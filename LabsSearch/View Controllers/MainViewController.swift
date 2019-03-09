@@ -56,7 +56,7 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         
         // Set text size in search field programatically to keep iOS<11 happy
         if #available(iOS 11.0, *) {
-            print(.o, "Using iOS 11+; using large title font for search field.")
+            print(.i, "Using iOS 11+; using large title font for search field.")
             searchTextField.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         } else {
             // Earlier versions use storyboard default ("Title 1" style)
