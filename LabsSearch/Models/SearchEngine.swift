@@ -78,11 +78,23 @@ struct SearchEngines {
     }
     
     // An array of all engine shortcuts in alphabetical order
+    // The old way sorted by shortcut, but now we sort them by engine name
     // TODO: This might be an expensive way to do this; should we refactor?
+//    var allShortcuts: [String] {
+//        get {
+//            let array = allEngines.keys.map { $0 }
+//            return array.sorted()
+//        }
+//    }
+    
     var allShortcuts: [String] {
         get {
-            let array = allEngines.keys.map { $0 }
-            return array.sorted()
+            // Make an array of arrays of every engine [[shortcut, name]]
+            var shortcutsAndNames = allEngines.values.map { [$0.shortcut, $0.name] }
+            // Sort these alphabetically using the engine name
+            shortcutsAndNames = shortcutsAndNames.sorted { $1[1] > $0[1] }
+            // Return a simple array of [shortcuts], but this is still sorted by alphabetical names
+            return shortcutsAndNames.map { $0[0] }
         }
     }
     

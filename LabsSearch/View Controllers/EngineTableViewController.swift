@@ -43,7 +43,7 @@ class EngineTableViewController: UITableViewController {
         if let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
             extensionDidChangeData {
             
-            print(.n, "Reloading table to reflect changes made by the action extension.")
+            print(.i, "Reloading table to reflect changes made by the action extension.")
             // This is hacky, but it updates the VC's copy of the engines list to match the global copy
             engines = SearchEngines.shared.allEngines
             shortcuts = SearchEngines.shared.allShortcuts
@@ -62,7 +62,7 @@ class EngineTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellKeys.engineTable, for: indexPath) as! EngineTableViewCell
         
-        print(.n, "Setting up cell from available shortcuts: \(shortcuts)")
+        print(.i, "Setting up cell from available shortcuts: \(shortcuts)")
         
         // Perform all setup necessary before displaying row
         prepareCell(cell, at: indexPath)
