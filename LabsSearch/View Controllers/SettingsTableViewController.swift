@@ -250,8 +250,11 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
             let alert = UIAlertController(title: NSLocalizedString("Settings.resetAppAlert-Title", comment: ""), message: NSLocalizedString("Settings.resetAppAlert-Message", comment: ""), preferredStyle: .alert)
             // Add actions
             alert.addAction(UIAlertAction(title: NSLocalizedString("Settings.resetAppAlert-Reset", comment: ""), style: .destructive) { alert in
-                self.resetApp()
-                self.navigationController?.popViewController(animated: true)
+                // This throws a small error is we don't force it onto the main thread
+                DispatchQueue.main.async {
+                    self.resetApp()
+                    self.navigationController?.popViewController(animated: true)
+                }
             })
             alert.addAction(UIAlertAction(title: NSLocalizedString("Settings.resetAppAlert-Cancel", comment: ""), style: .cancel) { alert in
                 // If the user chooses cancel, just deselect the row

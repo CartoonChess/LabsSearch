@@ -152,7 +152,8 @@ struct SearchEngines {
             // Overwrite old engines save list, if it exists
             saveEngines()
             // Set the default to Google; if that's missing, set it to the first available engine
-            defaultEngine = allEngines["g"] ?? allEngines[allShortcuts.first!]
+            let defaultShortcut = NSLocalizedString("SearchEngine.loadEngines-DefaultEngineShortcut", comment: "")
+            defaultEngine = allEngines[defaultShortcut] ?? allEngines[allShortcuts.first!]
             // Copy default engine images to user directory
             copyDefaultImages()
         }
@@ -172,52 +173,52 @@ struct SearchEngines {
         
         let engines = [
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-Google", comment: ""),
-                shortcut: "g",
+                name: NSLocalizedString("SearchEngine.defaultEngines-GoogleName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-GoogleShortcut", comment: ""),
                 baseUrl: URL(string: "https://www.google.com/search")!,
                 queries: ["q": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-AppleMaps", comment: ""),
-                shortcut: "m",
+                name: NSLocalizedString("SearchEngine.defaultEngines-AppleMapsName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-AppleMapsShortcut", comment: ""),
                 baseUrl: URL(string: "https://maps.apple.com/")!,
                 queries: ["q": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-NamuWiki", comment: ""),
-                shortcut: "nw",
+                name: NSLocalizedString("SearchEngine.defaultEngines-NamuWikiName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-NamuWikiShortcut", comment: ""),
                 baseUrl: URL(string: "https://namu.wiki/go/\(termsPlaceholder)")!,
                 queries: [:],
                 isEnabled: true),
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-Naver", comment: ""),
-                shortcut: "n",
+                name: NSLocalizedString("SearchEngine.defaultEngines-NaverName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-NaverShortcut", comment: ""),
                 baseUrl: URL(string: "https://search.naver.com/search.naver")!,
                 queries: ["query": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-NaverKoEnDictionary", comment: ""),
-                shortcut: "nd",
+                name: NSLocalizedString("SearchEngine.defaultEngines-NaverKoEnDictionaryName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-NaverKoEnDictionaryShortcut", comment: ""),
                 baseUrl: URL(string: "https://endic.naver.com/search.nhn")!,
                 queries: ["query": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-QDWiki", comment: ""),
-                shortcut: "q",
+                name: NSLocalizedString("SearchEngine.defaultEngines-QDWikiName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-QDWikiShortcut", comment: ""),
                 baseUrl: URL(string: "http://www.qetuodesigns.com/wiki/")!,
                 queries: [
                     "pagename": "Site.Search",
                     "q": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-Wikipedia", comment: ""),
-                shortcut: "w",
+                name: NSLocalizedString("SearchEngine.defaultEngines-WikipediaName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-WikipediaShortcut", comment: ""),
                 baseUrl: URL(string: NSLocalizedString("SearchEngine.defaultEngines-WikipediaURL", comment: ""))!,
                 queries: ["search": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-YouTube", comment: ""),
-                shortcut: "y",
+                name: NSLocalizedString("SearchEngine.defaultEngines-YouTubeName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-YouTubeShortcut", comment: ""),
                 baseUrl: URL(string: "https://www.youtube.com/results")!,
                 queries: ["search_query": termsPlaceholder],
                 isEnabled: true)
@@ -250,6 +251,7 @@ struct SearchEngines {
             return
         }
         
+        // Check that the "Icons" folder in user directory exists, otherwise create it
         if FileManager.default.fileExists(atPath: userImagesUrl.path) {
             print(.i, "Found user images directory at \(userImagesUrl).")
         } else {
@@ -262,35 +264,65 @@ struct SearchEngines {
             }
         }
         
-        for shortcut in allShortcuts {
-            // All images are named after the search shortcut
-            let imageName = shortcut
+        // Path to the default icons bundle
+        let mainBundlePath = Bundle.main.resourcePath
+        let iconBundlePath = mainBundlePath! + "/Icons.bundle"
+        
+        // We will collect the names of the icons (named after engines)
+        var engineNames = [String]()
+        
+        do {
+            engineNames = try FileManager.default.contentsOfDirectory(atPath: iconBundlePath)
+        } catch {
+            print(.x, "Attempted to fetch icon names from path \(iconBundlePath) but encountered the following error: \(error)")
+        }
+        
+        for oldIconName in engineNames {
             
-            // Copying images from app assets
-            if let sourceImage = UIImage(named: "Icons/\(shortcut)") {
-                print(.o, "Default image for engine with shortcut \"\(shortcut)\" found; proceeding to copy to user directory.")
-                
-                // TODO: PNGs don't need a file extension?
-                let destinationPath = userImagesUrl.appendingPathComponent(imageName)
-                
-                // Convert PNG to raw data
-                if let data = sourceImage.pngData() {
-                    // Try to write data to user directory
-                    do {
-                        try data.write(to: destinationPath)
-                        print(.o, "Copied image to \(destinationPath).")
-                    } catch {
-                        print(.x, "Failed to write image data to user directory; error: \(error)")
-                    }
-                } else {
-                    print(.x, "Failed to convert default image to PNG data.")
-                }
-            } else {
-                // No need to continue this engine if there is no default image for it
-                print(.n, "No default icon included for engine with shortcut \"\(shortcut)\".")
+            // newIconName will be set to "!" if localization doesn't exist for some reason
+            // This suggests that search engine isn't in use in that language
+            let newIconName = NSLocalizedString("SearchEngine.defaultEngines-\(oldIconName)Shortcut", value: "!", comment: "")
+            
+            // If this localization doesn't use that engine, skip it
+            // FIXME: This skips the icon, but leaves a broken engine!
+            //- loadDefaultEngines() must be configured on a per-localization basis.
+            guard newIconName != "!" else {
+                print(.n, "Skipped \(oldIconName) because this localization does not use it.")
+                continue
+            }
+            
+            // Paths for default icon from bundle and where to copy it to user folder
+            let sourcePath = "\(iconBundlePath)/\(oldIconName)"
+            let destinationPath = userImagesUrl.appendingPathComponent(newIconName)
+            
+            // Convert data file to image, then to image data
+            guard let sourceImage = UIImage(named: sourcePath),
+                let data = sourceImage.pngData() else {
+                    print(.x, "Failed to fetch or convert default image to PNG data.")
+                    continue
+            }
+            
+            print(.i, "Default image for \"\(oldIconName)\" found; proceeding to copy to user directory.")
+            
+            // Try to write data to user directory
+            do {
+                try data.write(to: destinationPath)
+                print(.o, "Copied image \"\(newIconName)\".")
+            } catch {
+                print(.x, "Failed to write image data to user directory; error: \(error)")
             }
             
         }
+        
+//        // This was an old method, kept here in case we ever want to change localizaitons on the fly again.
+//        let englishBundlePath = Bundle.main.path(forResource: "en", ofType: "lproj")!
+//        let englishBundle = Bundle(path: englishBundlePath)!
+//        let localizedString = NSLocalizedString("SearchEngine.defaultEngines-GoogleShortcut", bundle: englishBundle, comment: "")
+//
+//        let english = localizedString
+//        let current = NSLocalizedString("SearchEngine.defaultEngines-GoogleShortcut", comment: "")
+//        print("english: \(english)")
+//        print("current: \(current)")
         
     }
     

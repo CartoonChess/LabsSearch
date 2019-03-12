@@ -10,19 +10,34 @@
 
 // MARK: - Search Engine
 
-"SearchEngine.defaultEngines-Google" = "구글";
-"SearchEngine.defaultEngines-AppleMaps" = "애플 지도";
-"SearchEngine.defaultEngines-NamuWiki" = "나무위키";
-"SearchEngine.defaultEngines-Naver" = "네이버";
-"SearchEngine.defaultEngines-NaverKoEnDictionary" = "네이버 한영사전";
-"SearchEngine.defaultEngines-QDWiki" = "QD Wiki";
-"SearchEngine.defaultEngines-Wikipedia" = "위키피디아";
+// MARK: Names
+"SearchEngine.defaultEngines-GoogleName" = "구글";
+"SearchEngine.defaultEngines-AppleMapsName" = "애플 지도";
+"SearchEngine.defaultEngines-NamuWikiName" = "나무위키";
+"SearchEngine.defaultEngines-NaverName" = "네이버";
+"SearchEngine.defaultEngines-NaverKoEnDictionaryName" = "네이버 한영사전";
+"SearchEngine.defaultEngines-QDWikiName" = "QD Wiki";
+"SearchEngine.defaultEngines-WikipediaName" = "위키피디아";
+"SearchEngine.defaultEngines-YouTubeName" = "유투브";
+
+// MARK: Shortcuts
+"SearchEngine.defaultEngines-GoogleShortcut" = "ㄱ";
+"SearchEngine.defaultEngines-AppleMapsShortcut" = "ㅈ";
+"SearchEngine.defaultEngines-NamuWikiShortcut" = "ㄴㅁ";
+"SearchEngine.defaultEngines-NaverShortcut" = "ㄴ";
+"SearchEngine.defaultEngines-NaverKoEnDictionaryShortcut" = "ㄴㅅ";
+"SearchEngine.defaultEngines-QDWikiShortcut" = "q";
+"SearchEngine.defaultEngines-WikipediaShortcut" = "ㅇㅋ";
+"SearchEngine.defaultEngines-YouTubeShortcut" = "ㅇ";
+
+// MARK: URLs
 "SearchEngine.defaultEngines-WikipediaURL" = "https://ko.m.wikipedia.org/w/";
-"SearchEngine.defaultEngines-YouTube" = "유투브";
+
+// MARK: Default engine shortcut
+"SearchEngine.loadEngines-DefaultEngineShortcut" = "ㄴ";
 
 
 // MARK: - Settings
-
 
 // MARK: Stay In App explanation
 "Settings.stayInAppFooter-On" = "가능한 경우 검색 결과가 앱 내에서 보여집니다.";

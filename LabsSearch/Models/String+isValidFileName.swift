@@ -12,7 +12,7 @@ extension CharacterSet {
     
     // Create character set including colon, forward slash, and other undesirables
     static var invalidFileNameCharacters: CharacterSet {
-        var characters = CharacterSet(charactersIn: ":/")
+        var characters = CharacterSet(charactersIn: ":/\\")
         characters.formUnion(.newlines)
         characters.formUnion(.controlCharacters)
         characters.formUnion(.illegalCharacters)
