@@ -87,20 +87,54 @@ struct SearchEngines {
 //        }
 //    }
     
+    
+    /// Shortcuts for all engines, including disabled ones, alphabetically by engine name.
     var allShortcuts: [String] {
         get {
-            // Make an array of arrays of every engine [[shortcut, name]]
-            var shortcutsAndNames = allEngines.values.map { [$0.shortcut, $0.name] }
-            // Sort these alphabetically using the engine name
-            shortcutsAndNames = shortcutsAndNames.sorted { $1[1] > $0[1] }
-            // Return a simple array of [shortcuts], but this is still sorted by alphabetical names
-            return shortcutsAndNames.map { $0[0] }
+//            // Make an array of arrays of every engine [[shortcut, name]]
+//            var shortcutsAndNames = allEngines.values.map { [$0.shortcut, $0.name] }
+//            // Sort these alphabetically using the engine name
+//            shortcutsAndNames = shortcutsAndNames.sorted { $1[1] > $0[1] }
+//            // Return a simple array of [shortcuts], but this is still sorted by alphabetical names
+//            return shortcutsAndNames.map { $0[0] }
+            return getShortcuts()
+        }
+    }
+    
+    /// Shortcuts for enabled engines, alphabetically by engine name.
+    var enabledShortcuts: [String] {
+        get {
+//            // Make an array of arrays of every enabled engine [[shortcut, name]]
+//            var shortcutsAndNames = allEngines.values.filter({$0.isEnabled}).map { [$0.shortcut, $0.name] }
+//            // Sort these alphabetically using the engine name
+//            shortcutsAndNames = shortcutsAndNames.sorted { $1[1] > $0[1] }
+//            // Return a simple array of [shortcuts], but this is still sorted by alphabetical names
+//            return shortcutsAndNames.map { $0[0] }
+            return getShortcuts(forEnabledEnginesOnly: true)
         }
     }
     
     // This unlikely string will be the placeholder for the user's search terms
 //    let termsPlaceholder: String = "F@r=z&L;e/h?Q:M p\"T`O<P]w[s>I#p%z}z{T\\|^a~"
     let termsPlaceholder = "5C5WRbhx88ax8e7Xb7cOVXSjAFJgtKHs09DKd7E4IvemJRKEIwdqglpAvhvksgo9GjPI5cW8uWcOelAVwzt2ErQFijKUap5UdIjy"
+    
+    
+    func getShortcuts(forEnabledEnginesOnly: Bool = false) -> [String] {
+        var engines = allEngines
+        
+        // Remove disabled engines, if desired
+        if forEnabledEnginesOnly {
+            engines = allEngines.filter({$0.value.isEnabled})
+        }
+        
+        // Make an array of arrays of every engine [[shortcut, name]]
+        var shortcutsAndNames = engines.values.map { [$0.shortcut, $0.name] }
+        
+        // Sort these alphabetically using the engine name
+        shortcutsAndNames = shortcutsAndNames.sorted { $1[1] > $0[1] }
+        // Return a simple array of [shortcuts], but this is still sorted by alphabetical names
+        return shortcutsAndNames.map { $0[0] }
+    }
     
     // MARK: - Saving and loading properties and methods
     

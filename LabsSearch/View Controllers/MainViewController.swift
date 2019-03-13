@@ -56,7 +56,6 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         
         // Set text size in search field programatically to keep iOS<11 happy
         if #available(iOS 11.0, *) {
-            print(.i, "Using iOS 11+; using large title font for search field.")
             searchTextField.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         } else {
             // Earlier versions use storyboard default ("Title 1" style)
@@ -119,6 +118,9 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         // Set up special attributes for shortcut text
         let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.lightGray
+//            .foregroundColor: UIColor.white,
+//            .backgroundColor: UIColor.lightGray,
+//            .kern: 100
         ]
         
         // Replace text field text with coloured copy
@@ -148,15 +150,7 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
     }
     
     
-    // TODO: Keyboard shouldn't cover search field (do we need a scroll view?)
+    // FIXME: Keyboard shouldn't cover search field (do we need a scroll view?)
     // TODO: Search button (for if user prefers this over return key); below?
-    
-    
-    /*
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

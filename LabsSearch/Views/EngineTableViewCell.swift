@@ -19,6 +19,9 @@ class EngineTableViewCell: UITableViewCell, EngineIconViewController {
         }
     }
     
+    /// Transparency level applied to all views when engine isEnabled is false
+    var disabledAlpha: CGFloat = 0.3
+    
     @IBOutlet weak var engineIconView: EngineIconView!
     @IBOutlet weak var engineIconImage: EngineIconImageView!
     @IBOutlet weak var engineIconLabel: EngineIconLabel!
@@ -27,9 +30,9 @@ class EngineTableViewCell: UITableViewCell, EngineIconViewController {
     
     
     // Initialization
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
+//    override func awakeFromNib() {
+//        super.awakeFromNib()
+//    }
     
     
     /// Set cell parameters after cell is created.
@@ -46,8 +49,8 @@ class EngineTableViewCell: UITableViewCell, EngineIconViewController {
         // Dim the cell if the engine is disabled
         // TODO: We should probably split enabled/disabled engines between two sections
         if !engine.isEnabled {
-            engineIconView.alpha = 0.5
-            engineNameLabel.alpha = 0.5
+            engineIconView.alpha = disabledAlpha
+            engineNameLabel.alpha = disabledAlpha
         }
     }
     
@@ -86,9 +89,12 @@ class AllEnginesTableViewCell: EngineTableViewCell {
         }
         
         engineShortcutLabel.text = engine.shortcut
+        
+        // Dim additional elements when engine is disabled
         if !engine.isEnabled {
-            engineShortcutLabel.alpha = 0.5
+            engineShortcutLabel.alpha = disabledAlpha
         }
+        
         // TODO: Link IBOutlets, then enable this line
 //        engineIsEnabled.isOn = engine.isEnabled
     }

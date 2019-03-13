@@ -26,6 +26,7 @@ class EngineTableViewController: UITableViewController {
     // TODO: Is this... bad form?
     var engines = SearchEngines.shared.allEngines
     var shortcuts = SearchEngines.shared.allShortcuts
+    var enabledShortcuts = SearchEngines.shared.enabledShortcuts
 
     
     // MARK: - Methods
@@ -71,26 +72,30 @@ class EngineTableViewController: UITableViewController {
     }
     
     func prepareCell(_ cell: EngineTableViewCell, at indexPath: IndexPath) {
-        // Get engine info from engines object
-        guard let engine = engines[shortcuts[indexPath.row]] else {
-            print(.x, "Failed to unwrap engine for cell.")
-            return
+        var shortcuts = self.shortcuts
+        
+        // List all engines or just enabled ones, depending on the view controller
+        switch self {
+        case is DefaultEngineTableViewController:
+            shortcuts = enabledShortcuts
+//        case is AllEnginesTableViewController:
+//            print(.o, "AllETVC!")
+        default:
+//            let engine = engines[shortcuts[indexPath.row]]
+            break
         }
+        
+        // Get engine info from engines object
+//        guard let engine = engines[shortcuts[indexPath.row]] else {
+//            print(.x, "Failed to unwrap engine for cell.")
+//            return
+//        }
+        let engine = engines[shortcuts[indexPath.row]]
+        
         
         // Configure the cell
         // Cell class's engine property uses didSet to configure after setting engine here
         cell.engine = engine
     }
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }

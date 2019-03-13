@@ -94,7 +94,9 @@ struct SearchController {
             // If execution continues beyond this point, text was entered, but engine was not set
             // Based on the above logic, this if should always be entered with currentSearchEngine set to nil
             
-            if let detectedEngine = SearchEngines.shared.allEngines[possibleShortcut] {
+//            if let detectedEngine = SearchEngines.shared.allEngines[possibleShortcut] {
+            if SearchEngines.shared.enabledShortcuts.contains(possibleShortcut),
+                let detectedEngine = SearchEngines.shared.allEngines[possibleShortcut] {
                 print(.o, "Detected engine \(detectedEngine.name) from shortcut \"\(possibleShortcut)\".")
                 if unsplitText != detectedEngine.shortcut {
                     print(.o, "Space or additional text were entered after the shortcut; saving engine.")
@@ -105,7 +107,7 @@ struct SearchController {
                     delegate?.didUpdateSearch(detectedEngine: detectedEngine)
                 }
             } else {
-                print(.n, "Shortcut \"\(possibleShortcut)\" doesn't match any engine.")
+                print(.n, "Shortcut \"\(possibleShortcut)\" doesn't match any enabled engine.")
                 delegate?.didUpdateSearch(detectedEngine: nil)
             }
             
@@ -143,7 +145,9 @@ struct SearchController {
         //- Maybe falling back to this method if set to nil? Or should we trust that and avoid checking the shortcut altogether?..
         //- Alternately, we may be able to call detectEngine at the beginning of this function;
         //- But that could be an issue with the delegate, not to mention the crazy if/else web...
-        if let shortcut = shortcut, let unwrappedEngine = SearchEngines.shared.allEngines[shortcut] {
+        if let shortcut = shortcut,
+            SearchEngines.shared.enabledShortcuts.contains(shortcut),
+            let unwrappedEngine = SearchEngines.shared.allEngines[shortcut] {
             print(.o, "Found engine \(unwrappedEngine.name); preparing for search.")
             searchEngine = unwrappedEngine
         } else {

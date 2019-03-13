@@ -25,6 +25,12 @@ class DefaultEngineTableViewController: EngineTableViewController {
 
 
     // MARK: - Table view data source
+    
+    // We have to override the EngineTableViewController so we can exclude disabled engines
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return engines.count
+        return enabledShortcuts.count
+    }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellKeys.defaultEngineTable, for: indexPath) as! EngineTableViewCell
@@ -34,7 +40,8 @@ class DefaultEngineTableViewController: EngineTableViewController {
         
         // Show the checkmark if this is the default
         if let defaultEngine = selectedEngine,
-            engines[shortcuts[indexPath.row]]?.shortcut == defaultEngine.shortcut {
+//            engines[shortcuts[indexPath.row]]?.shortcut == defaultEngine.shortcut {
+            enabledShortcuts[indexPath.row] == defaultEngine.shortcut {
             print(.o, "Showing checkmark in default engine cell.")
             cell.accessoryType = .checkmark
             selectedEngineCell = cell
@@ -61,7 +68,7 @@ class DefaultEngineTableViewController: EngineTableViewController {
         selectedEngineCell?.accessoryType = .checkmark
         
         // Update default engine in local view with var and defaults using delegate
-        if let engine = engines[shortcuts[indexPath.row]] {
+        if let engine = engines[enabledShortcuts[indexPath.row]] {
             selectedEngine = engine
             delegate?.didSelectDefaultEngine(engine) //*
             // FIXME: We hit a critical error trying to unwrap an optional here
