@@ -77,7 +77,6 @@ class AllEnginesTableViewController: EngineTableViewController {
         shortcuts = SearchEngines.shared.allShortcuts // preserves alpha-order
         engines.removeValue(forKey: oldShortcut)
         engines[engineAfterUpdates.shortcut] = engineAfterUpdates
-        // FIXME: This table and default engines table apparently order by shortcut... Change to name later
         tableView.reloadData()
         
         // Update save data
@@ -175,14 +174,6 @@ class AllEnginesTableViewController: EngineTableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // TODO: Maybe we should have one segue and look for a selected cell instead
         // Actually, with no data to pass, AddEngineSegue is all handled through the storyboard
-        
-        // FIXME: This error shouldn't throw up if we're just going over to OpS VC
-        // Get the new view controller using segue.destination
-//        guard let destinationNavigationController = segue.destination as? UINavigationController,
-//            let destination = destinationNavigationController.topViewController as? AddEditEngineTableViewController else {
-//                print(.x, "Add/edit view or its parent navigation controller could not be loaded.")
-//                return
-//        }
         
         guard let destinationNavigationController = segue.destination as? UINavigationController else {
             print(.x, "Attempted to segue from AllEngines VC to wrong view.")

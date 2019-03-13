@@ -73,7 +73,6 @@ class EngineTableViewController: UITableViewController {
     func prepareCell(_ cell: EngineTableViewCell, at indexPath: IndexPath) {
         // Get engine info from engines object
         guard let engine = engines[shortcuts[indexPath.row]] else {
-//        guard let engine = SearchEngines.shared.allEngines[shortcuts[indexPath.row]] else {
             print(.x, "Failed to unwrap engine for cell.")
             return
         }

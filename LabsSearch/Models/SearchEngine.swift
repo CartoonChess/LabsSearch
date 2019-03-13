@@ -19,7 +19,7 @@ struct SearchEngine: Equatable, Codable {
     var queries: [String: String]
 //    var image: UIImage? = nil
 //    var image: Data? = nil
-    var isEnabled: Bool = true // TODO: Enable/disable from preferences view
+    var isEnabled: Bool
     
     func getImage() -> UIImage? {
         // Make sure the image actually exists; otherwise give up
@@ -201,7 +201,7 @@ struct SearchEngines {
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-NamuWikiShortcut", comment: ""),
                 baseUrl: URL(string: "https://namu.wiki/go/\(termsPlaceholder)")!,
                 queries: [:],
-                isEnabled: true),
+                isEnabled: false),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-NaverName", comment: ""),
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-NaverShortcut", comment: ""),
@@ -213,7 +213,7 @@ struct SearchEngines {
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-NaverKoEnDictionaryShortcut", comment: ""),
                 baseUrl: URL(string: "https://endic.naver.com/search.nhn")!,
                 queries: ["query": termsPlaceholder],
-                isEnabled: true),
+                isEnabled: false),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-QDWikiName", comment: ""),
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-QDWikiShortcut", comment: ""),
@@ -221,7 +221,7 @@ struct SearchEngines {
                 queries: [
                     "pagename": "Site.Search",
                     "q": termsPlaceholder],
-                isEnabled: true),
+                isEnabled: false),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-WikipediaName", comment: ""),
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-WikipediaShortcut", comment: ""),
@@ -246,7 +246,7 @@ struct SearchEngines {
                 baseUrl: engine.baseUrl,
                 queries: engine.queries,
 //                image: image,
-                isEnabled: true)
+                isEnabled: engine.isEnabled)
             enginesWithShortcutsAndImages[newEngine.shortcut] = newEngine
         }
         

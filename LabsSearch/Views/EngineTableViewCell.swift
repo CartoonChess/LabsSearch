@@ -42,6 +42,13 @@ class EngineTableViewCell: UITableViewCell, EngineIconViewController {
         }
 
         engineNameLabel.text = engine.name
+        
+        // Dim the cell if the engine is disabled
+        // TODO: We should probably split enabled/disabled engines between two sections
+        if !engine.isEnabled {
+            engineIconView.alpha = 0.5
+            engineNameLabel.alpha = 0.5
+        }
     }
     
     
@@ -73,10 +80,16 @@ class AllEnginesTableViewCell: EngineTableViewCell {
     override func updateCell() {
         super.updateCell()
         
-        // TODO: Link IBOutlets, then enable these lines
-        //- Also need to deal with engine optional (declared in protocol via parent,
-        //- but also unwrapped in super function...)
-        engineShortcutLabel.text = engine?.shortcut
+        guard let engine = engine else {
+            print(.x, "Failed to unwrap engine for use in table cell.")
+            return
+        }
+        
+        engineShortcutLabel.text = engine.shortcut
+        if !engine.isEnabled {
+            engineShortcutLabel.alpha = 0.5
+        }
+        // TODO: Link IBOutlets, then enable this line
 //        engineIsEnabled.isOn = engine.isEnabled
     }
     
