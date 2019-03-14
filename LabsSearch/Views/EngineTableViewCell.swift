@@ -47,8 +47,12 @@ class EngineTableViewCell: UITableViewCell, EngineIconViewController {
         engineNameLabel.text = engine.name
         
         // Dim the cell if the engine is disabled
+        // We set alpha on enabled as well so it shows properly in AllEngines after the user toggles this setting
         // TODO: We should probably split enabled/disabled engines between two sections
-        if !engine.isEnabled {
+        if engine.isEnabled {
+            engineIconView.alpha = 1
+            engineNameLabel.alpha = 1
+        } else {
             engineIconView.alpha = disabledAlpha
             engineNameLabel.alpha = disabledAlpha
         }
@@ -91,7 +95,9 @@ class AllEnginesTableViewCell: EngineTableViewCell {
         engineShortcutLabel.text = engine.shortcut
         
         // Dim additional elements when engine is disabled
-        if !engine.isEnabled {
+        if engine.isEnabled {
+            engineShortcutLabel.alpha = 1
+        } else {
             engineShortcutLabel.alpha = disabledAlpha
         }
         

@@ -38,6 +38,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     // Index paths for cells
     enum Cell {
+        static let engineName: IndexPath = [0, 0]
         static let deleteButton: IndexPath = [2, 0]
     }
     
@@ -62,11 +63,16 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     @IBOutlet weak var engineIconLabel: EngineIconLabel!
     
     @IBOutlet weak var nameTextField: TableViewCellTextField!
+    @IBOutlet weak var enabledToggle: UISwitch!
     @IBOutlet weak var shortcutTextField: TableViewCellTextField!
     
     @IBOutlet weak var urlDetailsChangedLabel: UILabel!
     
     @IBOutlet weak var deleteButtonCell: UITableViewCell!
+    
+    // In viewDidLoad, have this constraint ignore the hidden enabledToggle and fill the whole cell
+    @IBOutlet weak var nameTextFieldTrailingConstraint: NSLayoutConstraint!
+    
     
     
     // MARK: - Methods
@@ -103,6 +109,15 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // Hide the delete button
             deleteButtonCell.isHidden = true
             
+            // Hide the enabled toggle and stretch out the name field
+            enabledToggle.isHidden = true
+//            nameTextField.constraints.
+//            nameTextField.translatesAutoresizingMaskIntoConstraints = false
+//            nameTextFieldTrailingConstraint.isActive = false
+//            nameTextFieldTrailingConstraint = nameTextField.rightAnchor.constraint(equalTo: view.rightAnchor)
+////            nameTextFieldTrailingConstraint = nameTextField.rightAnchor.constraint(equalTo: nameTextField.layer.)
+//            nameTextFieldTrailingConstraint.isActive = true
+            
             // Check if an OpS object has been passed in and if so use the URL and name
             if let openSearch = openSearch {
                 print(.o, "Using OpenSearch engine named \"\(openSearch.name)\".")
@@ -126,6 +141,8 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // Populate fields
             setIcon()
             nameTextField.text = engine.name
+            enabledToggle.isOn = engine.isEnabled
+            enabledToggleChanged()
             shortcutTextField.text = engine.shortcut
             
             // Even if editing, only let corners be rounded once
@@ -379,7 +396,19 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             return false
         }
     }
-
+    
+    
+    /// Dim the engine icon when the engine is disabled.
+    @IBAction func enabledToggleChanged() {
+        if enabledToggle.isOn {
+            engineIconView.alpha = 1
+        } else {
+            engineIconView.alpha = 0.5
+        }
+        
+        updateSaveButton()
+    }
+    
 
     /// Enable the save button when all fields are filled out correctly.
     func updateSaveButton() {
@@ -503,6 +532,18 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     // MARK: - Table view
     
+    // Don't let the name row highlight if user taps around the isEnabled toggle
+    override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        switch indexPath {
+        case Cell.engineName:
+            return false
+        default:
+            // Other cells should be highlighted
+            // Note that the shortcut text field should occlude its row
+            return true
+        }
+    }
+    
     // MARK: Simulate button tap for delete button
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath {
@@ -552,7 +593,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             return
         }
         
-        print(.o, "Adding engine \(engine.name).")
+        print(.o, "Adding or modifying engine \(engine.name).")
         let shortcut = engine.shortcut
         
         // Add to shared object
@@ -633,7 +674,6 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     /// In the main app, this function should be called during the `prepare(for:)` segue function. In the action extension, which doesn't unwind, call this directly.
     func prepareForAddEditEngineUnwind() {
         // baseUrl and queries should be included in `engine != nil` (SearchEngine can't have nil baseUrl/queries)
-        // TODO: Include changes for remaining parameters as we add them to the view
         guard engine != nil,
             let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
             let shortcut = shortcutTextField.text else {
@@ -646,6 +686,8 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         // Update the object to be updated in the model in the all engines table
         engine?.name = name
         engine?.shortcut = shortcut
+        engine?.isEnabled = enabledToggle.isOn
+        
         
         // TODO: If we aren't going to continue looking for icons after this is dismissed, kill icon fetcher
         // URLSession.shared.invalidateAndCancel()
