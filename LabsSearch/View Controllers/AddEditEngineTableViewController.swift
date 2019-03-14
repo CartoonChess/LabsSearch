@@ -70,9 +70,6 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     @IBOutlet weak var deleteButtonCell: UITableViewCell!
     
-    // In viewDidLoad, have this constraint ignore the hidden enabledToggle and fill the whole cell
-    @IBOutlet weak var nameTextFieldTrailingConstraint: NSLayoutConstraint!
-    
     
     
     // MARK: - Methods
@@ -106,17 +103,9 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             
             // Indicate that the URL is not set
             urlDetailsChangedLabel.isHidden = false
-            // Hide the delete button
-            deleteButtonCell.isHidden = true
-            
-            // Hide the enabled toggle and stretch out the name field
+            // Hide the enabled toggle and delete button
             enabledToggle.isHidden = true
-//            nameTextField.constraints.
-//            nameTextField.translatesAutoresizingMaskIntoConstraints = false
-//            nameTextFieldTrailingConstraint.isActive = false
-//            nameTextFieldTrailingConstraint = nameTextField.rightAnchor.constraint(equalTo: view.rightAnchor)
-////            nameTextFieldTrailingConstraint = nameTextField.rightAnchor.constraint(equalTo: nameTextField.layer.)
-//            nameTextFieldTrailingConstraint.isActive = true
+            deleteButtonCell.isHidden = true
             
             // Check if an OpS object has been passed in and if so use the URL and name
             if let openSearch = openSearch {

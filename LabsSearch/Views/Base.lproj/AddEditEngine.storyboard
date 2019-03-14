@@ -66,29 +66,41 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="y8L-a9-9iD" customClass="TableViewCellTextField" customModule="Chears" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="310" height="43.5"/>
-                                                    <nil key="textColor"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
-                                                    <connections>
-                                                        <action selector="nameChanged:" destination="kQy-Ui-Ykl" eventType="editingChanged" id="kE7-Qu-nog"/>
-                                                    </connections>
-                                                </textField>
-                                                <switch hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aYW-Mo-VfI">
-                                                    <rect key="frame" x="310" y="6.5" width="51" height="31"/>
-                                                    <connections>
-                                                        <action selector="enabledToggleChanged" destination="kQy-Ui-Ykl" eventType="valueChanged" id="meP-PW-bIz"/>
-                                                    </connections>
-                                                </switch>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Kd2-Wm-HyG">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                                    <subviews>
+                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="y8L-a9-9iD" customClass="TableViewCellTextField" customModule="Chears" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="310" height="43.5"/>
+                                                            <nil key="textColor"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                                                            <connections>
+                                                                <action selector="nameChanged:" destination="kQy-Ui-Ykl" eventType="editingChanged" id="kE7-Qu-nog"/>
+                                                            </connections>
+                                                        </textField>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aYW-Mo-VfI">
+                                                            <rect key="frame" x="310" y="6.5" width="67" height="31"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="65" id="KQ8-pI-X2s"/>
+                                                            </constraints>
+                                                            <connections>
+                                                                <action selector="enabledToggleChanged" destination="kQy-Ui-Ykl" eventType="valueChanged" id="meP-PW-bIz"/>
+                                                            </connections>
+                                                        </switch>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="y8L-a9-9iD" firstAttribute="leading" secondItem="Kd2-Wm-HyG" secondAttribute="leading" id="1RU-Ks-p99"/>
+                                                        <constraint firstItem="y8L-a9-9iD" firstAttribute="top" secondItem="Kd2-Wm-HyG" secondAttribute="top" id="X8k-Gx-OHl"/>
+                                                        <constraint firstItem="aYW-Mo-VfI" firstAttribute="leading" secondItem="y8L-a9-9iD" secondAttribute="trailing" id="bxP-jZ-g7p"/>
+                                                        <constraint firstAttribute="bottom" secondItem="y8L-a9-9iD" secondAttribute="bottom" id="eDv-6M-oVM"/>
+                                                    </constraints>
+                                                </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="aYW-Mo-VfI" secondAttribute="trailing" constant="16" id="5Oq-6f-PNo"/>
-                                                <constraint firstAttribute="bottom" secondItem="y8L-a9-9iD" secondAttribute="bottom" id="EP4-om-fzb"/>
-                                                <constraint firstItem="aYW-Mo-VfI" firstAttribute="centerY" secondItem="72r-G6-36Z" secondAttribute="centerY" id="uCy-ym-TrP"/>
-                                                <constraint firstItem="y8L-a9-9iD" firstAttribute="leading" secondItem="72r-G6-36Z" secondAttribute="leading" id="vby-zi-s1w"/>
-                                                <constraint firstItem="aYW-Mo-VfI" firstAttribute="leading" secondItem="y8L-a9-9iD" secondAttribute="trailing" id="weC-Ro-qgr"/>
-                                                <constraint firstItem="y8L-a9-9iD" firstAttribute="top" secondItem="72r-G6-36Z" secondAttribute="top" id="wnA-ba-Ghb"/>
+                                                <constraint firstAttribute="trailing" secondItem="Kd2-Wm-HyG" secondAttribute="trailing" id="10a-n0-UgB"/>
+                                                <constraint firstItem="Kd2-Wm-HyG" firstAttribute="top" secondItem="72r-G6-36Z" secondAttribute="top" id="EIS-tC-80j"/>
+                                                <constraint firstAttribute="bottom" secondItem="Kd2-Wm-HyG" secondAttribute="bottom" id="LkH-oW-Vt9"/>
+                                                <constraint firstItem="Kd2-Wm-HyG" firstAttribute="leading" secondItem="72r-G6-36Z" secondAttribute="leading" id="TrG-Io-zlv"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -197,7 +209,6 @@
                         <outlet property="engineIconLabel" destination="zdb-9v-L09" id="AnZ-8e-iAY"/>
                         <outlet property="engineIconView" destination="d0l-ET-7U2" id="iz3-Db-eg6"/>
                         <outlet property="nameTextField" destination="y8L-a9-9iD" id="iij-Nd-89E"/>
-                        <outlet property="nameTextFieldTrailingConstraint" destination="weC-Ro-qgr" id="GN5-YY-YyA"/>
                         <outlet property="shortcutTextField" destination="I8j-4N-2gH" id="5bn-T3-ISc"/>
                         <outlet property="urlDetailsChangedLabel" destination="d1X-Kd-UI9" id="xOP-qf-SXu"/>
                         <segue destination="H9n-EM-0Qh" kind="unwind" identifier="DeleteEngineUnwindSegue" unwindAction="unwindToAllEnginesTableWithSegue:" id="3Rx-Mb-BnT"/>
