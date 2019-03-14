@@ -130,9 +130,17 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // Populate fields
             setIcon()
             nameTextField.text = engine.name
-            enabledToggle.isOn = engine.isEnabled
-            enabledToggleChanged()
             shortcutTextField.text = engine.shortcut
+            
+            // Disable toggle entirely if engine is default, otherwise set according to isEnabled property
+            if engine == SearchEngines.shared.defaultEngine {
+                enabledToggle.isEnabled = false
+                // Hide the delete button, too
+                deleteButtonCell.isHidden = true
+            } else {
+                enabledToggle.isOn = engine.isEnabled
+                enabledToggleChanged()
+            }
             
             // Even if editing, only let corners be rounded once
             viewDidAppear = true

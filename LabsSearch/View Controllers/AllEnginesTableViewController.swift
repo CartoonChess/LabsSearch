@@ -147,25 +147,28 @@ class AllEnginesTableViewController: EngineTableViewController {
             print(.n, "No matching image was found, so we are not trying to delete one.")
         }
         
-        // Handle cases where the user deletes the last engine or the default engine
-        
-        let allEngines = SearchEngines.shared.allEngines
-        
-        // If we've deleted the last engine, load the defaults
-        if allEngines.count == 0 {
-            // TODO: This doesn't refresh the view until we go out and return to it;
-            //- Anyway, we should have a more elegant approach to having no engines
-            //- (plus, we will likely make the default engines only hideable, not deleteable)
-            print(.n, "Deleted last engine; loading defaults.")
-            SearchEngines.shared.loadEngines()
-            tableView.reloadData()
-//        } else if UserDefaults.standard.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
-        } else if UserDefaults(suiteName: AppKeys.appGroup)?.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
-            // If this is the default engine, reflect our shared object (updates preferences automatically)
-            // TODO: We should handle default engine logic elsewhere; this is temporary
-            print(.n, "Deleted default engine; setting next available engine as new default.")
-            SearchEngines.shared.defaultEngine = allEngines.first?.value
-        }
+        // Default engine is no longer allowed to be disabled or deleted.
+//        // Handle cases where the user deletes the last engine or the default engine
+//
+//        let allEngines = SearchEngines.shared.allEngines
+//
+//        // If we've deleted the last engine, load the defaults
+//        if allEngines.count == 0 {
+//            // TODO: This doesn't refresh the view until we go out and return to it;
+//            //- Anyway, we should have a more elegant approach to having no engines
+//            //- (plus, we will likely make the default engines only hideable, not deleteable)
+//            print(.n, "Deleted last engine; loading defaults.")
+//            SearchEngines.shared.loadEngines()
+//            tableView.reloadData()
+////        } else if UserDefaults.standard.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
+//        } else if UserDefaults(suiteName: AppKeys.appGroup)?.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
+//            // If this is the default engine, reflect our shared object (updates preferences automatically)
+//            // TODO: We should handle default engine logic elsewhere; this is temporary
+//            print(.n, "Deleted default engine; setting next available engine as new default.")
+////            SearchEngines.shared.defaultEngine = allEngines.first?.value
+//            // FIXME: This will fail if all engines are disabled!
+//            SearchEngines.shared.defaultEngine = allEngines[SearchEngines.shared.enabledShortcuts.first!]
+//        }
     }
     
     
