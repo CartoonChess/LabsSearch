@@ -27,12 +27,17 @@ class EngineTableViewController: UITableViewController {
     var engines = SearchEngines.shared.allEngines
     var shortcuts = SearchEngines.shared.allShortcuts
     var enabledShortcuts = SearchEngines.shared.enabledShortcuts
+    var disabledShortcuts = SearchEngines.shared.disabledShortcuts
 
     
     // MARK: - Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print(.d, "shortcuts: \(shortcuts)")
+        print(.d, "enabledShortcuts: \(enabledShortcuts)")
+        print(.d, "disabledShortcuts: \(disabledShortcuts)")
         
         // If action extension added an engine, we need to reload the table
         // This watches for every time the main app enters the foreground on an engine table VC
@@ -78,10 +83,24 @@ class EngineTableViewController: UITableViewController {
         switch self {
         case is DefaultEngineTableViewController:
             shortcuts = enabledShortcuts
-//        case is AllEnginesTableViewController:
-//            print(.o, "AllETVC!")
+        case is AllEnginesTableViewController:
+            // Check if we're in enabled or disabled section
+            switch indexPath[0] {
+            case 0:
+                // Enabled engines
+                shortcuts = enabledShortcuts
+                break
+            case 1:
+                // Disabled engines
+                shortcuts = disabledShortcuts
+                break
+            default:
+                print(.x, "Attempting to load cells for a nonexistant section.")
+                return
+            }
         default:
 //            let engine = engines[shortcuts[indexPath.row]]
+            print(.x, "Attempted to load EngineTableViewCell in unsupported view controller.")
             break
         }
         

@@ -110,21 +110,40 @@ struct SearchEngines {
 //            shortcutsAndNames = shortcutsAndNames.sorted { $1[1] > $0[1] }
 //            // Return a simple array of [shortcuts], but this is still sorted by alphabetical names
 //            return shortcutsAndNames.map { $0[0] }
-            return getShortcuts(forEnabledEnginesOnly: true)
+            return getShortcuts(includeDisabledEngines: false)
         }
     }
     
-    // This unlikely string will be the placeholder for the user's search terms
-//    let termsPlaceholder: String = "F@r=z&L;e/h?Q:M p\"T`O<P]w[s>I#p%z}z{T\\|^a~"
-    let termsPlaceholder = "5C5WRbhx88ax8e7Xb7cOVXSjAFJgtKHs09DKd7E4IvemJRKEIwdqglpAvhvksgo9GjPI5cW8uWcOelAVwzt2ErQFijKUap5UdIjy"
+    var disabledShortcuts: [String] {
+        get {
+//            let allShortcuts = Set(self.allShortcuts)
+//            let enabledShortcuts = Set(self.enabledShortcuts)
+//            // FIXME: Does this maintain alphabetical order?
+////            return Array(allShortcuts.symmetricDifference(enabledShortcuts))
+//            var disabledShortcuts = Array(allShortcuts.symmetricDifference(enabledShortcuts))
+            return getShortcuts(includeEnabledEngines: false)
+        }
+    }
     
-    
-    func getShortcuts(forEnabledEnginesOnly: Bool = false) -> [String] {
+    /// Returns a list of engine shortcuts ordered alphabetically by engine name.
+    ///
+    /// - Parameters:
+    ///   - includeEnabledEngines: Whether to include enabled engines. Optional; defaults to `true`.
+    ///   - includeDisabledEngines: Whether to include disabled engines. Optional; defaults to `true`.
+    /// - Returns: An array of engine shortcuts.
+    ///
+    /// If both parameters are set to `false`, this function will return an empty array.
+    private func getShortcuts(includeEnabledEngines: Bool = true, includeDisabledEngines: Bool = true) -> [String] {
         var engines = allEngines
         
         // Remove disabled engines, if desired
-        if forEnabledEnginesOnly {
-            engines = allEngines.filter({$0.value.isEnabled})
+        if !includeDisabledEngines {
+            engines = engines.filter({$0.value.isEnabled})
+        }
+        
+        // Removes enabled engines
+        if !includeEnabledEngines {
+            engines = engines.filter({!$0.value.isEnabled})
         }
         
         // Make an array of arrays of every engine [[shortcut, name]]
@@ -135,6 +154,13 @@ struct SearchEngines {
         // Return a simple array of [shortcuts], but this is still sorted by alphabetical names
         return shortcutsAndNames.map { $0[0] }
     }
+    
+    
+    /// This unlikely string will be the placeholder for the user's search terms.
+    let termsPlaceholder = "5C5WRbhx88ax8e7Xb7cOVXSjAFJgtKHs09DKd7E4IvemJRKEIwdqglpAvhvksgo9GjPI5cW8uWcOelAVwzt2ErQFijKUap5UdIjy"
+    //    let termsPlaceholder: String = "F@r=z&L;e/h?Q:M p\"T`O<P]w[s>I#p%z}z{T\\|^a~"
+    
+    
     
     // MARK: - Saving and loading properties and methods
     

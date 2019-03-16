@@ -76,8 +76,11 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
     ///
     /// - Parameter sender: The search text field.
     @IBAction func searchTextFieldChanged(_ sender: UITextField) {
+//        sender.text = sender.text?.leadingSpacesRemoved()
+//        sender.attributedText = NSAttributedString(sender.attributedText?.string.leadingSpacesRemoved())
+        
         let unsplitText = sender.text
-        print(.o, "Search field changed to \"\(unsplitText ?? "nil")\".")
+//        print(.i, "Search field changed to \"\(unsplitText ?? "nil")\".")
         searchController.detectEngine(in: unsplitText)
     }
     

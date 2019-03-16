@@ -13,7 +13,7 @@
         <scene sceneID="c0g-a1-scP">
             <objects>
                 <tableViewController id="kQy-Ui-Ykl" customClass="AddEditEngineTableViewController" customModule="Chears" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="bt5-s4-Rrg">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="bt5-s4-Rrg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -73,9 +73,10 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="310" height="43.5"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                                                            <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                                             <connections>
                                                                 <action selector="nameChanged:" destination="kQy-Ui-Ykl" eventType="editingChanged" id="kE7-Qu-nog"/>
+                                                                <action selector="nameTextFieldReturnKeyPressed" destination="kQy-Ui-Ykl" eventType="primaryActionTriggered" id="nvi-N7-YpH"/>
                                                             </connections>
                                                         </textField>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aYW-Mo-VfI">
@@ -84,7 +85,7 @@
                                                                 <constraint firstAttribute="width" constant="65" id="KQ8-pI-X2s"/>
                                                             </constraints>
                                                             <connections>
-                                                                <action selector="enabledToggleChanged" destination="kQy-Ui-Ykl" eventType="valueChanged" id="meP-PW-bIz"/>
+                                                                <action selector="enabledToggleChanged:" destination="kQy-Ui-Ykl" eventType="valueChanged" id="n68-ar-YpD"/>
                                                             </connections>
                                                         </switch>
                                                     </subviews>
@@ -115,9 +116,10 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartQuotesType="no"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" enablesReturnKeyAutomatically="YES" smartDashesType="no" smartQuotesType="no"/>
                                                     <connections>
                                                         <action selector="shortcutChanged" destination="kQy-Ui-Ykl" eventType="editingChanged" id="McJ-TF-DLF"/>
+                                                        <action selector="shortcutTextFieldReturnKeyPressed" destination="kQy-Ui-Ykl" eventType="primaryActionTriggered" id="TZe-w9-aXe"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -133,28 +135,35 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Advanced Options" id="AD0-OO-J4n">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="W2a-yn-IkE" detailTextLabel="d1X-Kd-UI9" style="IBUITableViewCellStyleValue1" id="Zyf-C7-XTc">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="Zyf-C7-XTc">
                                         <rect key="frame" x="0.0" y="244" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Zyf-C7-XTc" id="2hd-06-ItR">
                                             <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Link Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="W2a-yn-IkE">
-                                                    <rect key="frame" x="16" y="12" width="88.5" height="20.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Link Details" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5IN-Np-NjY">
+                                                    <rect key="frame" x="16" y="17" width="88.5" height="10"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label hidden="YES" opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Not Set" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="d1X-Kd-UI9">
-                                                    <rect key="frame" x="282" y="12" width="58" height="20.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not Set" textAlignment="right" lineBreakMode="middleTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UNd-ch-Eye">
+                                                    <rect key="frame" x="112.5" y="6" width="228.5" height="31.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="5IN-Np-NjY" firstAttribute="top" secondItem="2hd-06-ItR" secondAttribute="topMargin" constant="6" id="658-bY-cSu"/>
+                                                <constraint firstAttribute="bottom" secondItem="UNd-ch-Eye" secondAttribute="bottom" constant="6" id="Ha1-K6-2C0"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="5IN-Np-NjY" secondAttribute="bottom" constant="6" id="TVY-jg-jsE"/>
+                                                <constraint firstAttribute="trailing" secondItem="UNd-ch-Eye" secondAttribute="trailing" id="WC8-PS-XlZ"/>
+                                                <constraint firstItem="UNd-ch-Eye" firstAttribute="top" secondItem="2hd-06-ItR" secondAttribute="top" constant="6" id="e5h-O4-lMf"/>
+                                                <constraint firstItem="UNd-ch-Eye" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5IN-Np-NjY" secondAttribute="trailing" constant="8" symbolic="YES" id="gjK-ox-9BB"/>
+                                                <constraint firstItem="5IN-Np-NjY" firstAttribute="leading" secondItem="2hd-06-ItR" secondAttribute="leadingMargin" id="shv-FH-uP6"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <segue destination="ZdH-wh-3Lf" kind="show" identifier="UrlDetailsSegue" id="6Nh-e7-T9b"/>
@@ -210,7 +219,7 @@
                         <outlet property="engineIconView" destination="d0l-ET-7U2" id="iz3-Db-eg6"/>
                         <outlet property="nameTextField" destination="y8L-a9-9iD" id="iij-Nd-89E"/>
                         <outlet property="shortcutTextField" destination="I8j-4N-2gH" id="5bn-T3-ISc"/>
-                        <outlet property="urlDetailsChangedLabel" destination="d1X-Kd-UI9" id="xOP-qf-SXu"/>
+                        <outlet property="urlDetailsChangedLabel" destination="UNd-ch-Eye" id="J8j-Gt-xpE"/>
                         <segue destination="H9n-EM-0Qh" kind="unwind" identifier="DeleteEngineUnwindSegue" unwindAction="unwindToAllEnginesTableWithSegue:" id="3Rx-Mb-BnT"/>
                         <segue destination="H9n-EM-0Qh" kind="unwind" identifier="AddEditEngineUnwindSegue" unwindAction="unwindToAllEnginesTableWithSegue:" id="QIT-P6-vAT"/>
                     </connections>
@@ -224,7 +233,7 @@
         <scene sceneID="e4t-K9-QPr">
             <objects>
                 <tableViewController id="ZdH-wh-3Lf" customClass="UrlDetailsTableViewController" customModule="Chears" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="CWp-tt-Jvk">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="CWp-tt-Jvk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -245,9 +254,10 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="URL" smartDashesType="no" smartQuotesType="no" textContentType="url"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="URL" enablesReturnKeyAutomatically="YES" smartDashesType="no" smartQuotesType="no" textContentType="url"/>
                                                     <connections>
                                                         <action selector="urlTextFieldChanged" destination="ZdH-wh-3Lf" eventType="editingChanged" id="koi-3S-XPi"/>
+                                                        <action selector="urlTextFieldReturnKeyPressed" destination="ZdH-wh-3Lf" eventType="primaryActionTriggered" id="wC2-nL-agR"/>
                                                     </connections>
                                                 </textField>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pVI-E7-bqI">
@@ -290,9 +300,10 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartQuotesType="no"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" enablesReturnKeyAutomatically="YES" smartDashesType="no" smartQuotesType="no"/>
                                                     <connections>
                                                         <action selector="magicWordTextFieldChanged" destination="ZdH-wh-3Lf" eventType="editingChanged" id="JQt-Mw-C8b"/>
+                                                        <action selector="magicWordTextFieldReturnKeyPressed" destination="ZdH-wh-3Lf" eventType="primaryActionTriggered" id="HQN-EO-p8z"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>

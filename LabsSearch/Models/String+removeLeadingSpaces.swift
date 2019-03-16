@@ -6,6 +6,8 @@
 //  Copyright © 2018 Distant Labs. All rights reserved.
 //
 
+import Foundation
+
 extension String {
     
     /// Returns a new string with all leading spaces removed.

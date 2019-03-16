@@ -200,38 +200,48 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Experimental Features" id="DQF-PT-GWP">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="kOa-74-fFf" style="IBUITableViewCellStyleDefault" id="nYM-Wm-l4m">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="nYM-Wm-l4m">
                                         <rect key="frame" x="0.0" y="291" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nYM-Wm-l4m" id="lu2-Kw-9uF">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Back Up Search Services" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="kOa-74-fFf">
-                                                    <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Back Up Search Services" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1eZ-h2-tUb">
+                                                    <rect key="frame" x="16" y="17" width="343" height="10"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="1eZ-h2-tUb" secondAttribute="bottom" constant="6" id="FhU-kj-sdw"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="1eZ-h2-tUb" secondAttribute="trailing" id="hy3-ks-nDV"/>
+                                                <constraint firstItem="1eZ-h2-tUb" firstAttribute="top" secondItem="lu2-Kw-9uF" secondAttribute="topMargin" constant="6" id="qrH-D4-bGc"/>
+                                                <constraint firstItem="1eZ-h2-tUb" firstAttribute="leading" secondItem="lu2-Kw-9uF" secondAttribute="leadingMargin" id="s4d-DF-RrI"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="n1P-jt-5Ob" style="IBUITableViewCellStyleDefault" id="t1f-xO-dgI">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="t1f-xO-dgI">
                                         <rect key="frame" x="0.0" y="335" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="t1f-xO-dgI" id="jYT-ib-IhI">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Remove All Services &amp; Use Defaults" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="n1P-jt-5Ob">
-                                                    <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Remove All Services &amp; Use Defaults" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J8T-wd-OpI">
+                                                    <rect key="frame" x="16" y="17" width="343" height="10"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="J8T-wd-OpI" firstAttribute="trailing" secondItem="jYT-ib-IhI" secondAttribute="trailingMargin" id="7yy-sw-xio"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="J8T-wd-OpI" secondAttribute="bottom" constant="6" id="bVR-pV-aKw"/>
+                                                <constraint firstItem="J8T-wd-OpI" firstAttribute="top" secondItem="jYT-ib-IhI" secondAttribute="topMargin" constant="6" id="dE3-Wx-SeA"/>
+                                                <constraint firstItem="J8T-wd-OpI" firstAttribute="leading" secondItem="jYT-ib-IhI" secondAttribute="leadingMargin" id="pNI-Q8-wB1"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -437,7 +447,7 @@
         <scene sceneID="jgi-Fb-N4q">
             <objects>
                 <tableViewController id="tyR-Bn-WEF" customClass="OpenSearchTableViewController" customModule="Chears" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="bSd-wr-p02">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="bSd-wr-p02">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -484,23 +494,23 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Next" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dXy-RU-2g9">
-                                                    <rect key="frame" x="16" y="11" width="343" height="22"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="31A-fw-nCG">
                                                     <rect key="frame" x="16" y="11" width="343" height="22"/>
                                                 </activityIndicatorView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Next" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bcw-8h-9eg">
+                                                    <rect key="frame" x="0.0" y="6" width="375" height="31.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailingMargin" secondItem="31A-fw-nCG" secondAttribute="trailing" id="4Gj-oh-pZ8"/>
-                                                <constraint firstItem="dXy-RU-2g9" firstAttribute="top" secondItem="SbK-Af-trx" secondAttribute="topMargin" id="Jri-hp-bWZ"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="dXy-RU-2g9" secondAttribute="bottom" id="UDE-MD-V5B"/>
-                                                <constraint firstItem="dXy-RU-2g9" firstAttribute="leading" secondItem="SbK-Af-trx" secondAttribute="leadingMargin" id="gov-ZT-s0M"/>
+                                                <constraint firstAttribute="bottom" secondItem="Bcw-8h-9eg" secondAttribute="bottom" constant="6" id="XDm-0q-kHI"/>
+                                                <constraint firstItem="Bcw-8h-9eg" firstAttribute="leading" secondItem="SbK-Af-trx" secondAttribute="leading" id="ZL1-E5-A0p"/>
                                                 <constraint firstItem="31A-fw-nCG" firstAttribute="leading" secondItem="SbK-Af-trx" secondAttribute="leadingMargin" id="jUC-rf-RwL"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="dXy-RU-2g9" secondAttribute="trailing" id="oe4-GI-qgS"/>
+                                                <constraint firstItem="Bcw-8h-9eg" firstAttribute="top" secondItem="SbK-Af-trx" secondAttribute="top" constant="6" id="qeK-wk-fma"/>
+                                                <constraint firstAttribute="trailing" secondItem="Bcw-8h-9eg" secondAttribute="trailing" id="rdl-ei-dk4"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="31A-fw-nCG" secondAttribute="bottom" id="vyJ-Oo-ECn"/>
                                                 <constraint firstItem="31A-fw-nCG" firstAttribute="top" secondItem="SbK-Af-trx" secondAttribute="topMargin" id="ysC-kP-Ell"/>
                                             </constraints>
@@ -531,7 +541,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="testButtonActivityIndicator" destination="31A-fw-nCG" id="Gdq-da-cLw"/>
-                        <outlet property="testButtonLabel" destination="dXy-RU-2g9" id="u3m-kb-Tuh"/>
+                        <outlet property="testButtonLabel" destination="Bcw-8h-9eg" id="aP6-6T-1dp"/>
                         <outlet property="urlTextField" destination="Udo-rx-XPM" id="Iw7-Vd-hZ8"/>
                         <segue destination="bT9-N3-UbT" kind="unwind" identifier="AttemptedOpenSearchUnwindSegue" unwindAction="unwindToAllEnginesTableWithSegue:" id="mQC-y3-lwI"/>
                     </connections>

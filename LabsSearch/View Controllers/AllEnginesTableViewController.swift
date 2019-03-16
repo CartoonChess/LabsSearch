@@ -31,10 +31,55 @@ class AllEnginesTableViewController: EngineTableViewController {
         if openSearch != nil {
             performSegue(withIdentifier: SegueKeys.addEngine, sender: nil)
         }
-        
     }
     
+    
     // MARK: - Table view data source
+    
+    // Divide the table between enabled and disabled engines
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // Only show the second section if there are disabled engines
+//        if SearchEngines.shared.disabledShortcuts.count > 0 {
+//            return 2
+//        } else {
+//            return 1
+//        }
+        // We should just be able to define two sections, and the second will disappear if empty
+        return 2
+    }
+    
+    // Literally the number of rows in each section
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            // Enabled engines
+            return enabledShortcuts.count
+        case 1:
+            // Disabled engines
+            return disabledShortcuts.count
+        default:
+            print(.x, "Too many sections returned in AllEngines table.")
+            return 0
+        }
+    }
+    
+//    // Recycling cells
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        // Step 1: Dequeue cell
+//        // Force unwrapping as per tutorial...
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "EmojiCell", for: indexPath) as! EmojiTableViewCell
+//
+//        // Step 2: Fetch model for display
+//        // MARK: Conditional was removed...
+//        let emoji = emojisCategorized[indexPath.section][indexPath.row]
+//
+//        // Step 3: Configure cell
+//        cell.update(with: emoji)
+//        cell.showsReorderControl = true
+//
+//        // Step 4: Return cell
+//        return cell
+//    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellKeys.allEnginesTable, for: indexPath) as! AllEnginesTableViewCell
@@ -57,17 +102,22 @@ class AllEnginesTableViewController: EngineTableViewController {
     //- https://codereview.stackexchange.com/
     
     func addEngine(_ engine: SearchEngine) {
-        // Model updates are all performed before the segue in AddEdit VC
+        // Note: Model updates are all performed before the segue in AddEdit VC
+        
+        print(.i, "Adding engine \(engine.name).")
         
         // Add to table view
         engines[engine.shortcut] = engine
+        // FIXME: Can we take out this first line now?
         shortcuts = SearchEngines.shared.allShortcuts // preserves alpha-order
+        enabledShortcuts = SearchEngines.shared.enabledShortcuts
+        disabledShortcuts = SearchEngines.shared.disabledShortcuts
         tableView.reloadData()
     }
     
     func updateEngine(_ engineBeforeUpdates: SearchEngine, to engineAfterUpdates: SearchEngine, at indexPath: IndexPath) {
-        print(.o, "Updating engine \(engineAfterUpdates.name).")
-
+        print(.i, "Updating engine \(engineAfterUpdates.name).")
+        
         // Update in shared object
         let oldShortcut = engineBeforeUpdates.shortcut
         SearchEngines.shared.allEngines.removeValue(forKey: oldShortcut)
@@ -75,6 +125,8 @@ class AllEnginesTableViewController: EngineTableViewController {
         
         // Update in table view
         shortcuts = SearchEngines.shared.allShortcuts // preserves alpha-order
+        enabledShortcuts = SearchEngines.shared.enabledShortcuts
+        disabledShortcuts = SearchEngines.shared.disabledShortcuts
         engines.removeValue(forKey: oldShortcut)
         engines[engineAfterUpdates.shortcut] = engineAfterUpdates
         tableView.reloadData()
@@ -83,19 +135,19 @@ class AllEnginesTableViewController: EngineTableViewController {
         SearchEngines.shared.saveEngines()
         
         // Update image, if necessary
-
+        
         let oldImageUrl = DirectoryKeys.userImagesUrl?.appendingPathComponent(engineBeforeUpdates.shortcut)
-//        let newImageUrl = DirectoryKeys.userImagesUrl?.appendingPathComponent(engineAfterUpdates.shortcut)
+        //        let newImageUrl = DirectoryKeys.userImagesUrl?.appendingPathComponent(engineAfterUpdates.shortcut)
         
         // New/updated images are saved in AddEdit; here, we only remove an image if the shortcut has changed
         if engineBeforeUpdates.shortcut != engineAfterUpdates.shortcut,
             let oldImageUrl = oldImageUrl,
-//            let newImageUrl = newImageUrl,
+            //            let newImageUrl = newImageUrl,
             FileManager.default.fileExists(atPath: oldImageUrl.path) {
             do {
-//                try FileManager.default.moveItem(at: oldImageUrl, to: newImageUrl)
+                //                try FileManager.default.moveItem(at: oldImageUrl, to: newImageUrl)
                 try FileManager.default.removeItem(at: oldImageUrl)
-//                print(.o, "Renamed icon image from \"\(engineBeforeUpdates.shortcut)\" to \"\(engineAfterUpdates.shortcut)\".")
+                //                print(.o, "Renamed icon image from \"\(engineBeforeUpdates.shortcut)\" to \"\(engineAfterUpdates.shortcut)\".")
                 print(.o, "Deleted old icon image \"\(engineBeforeUpdates.shortcut)\".")
             } catch {
                 print(.x, "Icon image could not be deleted; error: \(error)")
@@ -108,32 +160,36 @@ class AllEnginesTableViewController: EngineTableViewController {
         // If this is the default engine, reflect our shared object (updates preferences automatically)
         if UserDefaults(suiteName: AppKeys.appGroup)?.string(forKey: SettingsKeys.defaultEngineShortcut) == engineBeforeUpdates.shortcut
             && engineBeforeUpdates.shortcut != engineAfterUpdates.shortcut {
-            print(.n, "Changed default engine shortcut; updating default engine settings.")
+            print(.i, "Changed default engine shortcut; updating default engine settings.")
             SearchEngines.shared.defaultEngine = engineAfterUpdates
         }
     }
     
     func deleteEngine(_ engine: SearchEngine, at indexPath: IndexPath) {
-        print(.o, "Deleting engine \(engine.name).")
+        print(.n, "Deleting engine \(engine.name).")
         // TODO: Error messages?
         
+        let shortcut = engine.shortcut
+        
         // Remove from shared object
-        SearchEngines.shared.allEngines.removeValue(forKey: engine.shortcut)
+        SearchEngines.shared.allEngines.removeValue(forKey: shortcut)
         
         // Remove from table view
-        engines.removeValue(forKey: engine.shortcut)
-        guard let index = shortcuts.index(of: engine.shortcut) else {
+        engines.removeValue(forKey: shortcut)
+        guard let index = shortcuts.index(of: shortcut) else {
             print(.x, "Could not find shortcut in shortcuts array.")
             return
         }
         shortcuts.remove(at: index)
+        enabledShortcuts.removeAll { $0 == shortcut }
+        disabledShortcuts.removeAll { $0 == shortcut }
         tableView.deleteRows(at: [indexPath], with: .automatic)
         
         // Update save data
         SearchEngines.shared.saveEngines()
         
         // Delete icon, if it exists
-        let imageUrl = DirectoryKeys.userImagesUrl?.appendingPathComponent(engine.shortcut)
+        let imageUrl = DirectoryKeys.userImagesUrl?.appendingPathComponent(shortcut)
         
         if let imageUrl = imageUrl,
             FileManager.default.fileExists(atPath: imageUrl.path) {
@@ -255,12 +311,17 @@ class AllEnginesTableViewController: EngineTableViewController {
                 // If a row was selected in the all engines table, this is an edit
                 if let selectedIndexPath = tableView.indexPathForSelectedRow {
                     // Save name for comparison
-                    guard let engineBeforeUpdates = engines[shortcuts[selectedIndexPath.row]]  else {
+//                    guard let engineBeforeUpdates = engines[shortcuts[selectedIndexPath.row]]  else {
+//                        print(.x, "Could not get engine at selected row for updates.")
+//                        return
+//                    }
+                    
+                    guard let cell = tableView.cellForRow(at: selectedIndexPath) as? EngineTableViewCell,
+                        let engineBeforeUpdates = cell.engine else {
                         print(.x, "Could not get engine at selected row for updates.")
                         return
                     }
                     
-                    print(.n, "Applying updates to \(engineBeforeUpdates.name).")
                     updateEngine(engineBeforeUpdates, to: engineAfterUpdates, at: selectedIndexPath)
                     
                     // TODO: When updating/adding/deleting, if that shortcut is still in the main screen search field, that doesn't make any sense
@@ -278,15 +339,15 @@ class AllEnginesTableViewController: EngineTableViewController {
             // We're going to delete the engine in the currently selected row
             guard let selectedIndexPath = tableView.indexPathForSelectedRow,
                 let engine = engines[shortcuts[selectedIndexPath.row]] else {
-                print(.x, "Failed to detect engine at cell or unwrap engine for deletion.")
-                return
+                    print(.x, "Failed to detect engine at cell or unwrap engine for deletion.")
+                    return
             }
             
-            print(.n, "Deleting engine \(engine.name).")
             deleteEngine(engine, at: selectedIndexPath)
             
         default:
             // Unwind with no further action if cancel is tapped
+            // Note: This never appears to actually be triggered
             print(.i, "Cancel button was tapped.")
         }
         

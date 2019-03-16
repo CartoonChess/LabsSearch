@@ -16,6 +16,7 @@ enum PrintLevel {
     case notice, n, issue, yellow
     case ok, o, okay, good, np, pass, success, green
     case comment, i, info, information, note, white
+    case debug, d, blue
 }
 
 /// Extends the basic `print` function to add an emoji in front for readability in console logs.
@@ -38,6 +39,8 @@ func print(_ level: PrintLevel, _ message: String) {
             symbol = "✅"
         case .comment, .i, .info, .information, .note, .white:
             symbol = "💬"
+        case .debug, .d, .blue:
+            symbol = "💦🐛💦"
         }
         
         print(symbol + " " + message)

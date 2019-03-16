@@ -193,6 +193,12 @@ struct SearchController {
     /// - Parameter unsplitText: The full string as entered by the user.
     /// - Returns: An array of two strings—the `shortcut` and `terms`—or else `nil` if there was only one word.
     func splitShortcutAndTerms(in unsplitText: String) -> [String]? {
+        // If there is leading space in the search field, don't bother looking for an engine
+        guard unsplitText == unsplitText.leadingSpacesRemoved() else {
+            print(.n, "User-entered text contains leading space, so engine will not be detected.")
+            return nil
+        }
+        
         let components = unsplitText.split(separator: " ", maxSplits: 1)
         
         if components.count > 1 {

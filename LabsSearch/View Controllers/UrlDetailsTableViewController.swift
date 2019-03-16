@@ -113,7 +113,6 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         updateView()
     }
     
-    
     // Delegate function; allows cell to resize with text view (in conjunction with tableView(heighForRowAt))
 //    func textViewDidChange(_ textView: UITextView) {
 //        UIView.setAnimationsEnabled(false)
@@ -132,6 +131,59 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
     @IBAction func magicWordTextFieldChanged() {
         textFieldsDidChange = true
         updateView()
+    }
+    
+    /// Change the return key on the URL text field depending on its contents.
+    func updateUrlTextFieldReturnKey() {
+        if urlController.engineIsTestable {
+            urlTextField.returnKeyType = .go
+        } else if !magicWordCell.isHidden {
+            urlTextField.returnKeyType = .next
+        } else {
+            urlTextField.returnKeyType = .default
+        }
+        
+        // TODO: This may only work for iOS 10+
+        //- (same for magic word text field return key)
+        //- However, we don't support below iOS 10 at the moment.
+        urlTextField.reloadInputViews()
+    }
+    
+    /// Change the return key on the magic word text field depending on its contents.
+    func updateMagicWorldTextFieldReturnKey() {
+        if urlController.engineIsTestable {
+            magicWordTextField.returnKeyType = .go
+        } else {
+            magicWordTextField.returnKeyType = .default
+        }
+        
+        magicWordTextField.reloadInputViews()
+    }
+    
+    /// Decide what to do when pressing the return key in the URL field.
+    @IBAction func urlTextFieldReturnKeyPressed() {
+        if urlController.engineIsTestable {
+            // If the engine is already testable, run the test
+            openUrl()
+        } else if !magicWordCell.isHidden {
+            // If it's not testable and the magic word field is showing, move the cursor there
+            magicWordTextField.becomeFirstResponder()
+            
+        } else {
+            // If the URL is just invalid, hide the keyboard
+            urlTextField.endEditing(true)
+        }
+    }
+    
+    /// Decide what to do when pressing the return key in the magic word field.
+    @IBAction func magicWordTextFieldReturnKeyPressed() {
+        if urlController.engineIsTestable {
+            // If the engine is testable, run the test
+            openUrl()
+        } else {
+            // If not, just hide the keyboard
+            magicWordTextField.endEditing(true)
+        }
     }
     
     
@@ -196,6 +248,8 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             print(.n, "URL is invalid.")
             urlTextField.textColor = .red
         }
+        
+        updateUrlTextFieldReturnKey()
     }
     
     /// Format the magic word cell based on the current URL state
@@ -214,6 +268,8 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         default:
             magicWordCell.isHidden = true
         }
+        
+        updateMagicWorldTextFieldReturnKey()
     }
     
     /// Imitate enabled/disabled state in test button

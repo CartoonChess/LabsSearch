@@ -394,16 +394,32 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         }
     }
     
+    // This can also be done with delegation and tags:
+    //- https://stackoverflow.com/questions/31766896/switching-between-text-fields-on-pressing-return-key-in-swift
+    
+    /// Moves focus to the shortcut field when return is pressed.
+    @IBAction func nameTextFieldReturnKeyPressed() {
+        shortcutTextField.becomeFirstResponder()
+    }
+    
+    /// Hide the keyboard when pressing the return key.
+    @IBAction func shortcutTextFieldReturnKeyPressed() {
+//        shortcutTextField.resignFirstResponder()
+        shortcutTextField.endEditing(true)
+    }
+    
     
     /// Dim the engine icon when the engine is disabled.
-    @IBAction func enabledToggleChanged() {
+    ///
+    /// - Parameter sender: The UISwitch which triggered this function. This parameter is optional and defaults to `nil`, so programatic calls can omit it. Note that providing a sender updates the save button, while omitting the parameter does not trigger an update.
+    @IBAction func enabledToggleChanged(_ sender: UISwitch? = nil) {
         if enabledToggle.isOn {
             engineIconView.alpha = 1
         } else {
             engineIconView.alpha = 0.5
         }
         
-        updateSaveButton()
+        if sender != nil { updateSaveButton() }
     }
     
 
@@ -590,7 +606,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             return
         }
         
-        print(.o, "Adding or modifying engine \(engine.name).")
+        print(.i, "Updating save file with engine named \(engine.name).")
         let shortcut = engine.shortcut
         
         // Add to shared object
