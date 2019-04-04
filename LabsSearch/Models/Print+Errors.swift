@@ -40,7 +40,7 @@ func print(_ level: PrintLevel, _ message: String) {
         case .comment, .i, .info, .information, .note, .white:
             symbol = "💬"
         case .debug, .d, .blue:
-            symbol = "💦🐛💦"
+            symbol = "🙅‍♂️🦋🙅‍♂️"
         }
         
         print(symbol + " " + message)

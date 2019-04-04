@@ -124,7 +124,7 @@ class OpenSearchTableViewController: UITableViewController {
     
     @IBAction func testButtonTapped() {
         guard let url = url else {
-            print(.x, "Test button was somehow tapped when URL was invalid.")
+            print(.x, "Test button was somehow tapped while URL was invalid.")
             return
         }
         

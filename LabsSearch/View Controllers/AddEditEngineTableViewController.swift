@@ -188,16 +188,26 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         
         // Update text fields
         
-        // Get the host app URL. If this fails, set the whole page title in the name field
+        // Set the name field
         if let openSearch = openSearch,
+            !openSearch.name.isEmpty {
+            // If using the main app (OpS object will always exist), check for OpS name
+            print(.i, "Setting name via OpenSearch name \"\(openSearch.name)\".")
+            nameTextField.text = openSearch.name
+        } else if let openSearch = openSearch,
             let url = openSearch.url,
             let name = makeEngineName(from: url.absoluteString) {
+            // If OpS didn't specify a name, construct it from the URL
+            print(.i, "Setting name via OpenSearch URL.")
             nameTextField.text = name
         } else if let url = hostAppUrlString,
             let name = makeEngineName(from: url) {
+            // If using the app ext, construct name from URL
+            print(.i, "Setting name via host app URL.")
             nameTextField.text = name
         } else {
             print(.x, "Failed to get host from OpenSearch object or host app URL; setting name field to page title or nil.")
+            // If host app's URL can't be detected, use page title (will set a blank name if main app reaches here)
             nameTextField.text = hostAppEngineName
         }
         shortcutTextField.text = makeEngineShortcut()

@@ -10,6 +10,8 @@ import UIKit
 import SafariServices
 
 class MainViewController: UIViewController, SearchControllerDelegate, SFSafariViewControllerDelegate, EngineIconViewController {
+    
+    // MARK: - Parameters
 
     // TODO: Make SearchController a class? .shared? Fix currentEngine?
     //- Had to make this a var to keep everyone happy...
@@ -24,12 +26,17 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         }
     }
     
+    // This is used in conjunction with observers/notifications to scroll in case the keyboard covers the text field
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     @IBOutlet weak var engineIconView: EngineIconView!
     @IBOutlet weak var engineIconImage: EngineIconImageView!
     @IBOutlet weak var engineIconLabel: EngineIconLabel!
     
     @IBOutlet weak var searchTextField: UITextField!
     
+    
+    // MARK: - Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +57,9 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         
         // Show keyboard automatically
         searchTextField.becomeFirstResponder()
+        
+        // Allow the VC to listen to keyboard notifications so we can scroll the view if the keyboard hides the text field
+        registerForKeyboardNotifications()
         
         // Hide engine icon on startup
         engineIconView.alpha = 0
@@ -153,7 +163,42 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
     }
     
     
-    // FIXME: Keyboard shouldn't cover search field (do we need a scroll view?)
+    // MARK: - TextField vs. keyboard scroll functions
+    // Note: These are all taken from Apple's "App Development with Swift" ebook
+    
+    // Set observers for keyboard show/hide notifications
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWasShown(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    // Basically, extend the length of the scroll view by the height of the keyboard, effectively scrolling it
+    @objc func keyboardWasShown(_ notification: NSNotification) {
+        // Not sure about this error
+        guard let info = notification.userInfo,
+            let keyboardFrameValue = info[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue else {
+            print(.x, "Error receiving keyboard showing notification.")
+            return
+        }
+        
+        // Get keyboard size
+        let keyboardFrame = keyboardFrameValue.cgRectValue
+        let keyboardSize = keyboardFrame.size
+        
+        // Add inset to bottom of scroll view
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
+        scrollView.contentInset = contentInsets
+        // Adjust the scrollbar respectively
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
+    // Revert the scroll view to the way it was before the keyboard was shown
+    @objc func keyboardWillBeHidden(_ notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
     // TODO: Search button (for if user prefers this over return key); below?
 
 }

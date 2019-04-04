@@ -103,7 +103,7 @@ struct SearchController {
                     currentSearchEngine = detectedEngine
                     delegate?.didUpdateSearch(detectedEngine: detectedEngine, didSetEngine: true)
                 } else {
-                    print(.n, "Engine detected, but will not save until space or additional text is entered.")
+                    print(.i, "Engine detected, but will not save until space or additional text is entered.")
                     delegate?.didUpdateSearch(detectedEngine: detectedEngine)
                 }
             } else {
@@ -112,7 +112,7 @@ struct SearchController {
             }
             
         } else {
-            print(.n, "Search field is empty; setting engine to nil.")
+            print(.i, "Search field is empty; setting engine to nil.")
             currentSearchEngine = nil
             delegate?.didUpdateSearch(detectedEngine: nil)
         }
@@ -208,7 +208,7 @@ struct SearchController {
             return [shortcut, terms]
         } else {
             // There was only one word, so no shortcut was present
-            print(.n, "Text could not be split because only one word was entered.")
+            print(.i, "Text could not be split because only one word was entered.")
             return nil
         }
     }

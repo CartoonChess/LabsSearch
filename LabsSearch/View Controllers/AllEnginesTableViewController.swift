@@ -176,7 +176,7 @@ class AllEnginesTableViewController: EngineTableViewController {
         
         // Remove from table view
         engines.removeValue(forKey: shortcut)
-        guard let index = shortcuts.index(of: shortcut) else {
+        guard let index = shortcuts.firstIndex(of: shortcut) else {
             print(.x, "Could not find shortcut in shortcuts array.")
             return
         }
