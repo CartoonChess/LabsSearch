@@ -132,8 +132,11 @@ struct SearchEngines {
     ///   - includeDisabledEngines: Whether to include disabled engines. Optional; defaults to `true`.
     /// - Returns: An array of engine shortcuts.
     ///
-    /// If both parameters are set to `false`, this function will return an empty array.
+    /// If both parameters are set to `false`, this function returns an empty array.
     private func getShortcuts(includeEnabledEngines: Bool = true, includeDisabledEngines: Bool = true) -> [String] {
+        // Save some cycles by immediately returning an empty array when someone is dumb enough to ask for nothing
+        if !includeEnabledEngines && !includeDisabledEngines { return [] }
+        
         var engines = allEngines
         
         // Remove disabled engines, if desired
@@ -150,12 +153,18 @@ struct SearchEngines {
         var shortcutsAndNames = engines.values.map { [$0.shortcut, $0.name] }
         
         // Sort these alphabetically using the engine name
-        shortcutsAndNames = shortcutsAndNames.sorted { $1[1] > $0[1] }
+//        shortcutsAndNames = shortcutsAndNames.sorted { $1[1] > $0[1] }
+        shortcutsAndNames = shortcutsAndNames.sorted {
+            // Sort by name ([1]), but,
+            //- if names are the same, sort by shortcut ([0])
+            $1[1] > $0[1] || ($1[1] == $0[1] && $1[0] > $0[0])
+        }
         // Return a simple array of [shortcuts], but this is still sorted by alphabetical names
         return shortcutsAndNames.map { $0[0] }
     }
     
     
+    // FIXME: Hide this from exported plist!
     /// This unlikely string will be the placeholder for the user's search terms.
     let termsPlaceholder = "5C5WRbhx88ax8e7Xb7cOVXSjAFJgtKHs09DKd7E4IvemJRKEIwdqglpAvhvksgo9GjPI5cW8uWcOelAVwzt2ErQFijKUap5UdIjy"
     //    let termsPlaceholder: String = "F@r=z&L;e/h?Q:M p\"T`O<P]w[s>I#p%z}z{T\\|^a~"
