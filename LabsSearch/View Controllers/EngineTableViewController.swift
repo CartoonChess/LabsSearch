@@ -35,9 +35,12 @@ class EngineTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(.d, "shortcuts: \(shortcuts)")
-        print(.d, "enabledShortcuts: \(enabledShortcuts)")
-        print(.d, "disabledShortcuts: \(disabledShortcuts)")
+//        print(.d, "shortcuts: \(shortcuts)")
+//        print(.d, "enabledShortcuts: \(enabledShortcuts)")
+//        print(.d, "disabledShortcuts: \(disabledShortcuts)")
+        
+        // FIXME: This is supposed to allow custom cells to shrink on iPad, but it's not working
+        tableView.cellLayoutMarginsFollowReadableWidth = true
         
         // If action extension added an engine, we need to reload the table
         // This watches for every time the main app enters the foreground on an engine table VC

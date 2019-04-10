@@ -39,6 +39,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     // Index paths for cells
     enum Cell {
         static let engineName: IndexPath = [0, 0]
+        static let shortcut: IndexPath = [0, 1]
         static let deleteButton: IndexPath = [2, 0]
     }
     
@@ -76,6 +77,37 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Increase the size of the view containing the icon view when using larger icon on iPad
+        // Note that there seems to be a conflict with IB's vary for traits,
+        // so iPhone reports iconHeight as 120 (big) if this is calculated in viewDidLoad().
+        // For this reason, we detect iPads (regular width + regular height) and adjust to new size
+        // (detection code from SOf)
+        
+        // Also note tableHeaderView is the (usually nil) view atop the table sections!
+        // We messed with this in IB (somehow) but Apple actually put it there
+        
+//        let iconHeight = engineIconView.frame.size.height
+//        let additionalIconHeight = iconHeight - 60 // 60 is default/smallest height (iPhone)
+//        let additionalPadding = (additionalIconHeight / 30) * 8 // 8 is also default for top/bottom
+//        let additionalViewHeight = additionalIconHeight + (additionalPadding * 2)
+////        engineIconContainerView.frame.size.height += additionalViewHeight
+//        tableView.tableHeaderView?.frame.size.height += additionalViewHeight
+//
+//        print(.d, "iconHeight: \(iconHeight)")
+//        print(.d, "additionalIconHeight: \(additionalIconHeight)")
+//        print(.d, "additionalPadding: \(additionalPadding)")
+//        print(.d, "additionalViewHeight: \(additionalViewHeight)")
+        
+        let sizeTraitsClass:(UIUserInterfaceSizeClass, UIUserInterfaceSizeClass) = (UIScreen.main.traitCollection.horizontalSizeClass, UIScreen.main.traitCollection.verticalSizeClass)
+        
+        switch sizeTraitsClass {
+        case (UIUserInterfaceSizeClass.regular, UIUserInterfaceSizeClass.regular):
+            //iPad - width: regular; height: regular
+            tableView.tableHeaderView?.frame.size.height += 92
+        default:
+            break
+        }
         
         // For app extension:
         // In order to access allShortcuts, we must load up the engines plist
@@ -556,13 +588,13 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     // MARK: - Table view
     
     // Don't let the name row highlight if user taps around the isEnabled toggle
+    // Set this for shortcut now as well so left/right iPad padding doesn't trigger highlight
     override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         switch indexPath {
-        case Cell.engineName:
+        case Cell.engineName, Cell.shortcut:
             return false
         default:
             // Other cells should be highlighted
-            // Note that the shortcut text field should occlude its row
             return true
         }
     }
@@ -582,6 +614,26 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
                 // If the user chooses cancel, just deselect the delete row
                 tableView.deselectRow(at: indexPath, animated: true)
             })
+            
+            // iPad only: Eminate from button
+            guard let cell = tableView.cellForRow(at: indexPath) else {
+                print(.x, "Failed to unwrap delete button cell.")
+                return
+            }
+            // Assures us this is an iPad, basically
+            if let popover = alert.popoverPresentationController {
+                // iPad action sheet doesn't show cancel button, so add a message so it doesn't look weird
+                alert.message = "This cannot be undone."
+//                alert.popoverPresentationController?.sourceView = cell
+//                alert.popoverPresentationController?.sourceRect = cell.bounds
+                // Set centre of cell
+                popover.sourceView = cell
+                popover.sourceRect = cell.bounds
+            }
+            
+            // Note: There is a constraint issue here with a width of -16 that the layout engine handles by itself in iOS 12.2. Currently this is filed as a bug:
+            //- https://stackoverflow.com/questions/55372093/uialertcontrollers-actionsheet-gives-constraint-error-on-ios-12-2
+            
             // Show alert
             present(alert, animated: true, completion: nil)
             

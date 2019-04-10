@@ -10,7 +10,7 @@ import Foundation
 
 /// A set of synonyms at three levels for console reporting: `error`, `note`, and `ok`.
 ///
-/// The shortest notation is `x`, `n`, `o`.
+/// The shortest notation is `x`, `n`, `o`, `i`, `d`.
 enum PrintLevel {
     case error, x, bad, warning, fail, red
     case notice, n, issue, yellow

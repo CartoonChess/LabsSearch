@@ -14,11 +14,18 @@ import UIKit
 class TableViewCellTextField: UITextField {
     
     func getPadding(plusExtraFor clearButtonMode: ViewMode) -> UIEdgeInsets {
+//        // Eliminate side padding if using readable width guidelines
+//        var foo: CGFloat = 16
+//        let sidePadding: CGFloat = foo >= 16 ? foo : 0
+//        print(.d, "\(self.readableContentGuide)")
+        
+        // Define basic (without clear button) padding
         var padding = UIEdgeInsets(top: 11, left: 16, bottom: 11, right: 16)
         
         // Add additional padding on the right side when showing the clear button
         if self.clearButtonMode == .always || self.clearButtonMode == clearButtonMode {
-            padding.right = 28
+//            padding.right = 28
+            padding.right += 12
         }
         
         return padding

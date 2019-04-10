@@ -130,6 +130,8 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
         let activityController = UIActivityViewController(activityItems: [userEnginesUrl], applicationActivities: nil)
         // iPad only: Eminate from button (fatal error if omitted)
         activityController.popoverPresentationController?.sourceView = sender
+        // And make it come from the center of the button
+        activityController.popoverPresentationController?.sourceRect = sender.bounds
 
         present(activityController, animated: true, completion: nil)
     }

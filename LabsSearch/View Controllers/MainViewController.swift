@@ -40,6 +40,7 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Make main view controller the delegate in order to update engine image and search field visuals
         searchController.delegate = self
         
@@ -79,6 +80,15 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
         updateIconLayout()
+        
+//        // Suppress autolayout errors related to iPad keyboard's autocorrect bar
+//        // This works on first load, but fails on returning to the view
+//        // We tried this in viewDidLoad as well...
+//        // We'll just accept this as a bug for now:
+//        //- https://openradar.appspot.com/36578167
+//        //- https://stackoverflow.com/questions/46566188/uibuttonbarstackview-breaking-constraint-when-becomefirstresponder-sent
+//        searchTextField.inputAssistantItem.leadingBarButtonGroups = []
+//        searchTextField.inputAssistantItem.trailingBarButtonGroups = []
     }
     
     

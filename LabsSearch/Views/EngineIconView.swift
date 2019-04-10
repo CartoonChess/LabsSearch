@@ -69,6 +69,14 @@ extension EngineIconViewController {
             // false or nil
             engineIconCornerRadiusFactor = 4.0
         }
+        
+        // FIXME: Corners are wrong due to iPhone vs. iPad traits.
+        // engineIconView.frame.width reports based on IB preview rather than actual device
+        //- iPad IB, iPad device: Main 120, AddEdit 120
+        //- iPad IB, iPhone device: Main 120 (60 when returning from Settings), AddEdit 120
+        //- iPhone IB, iPad device: Main 120, AddEdit 60
+        //- iPhone IB, iPhone device: Main 60, AddEdit 60
+        
         let engineIconCornerRadius = engineIconView.frame.width / engineIconCornerRadiusFactor
         engineIconView.layer.cornerRadius = engineIconCornerRadius
 
