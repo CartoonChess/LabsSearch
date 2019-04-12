@@ -99,9 +99,9 @@ class OpenSearchController: NSObject, XMLParserDelegate {
                             self.parseXml(data: data)
                             
                             // Remove any trailing whitespace from the name
-                            print(.d, "openSearch.name before trim: \(self.openSearch.name)")
+//                            print(.d, "openSearch.name before trim: \(self.openSearch.name)")
                             self.openSearch.name = self.openSearch.name.trimmingCharacters(in: .whitespacesAndNewlines)
-                            print(.d, "openSearch.name after trim: \(self.openSearch.name)")
+//                            print(.d, "openSearch.name after trim: \(self.openSearch.name)")
                             
                             // If the parse was successful, an OpenSearch object will be passed back; otherwise nil
                             completion()
@@ -281,7 +281,7 @@ class OpenSearchController: NSObject, XMLParserDelegate {
 //                }
                 // Some XML documents assign this twice, either breaking at a special character,
                 // or the second being "\n  ", so we combine them and remove whitespace in data task at the end
-                print(.d, "\(xmlElement): \(string)")
+//                print(.d, "\(xmlElement): \(string)")
                 openSearch.name += string
             default:
                 break
