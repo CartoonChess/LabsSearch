@@ -98,6 +98,11 @@ class OpenSearchController: NSObject, XMLParserDelegate {
                             self.parsingHtml = false
                             self.parseXml(data: data)
                             
+                            // Remove any trailing whitespace from the name
+                            print(.d, "openSearch.name before trim: \(self.openSearch.name)")
+                            self.openSearch.name = self.openSearch.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                            print(.d, "openSearch.name after trim: \(self.openSearch.name)")
+                            
                             // If the parse was successful, an OpenSearch object will be passed back; otherwise nil
                             completion()
                         } else {
@@ -270,10 +275,14 @@ class OpenSearchController: NSObject, XMLParserDelegate {
         if !parsingHtml {
             switch xmlElement {
             case "ShortName":
-                // Some XML documents assign this twice, the second being "\n  ", so we only accept the first one
-                if openSearch.name.isEmpty {
-                    openSearch.name = string
-                }
+//                // Some XML documents assign this twice, the second being "\n  ", so we only accept the first one
+//                if openSearch.name.isEmpty {
+//                    openSearch.name = string
+//                }
+                // Some XML documents assign this twice, either breaking at a special character,
+                // or the second being "\n  ", so we combine them and remove whitespace in data task at the end
+                print(.d, "\(xmlElement): \(string)")
+                openSearch.name += string
             default:
                 break
             }

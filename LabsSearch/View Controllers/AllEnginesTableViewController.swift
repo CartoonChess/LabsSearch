@@ -16,6 +16,18 @@ class AllEnginesTableViewController: EngineTableViewController {
     // This VC can receive the details of an OpenSearch from the OpenSearch VC
     //- It will then pass the object on to AddEdit via viewDidAppear
     var openSearch: OpenSearch? = nil
+    
+    var selectedEngine: SearchEngine? {
+        get {
+            guard let indexPath = tableView.indexPathForSelectedRow,
+                let cell = tableView.cellForRow(at: indexPath) as? EngineTableViewCell,
+                let engine = cell.engine else {
+                return nil
+            }
+        
+            return engine
+        }
+    }
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,6 +115,7 @@ class AllEnginesTableViewController: EngineTableViewController {
     
     func addEngine(_ engine: SearchEngine) {
         // Note: Model updates are all performed before the segue in AddEdit VC
+        // TODO: Maybe that's dumb?
         
         print(.i, "Adding engine \(engine.name).")
         
@@ -115,7 +128,13 @@ class AllEnginesTableViewController: EngineTableViewController {
         tableView.reloadData()
     }
     
-    func updateEngine(_ engineBeforeUpdates: SearchEngine, to engineAfterUpdates: SearchEngine, at indexPath: IndexPath) {
+//    func updateEngine(_ engineBeforeUpdates: SearchEngine, to engineAfterUpdates: SearchEngine, at indexPath: IndexPath) {
+    func updateEngine(to engineAfterUpdates: SearchEngine) {
+        guard let engineBeforeUpdates = selectedEngine else {
+                print(.x, "Failed to detect engine at selected cell or unwrap engine for deletion.")
+                return
+        }
+        
         print(.i, "Updating engine \(engineAfterUpdates.name).")
         
         // Update in shared object
@@ -165,7 +184,14 @@ class AllEnginesTableViewController: EngineTableViewController {
         }
     }
     
-    func deleteEngine(_ engine: SearchEngine, at indexPath: IndexPath) {
+    func deleteEngine() {
+        // We're going to delete the engine in the currently selected row
+        guard let indexPath = tableView.indexPathForSelectedRow,
+            let engine = selectedEngine else {
+            print(.x, "Failed to detect engine at selected cell or unwrap engine for deletion.")
+            return
+        }
+        
         print(.n, "Deleting engine \(engine.name).")
         // TODO: Error messages?
         
@@ -195,7 +221,7 @@ class AllEnginesTableViewController: EngineTableViewController {
             FileManager.default.fileExists(atPath: imageUrl.path) {
             do {
                 try FileManager.default.removeItem(at: imageUrl)
-                print(.o, "Deleted icon image for engine \(engine.name).")
+                print(.n, "Deleted icon image for engine \(engine.name).")
             } catch {
                 print(.x, "Icon image could not be deleted; error: \(error)")
             }
@@ -204,27 +230,27 @@ class AllEnginesTableViewController: EngineTableViewController {
         }
         
         // Default engine is no longer allowed to be disabled or deleted.
-//        // Handle cases where the user deletes the last engine or the default engine
-//
-//        let allEngines = SearchEngines.shared.allEngines
-//
-//        // If we've deleted the last engine, load the defaults
-//        if allEngines.count == 0 {
-//            // TODO: This doesn't refresh the view until we go out and return to it;
-//            //- Anyway, we should have a more elegant approach to having no engines
-//            //- (plus, we will likely make the default engines only hideable, not deleteable)
-//            print(.n, "Deleted last engine; loading defaults.")
-//            SearchEngines.shared.loadEngines()
-//            tableView.reloadData()
-////        } else if UserDefaults.standard.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
-//        } else if UserDefaults(suiteName: AppKeys.appGroup)?.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
-//            // If this is the default engine, reflect our shared object (updates preferences automatically)
-//            // TODO: We should handle default engine logic elsewhere; this is temporary
-//            print(.n, "Deleted default engine; setting next available engine as new default.")
-////            SearchEngines.shared.defaultEngine = allEngines.first?.value
-//            // FIXME: This will fail if all engines are disabled!
-//            SearchEngines.shared.defaultEngine = allEngines[SearchEngines.shared.enabledShortcuts.first!]
-//        }
+        //        // Handle cases where the user deletes the last engine or the default engine
+        //
+        //        let allEngines = SearchEngines.shared.allEngines
+        //
+        //        // If we've deleted the last engine, load the defaults
+        //        if allEngines.count == 0 {
+        //            // TODO : This doesn't refresh the view until we go out and return to it;
+        //            //- Anyway, we should have a more elegant approach to having no engines
+        //            //- (plus, we will likely make the default engines only hideable, not deleteable)
+        //            print(.n, "Deleted last engine; loading defaults.")
+        //            SearchEngines.shared.loadEngines()
+        //            tableView.reloadData()
+        ////        } else if UserDefaults.standard.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
+        //        } else if UserDefaults(suiteName: AppKeys.appGroup)?.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
+        //            // If this is the default engine, reflect our shared object (updates preferences automatically)
+        //            // TODO : We should handle default engine logic elsewhere; this is temporary
+        //            print(.n, "Deleted default engine; setting next available engine as new default.")
+        ////            SearchEngines.shared.defaultEngine = allEngines.first?.value
+        //            // FIXME : This will fail if all engines are disabled!
+        //            SearchEngines.shared.defaultEngine = allEngines[SearchEngines.shared.enabledShortcuts.first!]
+        //        }
     }
     
     
@@ -273,13 +299,7 @@ class AllEnginesTableViewController: EngineTableViewController {
     
     
     @IBAction func unwindToAllEnginesTable(segue: UIStoryboardSegue) {
-        print(.n, "Unwinding to AllEngines view.")
-        
-//        // First, copy over the OpS engine object if coming back from the VC and the object exists
-//        if let source = segue.source as? OpenSearchTableViewController {
-//            openSearch = source.openSearch
-//            return
-//        }
+        print(.i, "Unwinding to AllEngines view.")
         
         // First, copy over the OpS engine object if coming back from the VC and the object exists
         if let source = segue.source as? OpenSearchTableViewController {
@@ -309,20 +329,22 @@ class AllEnginesTableViewController: EngineTableViewController {
             // Get the engine
             if let engineAfterUpdates = source.engine {
                 // If a row was selected in the all engines table, this is an edit
-                if let selectedIndexPath = tableView.indexPathForSelectedRow {
+                if tableView.indexPathForSelectedRow != nil {
                     // Save name for comparison
 //                    guard let engineBeforeUpdates = engines[shortcuts[selectedIndexPath.row]]  else {
 //                        print(.x, "Could not get engine at selected row for updates.")
 //                        return
 //                    }
                     
-                    guard let cell = tableView.cellForRow(at: selectedIndexPath) as? EngineTableViewCell,
-                        let engineBeforeUpdates = cell.engine else {
-                        print(.x, "Could not get engine at selected row for updates.")
-                        return
-                    }
+//                    guard let cell = tableView.cellForRow(at: selectedIndexPath) as? EngineTableViewCell,
+//                        let engineBeforeUpdates = cell.engine else {
+//                        print(.x, "Could not get engine at selected row for updates.")
+//                        return
+//                    }
+//
+//                    updateEngine(engineBeforeUpdates, to: engineAfterUpdates, at: selectedIndexPath)
                     
-                    updateEngine(engineBeforeUpdates, to: engineAfterUpdates, at: selectedIndexPath)
+                    updateEngine(to: engineAfterUpdates)
                     
                     // TODO: When updating/adding/deleting, if that shortcut is still in the main screen search field, that doesn't make any sense
                     //- Clear search field automatically when returning from settings view aka viewWillAppear?
@@ -337,13 +359,16 @@ class AllEnginesTableViewController: EngineTableViewController {
             }
         case SegueKeys.deleteEngineUnwind:
             // We're going to delete the engine in the currently selected row
-            guard let selectedIndexPath = tableView.indexPathForSelectedRow,
-                let engine = engines[shortcuts[selectedIndexPath.row]] else {
-                    print(.x, "Failed to detect engine at cell or unwrap engine for deletion.")
-                    return
-            }
-            
-            deleteEngine(engine, at: selectedIndexPath)
+//            guard let selectedIndexPath = tableView.indexPathForSelectedRow,
+//                let cell = tableView.cellForRow(at: selectedIndexPath) as? EngineTableViewCell,
+//                let engine = cell.engine else {
+////                let engine = engines[shortcuts[selectedIndexPath.row]] else {
+//                    print(.x, "Failed to detect engine at cell or unwrap engine for deletion.")
+//                    return
+//            }
+//
+//            deleteEngine(engine, at: selectedIndexPath)
+            deleteEngine()
             
         default:
             // Unwind with no further action if cancel is tapped

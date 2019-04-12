@@ -79,7 +79,12 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
+        // Refresh icon corners, in case stayInApp has changed
         updateIconLayout()
+        // Check the text field again, in case the user has en(/dis)abled entered engine or changed shortcut
+        // Note: If we ever have issues with this in the future, consider setting self.engine = nil
+        searchController.currentSearchEngine = nil
+        searchTextFieldChanged(searchTextField)
         
 //        // Suppress autolayout errors related to iPad keyboard's autocorrect bar
 //        // This works on first load, but fails on returning to the view
