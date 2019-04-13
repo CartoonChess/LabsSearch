@@ -185,8 +185,6 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     /// Check for updated data when returning from another app, and recheck the shortcut validity.
     @objc func willEnterForeground() {
-        print(.d, "(AddEdit) VC will enter foreground!")
-        
         // If switching back to the main app, we only need to recheck if the ext has added an engine
         #if !EXTENSION
             guard let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
@@ -196,10 +194,12 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             }
             print(.i, "Testing shortcut validity because extension has added an engine.")
         #else
+            // AppDelegate will only refresh engines if ext has added engine,
+            // so in ext's case we will force a reload just in case
+            SearchEngines.shared.loadEngines()
             print(.i, "Testing shortcut validity because extension returned to foreground.")
         #endif
         
-        SearchEngines.shared.loadEngines()
         allShortcuts = SearchEngines.shared.allShortcuts
         // allOtherShortcuts is only for edit mode, which can only happen in main app
         #if !EXTENSION
@@ -208,8 +208,6 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         
         // Check shortcut validity and update save button
         shortcutChanged()
-        
-        print(.d, "(AddEdit) VC will enter foreground - with \(SearchEngines.shared.allShortcuts)!")
     }
     
     

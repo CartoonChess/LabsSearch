@@ -42,27 +42,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-        print(.d, "App(delegate) will enter foreground!")
+        
         // If an engine was added via the action extension, refresh the data when returning to main app
+        // Note: App extension does this itself in AddEdit VC
         if let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
             extensionDidChangeData {
-            print(.o, "Engine previously added via action extension; refreshing data.")
+            print(.i, "Engine previously added via action extension; refreshing data.")
             // Refresh data
             SearchEngines.shared.loadEngines()
         }
-        print(.d, "App(delegate) will enter foreground - with \(SearchEngines.shared.allShortcuts)!")
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        print(.d, "App(delegate) did become active!")
+        
         // extensionDidChangeData is returned to false here to allow active views to first refresh themselves
         if let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
             extensionDidChangeData {
-            print(.n, "Data and any currently visible tables should have been refreshed; setting extensionDidChangeData to false.")
+            print(.i, "Data and any currently visible tables should have been refreshed; setting extensionDidChangeData to false.")
             UserDefaults(suiteName: AppKeys.appGroup)?.set(false, forKey: SettingsKeys.extensionDidChangeData)
         }
-        print(.d, "App(delegate) did become active - with \(SearchEngines.shared.allShortcuts)!")
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

@@ -49,7 +49,6 @@ class EngineTableViewController: UITableViewController {
     
     /// Check for updated data when returning from another app, and reload the table if necessary.
     @objc func willEnterForeground() {
-        print(.d, "(EngineTable) VC will enter foreground!")
         if let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
             extensionDidChangeData {
             
@@ -62,7 +61,6 @@ class EngineTableViewController: UITableViewController {
             
             tableView.reloadData()
         }
-        print(.d, "(EngineTable) VC will enter foreground - with \(SearchEngines.shared.allShortcuts)!")
     }
     
     // MARK: - Table view data source
