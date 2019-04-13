@@ -177,6 +177,39 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // Even if editing, only let corners be rounded once
             viewDidAppear = true
         }
+        
+        // If switching apps, we need to recheck shortcut validity
+        // Note: UIApplication works in app ext, just not .shared, so this is okay
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
+    /// Check for updated data when returning from another app, and recheck the shortcut validity.
+    @objc func willEnterForeground() {
+        print(.d, "(AddEdit) VC will enter foreground!")
+        
+        // If switching back to the main app, we only need to recheck if the ext has added an engine
+        #if !EXTENSION
+            guard let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
+                extensionDidChangeData else {
+                print(.i, "Returned to app but extension did not add an engine, so no need to retest shortcut.")
+                return
+            }
+            print(.i, "Testing shortcut validity because extension has added an engine.")
+        #else
+            print(.i, "Testing shortcut validity because extension returned to foreground.")
+        #endif
+        
+        SearchEngines.shared.loadEngines()
+        allShortcuts = SearchEngines.shared.allShortcuts
+        // allOtherShortcuts is only for edit mode, which can only happen in main app
+        #if !EXTENSION
+            allOtherShortcuts = allShortcuts?.filter { $0 != engine?.shortcut }
+        #endif
+        
+        // Check shortcut validity and update save button
+        shortcutChanged()
+        
+        print(.d, "(AddEdit) VC will enter foreground - with \(SearchEngines.shared.allShortcuts)!")
     }
     
     
@@ -683,6 +716,9 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         }
         
         #if EXTENSION
+            // Tell main app it needs to refresh data when returned to foreground
+            UserDefaults(suiteName: AppKeys.appGroup)?.set(true, forKey: SettingsKeys.extensionDidChangeData)
+        
             returnToHostApp()
         #else
             // Main app must pass engine object via unwind in order to update AllEngines table

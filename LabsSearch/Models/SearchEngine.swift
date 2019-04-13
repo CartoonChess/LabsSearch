@@ -88,6 +88,7 @@ struct SearchEngines {
 //    }
     
     
+    // TODO: Why not make an enum or array like SearchEngines.shared.allShortcuts.enabled, so we can update one value in VCs instead of all three?
     /// Shortcuts for all engines, including disabled ones, alphabetically by engine name.
     var allShortcuts: [String] {
         get {

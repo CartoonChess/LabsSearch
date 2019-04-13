@@ -72,6 +72,31 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
             // Earlier versions use storyboard default ("Title 1" style)
             print(.n, "Using iOS<11; setting fixed font size for search field.")
         }
+        
+        // If switching apps, we need to recheck text field
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
+    /// Check for updated data when returning from another app, and reevaluate the search text field.
+    @objc func willEnterForeground() {
+        print(.d, "(Main) VC will enter foreground!")
+        
+        // Check if the ext has added an engine
+        guard let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
+            extensionDidChangeData else {
+                print(.i, "Returned to app but extension did not add an engine, so no need to refresh engines.")
+                return
+        }
+        print(.i, "Rechecking search text field because extension has added an engine.")
+        
+//        SearchEngines.shared.loadEngines()
+//        allShortcuts = SearchEngines.shared.allShortcuts
+        
+        // Check the text field again
+        searchController.currentSearchEngine = nil
+        searchTextFieldChanged(searchTextField)
+        
+        print(.d, "(Main) VC will enter foreground - with \(SearchEngines.shared.allShortcuts)!")
     }
     
     
