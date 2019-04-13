@@ -8,12 +8,19 @@
 
 import UIKit
 
+/// Allows the AllEngines TVC to receive a message when it needs to update its table in the background.
+protocol AddEditEngineTableViewControllerDelegate: class {
+    func willEnterForeground()
+}
+
 class AddEditEngineTableViewController: UITableViewController, EngineIconViewController, UrlDetailsTableViewControllerDelegate {
     
     // MARK: - Properties
     
     // Set this to true when the view has appeared for the first time
     var viewDidAppear: Bool = false
+    
+    weak var delegate: AddEditEngineTableViewControllerDelegate?
     
     // For checking that the shortcut isn't already in use
     // This must be instantiated in viewDidLoad so that the app extension has a chance to use it
@@ -193,6 +200,9 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
                 return
             }
             print(.i, "Testing shortcut validity because extension has added an engine.")
+        
+            // Tell AllEngines to update its table as well
+            delegate?.willEnterForeground()
         #else
             // AppDelegate will only refresh engines if ext has added engine,
             // so in ext's case we will force a reload just in case

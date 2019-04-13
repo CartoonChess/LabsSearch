@@ -11,7 +11,7 @@ import UIKit
 import UIKit
 
 /// Shows a list of all search engines in detail for editing.
-class AllEnginesTableViewController: EngineTableViewController {
+class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTableViewControllerDelegate {
     
     // This VC can receive the details of an OpenSearch from the OpenSearch VC
     //- It will then pass the object on to AddEdit via viewDidAppear
@@ -43,6 +43,34 @@ class AllEnginesTableViewController: EngineTableViewController {
         if openSearch != nil {
             performSegue(withIdentifier: SegueKeys.addEngine, sender: nil)
         }
+    }
+    
+    override func willEnterForeground() {
+        // Take note of the selected engine, if it exists
+        let selectedEngine = self.selectedEngine
+        var indexPath = tableView.indexPathForSelectedRow
+        
+        // Update table with engine added through action extention, if applicable
+        super.willEnterForeground()
+        
+        // We can stop here if no row had been selected
+        guard let previouslySelectedEngine = selectedEngine else { return }
+        
+        // Newly added engines are always enabled, so the index will be the same for disabled ones
+        
+        if previouslySelectedEngine.isEnabled {
+            // Selected engine was enabled, so it may have been offset by the newly added engine
+            let shortcut = previouslySelectedEngine.shortcut
+            guard let row = enabledShortcuts.firstIndex(of: shortcut) else {
+                print(.x, "Failed to find previously selected engine among enabled engines.")
+                return
+            }
+            indexPath = [0, row]
+        }
+        
+        // Reselect engine, so edit/delete still works
+        print(.i, "Reselecting engine in AllEngines VC.")
+        tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
     }
     
     
@@ -281,6 +309,8 @@ class AllEnginesTableViewController: EngineTableViewController {
                 
                 // Pass the selected object to the new view controller
                 destination.engine = engine
+                // And also make ourselves the delegate
+                destination.delegate = self
             case SegueKeys.addEngine:
                 print(.o, "Segueing to AddEdit view using OpenSearch engine named \"\(openSearch?.name ?? "nil")\".")
                 destination.openSearch = openSearch

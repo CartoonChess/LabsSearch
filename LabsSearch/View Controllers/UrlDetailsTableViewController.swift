@@ -20,6 +20,10 @@ protocol UrlDetailsTableViewControllerDelegate: class {
     func updateUrlDetails(baseUrl: URL?, queries: [String: String])
     func updateFields(for url: String)
     func updateIcon(for url: URL, host: String)
+    
+    // Now we can tell AddEdit to reevaluate, i.e. check shortcut
+    // in odd event engine was added via action extension inside Safari VC
+    func willEnterForeground()
 }
 
 // Note: Code for UITextView is left here and in IB
@@ -318,6 +322,24 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             } else {
                 print(.x, "Failed to open URL for testing.")
             }
+        }
+    }
+    
+    
+    @objc override func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        print(.n, "Safari view dismissed.")
+        
+        if let extensionDidChangeData = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.extensionDidChangeData),
+            extensionDidChangeData {
+            print(.i, "Engine added via action extension nested inside Safari view; reevaluating AddEdit VC.")
+            // Refresh data
+            SearchEngines.shared.loadEngines()
+            // Tell AddEdit to reevaluate
+            delegate?.willEnterForeground()
+//            // Toggle setting back to false
+//            UserDefaults(suiteName: AppKeys.appGroup)?.set(false, forKey: SettingsKeys.extensionDidChangeData)
+            // Toggling the preference back to false will be handled elsewhere
+            // Table updates in AddEdit must consider both main and ext engines simultaneously in this case
         }
     }
     
