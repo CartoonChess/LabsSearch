@@ -111,29 +111,76 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     // TODO: These features, like so many other things now, are bloating up our VCs
     //- We should move various functions into pure controllers perhaps
     
-    /// This is intended for debug mode only. Opens the system share sheet to export the engines plist.
+    
+    /// Opens the system share sheet to export the engines plist.
+    ///
+    /// - Parameter sender: The table cell the user touched to initiate this function. Useful for iPad layouts.
+    ///
+    /// This is intended for debug mode only.
     func exportEngines(sender: UITableViewCell) {
-//        let archiveUrl = DirectoryKeys.userEnginesUrl
-
-        // Make sure the engines file exists
-//        guard FileManager.default.fileExists(atPath: archiveUrl.path) else {
-        guard let userEnginesUrl = DirectoryKeys.userEnginesUrl,
-            FileManager.default.fileExists(atPath: userEnginesUrl.path) else {
-//            print(.x, "Could not find or failed to fetch engines archive at \(archiveUrl).")
-            print(.x, "Could not find or failed to fetch engines archive at user engines URL.")
-            return
+        // We have to make a copy of allEngines with the terms placeholder obscured
+        // However, we can't put in a URL-illegal string, but we also don't want something reproducable
+        // Therefore, each export will generate its own random string to replace the placeholder
+        // A dummy engine will be added to the array (using the illegal shortcut " ")
+        // It will contain the randomized placeholder, so that this can be checked for importing later
+        
+        // Create the random placeholder
+        let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let censoredPlaceholder = String((0...20).map{_ in characters.randomElement()!})
+        
+        // Create a copy of allEngines with the placeholder changed
+        var censoredEngines = [String: SearchEngine]()
+        
+        for (_, engine) in SearchEngines.shared.allEngines {
+            // Censor placeholder in base URL
+            let censoredBaseUrl = engine.baseUrl.absoluteString.replacingOccurrences(of: SearchEngines.shared.termsPlaceholder, with: censoredPlaceholder)
+            
+            // If for some reason we can't replace the placeholder, just skip the engine
+            //- Sorry, engine.
+            guard let baseUrl = URL(string: censoredBaseUrl) else {
+                print(.x, "Problem removing terms placeholder in engine \"\(engine.name)\".")
+                continue
+            }
+            
+            // Recreate engine with URL and queries censored
+            let censoredEngine = SearchEngine(
+                name: engine.name,
+                shortcut: engine.shortcut,
+                baseUrl: baseUrl,
+                queries: engine.queries.withValueReplaced(SearchEngines.shared.termsPlaceholder, replaceWith: censoredPlaceholder),
+                isEnabled: engine.isEnabled)
+            censoredEngines[censoredEngine.shortcut] = censoredEngine
         }
         
-        // Create the activity controller with the archive data to pass
-        // Sending the URL automatically fetches the file to send
-//        let activityController = UIActivityViewController(activityItems: [archiveUrl], applicationActivities: nil)
-        let activityController = UIActivityViewController(activityItems: [userEnginesUrl], applicationActivities: nil)
-        // iPad only: Eminate from button (fatal error if omitted)
-        activityController.popoverPresentationController?.sourceView = sender
-        // And make it come from the center of the button
-        activityController.popoverPresentationController?.sourceRect = sender.bounds
+        // Add a dummy engine that contains the randomized placeholder as the name
+        censoredEngines[" "] = SearchEngine(name: censoredPlaceholder, shortcut: " ", baseUrl: URL(string: "http://example.com")!, queries: [:], isEnabled: false)
+        
+        // Create plist data from allEngines with the terms placeholder obscured
+        // TODO: When/if an import function is written, this obfuscation will have to be reversed
+        
+        let propertyListEncoder = PropertyListEncoder()
+        do {
+            let encodedEngines = try propertyListEncoder.encode(censoredEngines)
+            print(.i, "Engines successfully encoded.")
+            
+            // Create temporary plist file
+            let temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+            let temporaryFile = temporaryDirectory.appendingPathComponent("engines").appendingPathExtension("plist")
+            try encodedEngines.write(to: temporaryFile, options: .noFileProtection)
+            print(.i, "Saved censored engines to temporary file.")
+        
+            // Create the activity controller with the archive data to pass
+            let activityController = UIActivityViewController(activityItems: [temporaryFile], applicationActivities: nil)
+            
+            // iPad only: Eminate from button (fatal error if omitted)
+            activityController.popoverPresentationController?.sourceView = sender
+            // And make it come from the center of the button
+            activityController.popoverPresentationController?.sourceRect = sender.bounds
 
-        present(activityController, animated: true, completion: nil)
+            present(activityController, animated: true, completion: nil)
+        } catch {
+            print(.x, "Failed to encode engines to plist format; error: \(error)")
+        }
     }
     
     
@@ -145,7 +192,6 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
 //        } else {
 //            print(.x, "Failed to delete preferences file.")
 //        }
-        // FIXME: I doubt this works
         defaults?.removePersistentDomain(forName: AppKeys.appGroup)
         
         // Set up some standard preferences
@@ -191,7 +237,6 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     // MARK: - Table view methods
     
     // Show or hide the developer row
-    // FIXME: We need to check that this actually hides the row in a proper build
     //- Do we want to allow beta testers to use this?
     override func numberOfSections(in tableView: UITableView) -> Int {
         // Set the default to be safe

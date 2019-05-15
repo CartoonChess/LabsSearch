@@ -71,9 +71,10 @@ class DefaultEngineTableViewController: EngineTableViewController {
         if let engine = engines[enabledShortcuts[indexPath.row]] {
             selectedEngine = engine
             delegate?.didSelectDefaultEngine(engine) //*
-            // FIXME: We hit a critical error trying to unwrap an optional here
+            // Note: We hit a critical error trying to unwrap an optional here
             //- It occurred when touching a define engine cell after increasing system font size
             //- Note that the settings table labels disappear before this
+            //- However, we've been unable to reproduce this.
         }
     }
 

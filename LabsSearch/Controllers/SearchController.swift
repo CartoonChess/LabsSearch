@@ -138,8 +138,9 @@ struct SearchController {
             terms = components[1]
         }
         
-        // FIXME: Need to disable search text field when there's no search engines available
-        //- Update UI to instruct user to allow default engines to be loaded
+        // TODO: Disable search text field when there's no search engines available?
+        // Currently our code should never allow this to happen.
+        //- Update UI to instruct user to allow default engines to be loaded?
         
         // TODO: Can we simplify this by asking for the currentSearchEngine?
         //- Maybe falling back to this method if set to nil? Or should we trust that and avoid checking the shortcut altogether?..

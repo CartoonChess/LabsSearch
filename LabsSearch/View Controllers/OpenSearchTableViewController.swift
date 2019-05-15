@@ -129,7 +129,7 @@ class OpenSearchTableViewController: UITableViewController {
         }
         
         // Show network loading indicator; this is turned off in the unwind segue (AllEngines VC)
-        // FIXME: Or maybe in the cancel/found/skip segues?
+        // TODO: Or maybe in the cancel/found/skip segues?
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
         // While testing, Disable URL text field and replace button text with activity spinner

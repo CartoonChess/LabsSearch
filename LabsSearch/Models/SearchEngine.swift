@@ -119,7 +119,7 @@ struct SearchEngines {
         get {
 //            let allShortcuts = Set(self.allShortcuts)
 //            let enabledShortcuts = Set(self.enabledShortcuts)
-//            // FIXME: Does this maintain alphabetical order?
+//            // FIXME : Does this maintain alphabetical order?
 ////            return Array(allShortcuts.symmetricDifference(enabledShortcuts))
 //            var disabledShortcuts = Array(allShortcuts.symmetricDifference(enabledShortcuts))
             return getShortcuts(includeEnabledEngines: false)
@@ -165,7 +165,6 @@ struct SearchEngines {
     }
     
     
-    // FIXME: Hide this from exported plist!
     /// This unlikely string will be the placeholder for the user's search terms.
     let termsPlaceholder = "5C5WRbhx88ax8e7Xb7cOVXSjAFJgtKHs09DKd7E4IvemJRKEIwdqglpAvhvksgo9GjPI5cW8uWcOelAVwzt2ErQFijKUap5UdIjy"
     //    let termsPlaceholder: String = "F@r=z&L;e/h?Q:M p\"T`O<P]w[s>I#p%z}z{T\\|^a~"

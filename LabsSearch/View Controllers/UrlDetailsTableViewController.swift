@@ -95,13 +95,12 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             urlTextField.text = url.absoluteString
         } else if let openSearchUrl = openSearchUrl {
             // This happens when OpS was used but the URL wasn't valid
+            // Note that even if OpS didn't find anything, if the URL contained the magic word, this view doesn't load, just assumes the URL is good
             urlTextField.text = openSearchUrl
         } else {
             // Engine is nil; this will do nothing if not using the action extension
             // Set URL to that which is provided by the host app if we haven't already made our own
             urlTextField.text = hostAppUrlString
-            
-            // FIXME: If receiving the URL of a failed OpS search with no magic word, fill it in here
         }
         
         // Determine if initial values are good enough to allow a test to be run

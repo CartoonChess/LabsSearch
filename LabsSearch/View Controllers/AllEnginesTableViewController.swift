@@ -149,7 +149,7 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
         
         // Add to table view
         engines[engine.shortcut] = engine
-        // FIXME: Can we take out this first line now?
+        // TODO: Can we take out this first line now?
         shortcuts = SearchEngines.shared.allShortcuts // preserves alpha-order
         enabledShortcuts = SearchEngines.shared.enabledShortcuts
         disabledShortcuts = SearchEngines.shared.disabledShortcuts

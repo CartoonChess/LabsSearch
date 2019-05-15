@@ -16,7 +16,7 @@ struct OpenSearch {
 
 class OpenSearchController: NSObject, XMLParserDelegate {
     
-    // FIXME: We need a status bar network loading indicator!
+    // Note: At present, status bar network loading indicator is handled in VCs
     
     // URL the user has specified; we must declare this at the class level for the parser's sake
     var url: URL? = nil

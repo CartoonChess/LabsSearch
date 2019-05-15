@@ -10,7 +10,8 @@ import Foundation
 
 extension String {
     
-    // FIXME: Need an option to skip `.removingPercentEncoding` for when user searches literal stuff
+    // TODO: Do we need an option to skip `.removingPercentEncoding` for when user searches literal stuff?
+    //- Seems to be working as expected so far...
     
     /// Converts a string to a percent-encoded URL, including Unicode characters.
     ///

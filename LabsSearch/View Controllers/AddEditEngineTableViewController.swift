@@ -231,7 +231,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     func updateView() {
         // Create an engine object with the URL, if it's testable
         // This will prevent pushing to the URL details view
-        // FIXME: This can still probably fail and cause the URL details view to push when the JSON is slow
+        // TODO: This can still probably fail and cause the URL details view to push when the JSON is slow
         
         // Set up variables and set them based on OpS or app ext
         let urlString: String?
@@ -562,7 +562,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // TODO: Update save/cancel buttons to show alerts (we've drawn details on paper)
             
         } else if baseUrl == nil && !didReceiveUpdatedUrl {
-            // FIXME: Does this ever actually execute?
+            // TODO: Does this ever actually execute?
             // Engine was modified for the first time, but it wasn't usable (i.e. can't be saved)
             print(.n, "Invalid URL entered; notifying user.")
             // Update URL details cell right label
@@ -607,9 +607,9 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             
             iconFetcher.fetchIcon(for: url) { (icon) in
                 DispatchQueue.main.async {
-                    // FIXME: We're now overriding EngineIcon functions and checks
+                    // TODO: We're now overriding EngineIcon functions and checks
                     //- But as they require an engine object and a saved image, what else can we do?
-                    // FIXME: Mutliple calls stack up; need to cancel existing if this happens
+                    // TODO: Mutliple calls stack up; need to cancel existing if this happens
                     // TODO: Animate this?
                     self.engineIconImage.image = icon
                     self.engineIconImage.alpha = 1
