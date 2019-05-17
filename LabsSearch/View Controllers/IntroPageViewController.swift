@@ -8,24 +8,18 @@
 
 import UIKit
 
-/// A separate view controller which contains the page view controller in a container. The delegate displays the page control (dots).
-protocol IntroPageViewControllerDelegate {
+
+extension UIPageViewControllerDelegate {
     /// Called by the UIPageViewController whenever the current number of pages is set or changed.
     ///
     /// - Parameter pageCount: The new page count.
-    func didUpdatePageCount(to count: Int)
-    /// Called by the UIPageViewController whenever the current page is changed.
-    ///
-    /// - Parameter pageIndex: The new page index.
-    func didUpdatePageIndex(to pageIndex: Int)
+    func didUpdatePageCount(to count: Int) {}
 }
 
-class IntroPageViewController: UIPageViewController, UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+
+class IntroPageViewController: UIPageViewController, UIPageViewControllerDataSource {
     
     // MARK:- Properties
-    
-    // The delegate VC which handles the page control (dots)
-    var introDelegate: IntroPageViewControllerDelegate?
     
     // Array of all "pages" (view controllers)
     let pages: [UIViewController] = {
@@ -49,11 +43,8 @@ class IntroPageViewController: UIPageViewController, UIPageViewControllerDelegat
         }
         setViewControllers([firstPage], direction: .forward, animated: true, completion: nil)
         
-        // Set ourselves as the main delegate to detect when pages are changed
-        delegate = self
-        
         // Pass page count to delegate to set page control (dots)
-        introDelegate?.didUpdatePageCount(to: pages.count)
+        delegate?.didUpdatePageCount(to: pages.count)
     }
     
     
@@ -93,26 +84,6 @@ class IntroPageViewController: UIPageViewController, UIPageViewControllerDelegat
         }
     }
     
-    // Called when transition after swipe has finished (used to tell delegate to update page control [dots])
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        print(.d, "Changing page dots.")
-        
-//        // This function can be triggered even if the user aborts the transition, so we must check
-//        // (not sure this is strictly necessary, though)
-//        guard completed else {
-//            print(.d, "Page transition aborted.")
-//            return
-//        }
-        
-        // PageVCDelegate indicates the current VC page as [viewControllers]
-        guard let page = viewControllers?.first,
-            let pageIndex = pages.firstIndex(of: page) else {
-            print(.x, "Page is not in intro pages array.")
-            return
-        }
-        
-        introDelegate?.didUpdatePageIndex(to: pageIndex)
-    }
 
     /*
     // MARK: - Navigation
