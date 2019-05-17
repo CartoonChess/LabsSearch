@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NPg-9P-SxL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cgB-gC-LV8">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,18 +10,56 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Intro View Controller-->
+        <scene sceneID="ytf-Nv-uff">
+            <objects>
+                <viewController id="cgB-gC-LV8" customClass="IntroViewController" customModule="Chears" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oxU-8H-geI">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tQ6-gm-vVU">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <connections>
+                                    <segue destination="NPg-9P-SxL" kind="embed" id="Amk-dX-rHV"/>
+                                </connections>
+                            </containerView>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="2" translatesAutoresizingMaskIntoConstraints="NO" id="lxj-YI-V7r">
+                                <rect key="frame" x="176" y="630" width="23" height="37"/>
+                            </pageControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="tQ6-gm-vVU" firstAttribute="leading" secondItem="AAC-N7-zic" secondAttribute="leading" id="4JN-8v-GIi"/>
+                            <constraint firstItem="tQ6-gm-vVU" firstAttribute="top" secondItem="AAC-N7-zic" secondAttribute="top" id="8ho-zf-taT"/>
+                            <constraint firstItem="AAC-N7-zic" firstAttribute="bottom" secondItem="lxj-YI-V7r" secondAttribute="bottom" id="Wfs-mH-lLL"/>
+                            <constraint firstItem="AAC-N7-zic" firstAttribute="bottom" secondItem="tQ6-gm-vVU" secondAttribute="bottom" id="Z3i-Hp-gyn"/>
+                            <constraint firstItem="lxj-YI-V7r" firstAttribute="centerX" secondItem="oxU-8H-geI" secondAttribute="centerX" id="eaR-4r-fz8"/>
+                            <constraint firstItem="AAC-N7-zic" firstAttribute="trailing" secondItem="tQ6-gm-vVU" secondAttribute="trailing" id="hbP-0B-wPd"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="AAC-N7-zic"/>
+                    </view>
+                    <connections>
+                        <outlet property="container" destination="tQ6-gm-vVU" id="MWw-nF-OcA"/>
+                        <outlet property="pageControl" destination="lxj-YI-V7r" id="ZMA-Sz-BS0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wlB-1I-ZHP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="740" y="-585"/>
+        </scene>
         <!--Intro Page View Controller-->
         <scene sceneID="Qrx-o4-ZmS">
             <objects>
                 <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="NPg-9P-SxL" customClass="IntroPageViewController" customModule="Chears" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Gv-Zz-WuF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="52" y="86"/>
+            <point key="canvasLocation" x="1396" y="-585"/>
         </scene>
-        <!--View Controller-->
+        <!--Intro1-->
         <scene sceneID="6ic-Rw-6LC">
             <objects>
-                <viewController id="heq-5u-agJ" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Intro1" title="Intro1" id="heq-5u-agJ" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4hN-hj-Eyb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -42,10 +80,10 @@
             </objects>
             <point key="canvasLocation" x="740" y="86"/>
         </scene>
-        <!--View Controller-->
+        <!--Intro2-->
         <scene sceneID="iHz-uz-tyA">
             <objects>
-                <viewController id="Jww-K6-Xey" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Intro2" title="Intro2" id="Jww-K6-Xey" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BWk-64-cMw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
