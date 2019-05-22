@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// Delegates that adopt this protocol will receive a `SearchEngine` object intended to be set to `UserDefaults` as the default engine.
+/// Delegates that adopt this protocol will receive a `SearchEngine` object intended to be sent to `UserDefaults` as the default engine.
 protocol DefaultEngineTableViewControllerDelegate: class {
     /// Assign the passed engine to the default engine in `UserDefaults`.
     ///

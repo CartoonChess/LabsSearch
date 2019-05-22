@@ -56,9 +56,6 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
             UserDefaults(suiteName: AppKeys.appGroup)?.set(false, forKey: SettingsKeys.stayInApp)
         }
         
-        // Show keyboard automatically
-        searchTextField.becomeFirstResponder()
-        
         // Allow the VC to listen to keyboard notifications so we can scroll the view if the keyboard hides the text field
         registerForKeyboardNotifications()
         
@@ -75,6 +72,18 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         
         // If switching apps, we need to recheck text field
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if 1 == 1 {
+            // Show the intro on first load
+            performSegue(withIdentifier: SegueKeys.intro, sender: nil)
+        } else {
+            // Show keyboard automatically
+            searchTextField.becomeFirstResponder()
+        }
     }
     
     /// Check for updated data when returning from another app, and reevaluate the search text field.
@@ -233,5 +242,17 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
     }
     
     // TODO: Search button (for if user prefers this over return key); below?
+    
+    
+    // MARK: - Navigation
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        // We only need to perform actions if we're showing the intro
+//        guard let destination = segue.destination as? IntroViewController else { return }
+//    }
+    
+    @IBAction func unwindToMain(segue: UIStoryboardSegue) {
+    
+    }
 
 }

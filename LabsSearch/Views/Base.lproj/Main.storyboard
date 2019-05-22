@@ -127,11 +127,20 @@
                         <outlet property="engineIconView" destination="1nX-Zg-bxw" id="OAj-FG-Bq9"/>
                         <outlet property="scrollView" destination="kfJ-ib-658" id="edf-6g-WcQ"/>
                         <outlet property="searchTextField" destination="cMM-aJ-1Yd" id="dmi-CR-1PD"/>
+                        <segue destination="AtO-Gx-3Tf" kind="presentation" identifier="IntroSegue" modalPresentationStyle="formSheet" id="fb8-cA-o5v"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1076" y="133.5832083958021"/>
+        </scene>
+        <!--Intro-->
+        <scene sceneID="GSs-HI-cIi">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Intro" id="AtO-Gx-3Tf" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YoN-Lv-KmT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1076" y="542"/>
         </scene>
         <!--Settings-->
         <scene sceneID="wOp-wp-Jiz">

@@ -38,6 +38,7 @@ struct CellKeys {
 
 /// Contains unchanging key names for all segue identifiers.
 struct SegueKeys {
+    static let intro = "IntroSegue"
     static let settings = "SettingsSegue"
     static let defaultEngine = "DefaultEngineSegue"
     static let allEngines = "AllEnginesSegue"

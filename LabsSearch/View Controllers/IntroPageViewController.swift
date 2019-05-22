@@ -19,11 +19,12 @@ extension UIPageViewControllerDelegate {
 
 class IntroPageViewController: UIPageViewController, UIPageViewControllerDataSource {
     
+    
     // MARK:- Properties
     
     // Array of all "pages" (view controllers)
     let pages: [UIViewController] = {
-        let viewControllerIDs = ["Intro1", "Intro2"]
+        let viewControllerIDs = ["Intro4", "Intro1", "Intro2", "Intro3"]
         return viewControllerIDs.map {
             return UIStoryboard(name: "Intro", bundle: nil).instantiateViewController(withIdentifier: $0)
         }

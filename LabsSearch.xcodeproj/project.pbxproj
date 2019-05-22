@@ -61,6 +61,8 @@
 		AE830D11219823F200CD8257 /* UrlController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE830D0F219807FD00CD8257 /* UrlController.swift */; };
 		AE830D152199C0D400CD8257 /* String+isValidFileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE830D142199C0D400CD8257 /* String+isValidFileName.swift */; };
 		AE830D162199C62700CD8257 /* String+isValidFileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE830D142199C0D400CD8257 /* String+isValidFileName.swift */; };
+		AE8D0FF9228EFF030069652D /* IntroDefaultEngineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D0FF8228EFF030069652D /* IntroDefaultEngineTableViewController.swift */; };
+		AE8D0FFB228FC03A0069652D /* IntroExampleShortcutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D0FFA228FC03A0069652D /* IntroExampleShortcutViewController.swift */; };
 		AE94B51F21953F4300616860 /* UrlDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE093F212194AC3400CF3361 /* UrlDetailsTableViewController.swift */; };
 		AE94B5202195907400616860 /* AddEditEngineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE093EDF2193283200CF3361 /* AddEditEngineTableViewController.swift */; };
 		AEBA473B219D2C0400869E24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEBA473A219D2C0400869E24 /* Assets.xcassets */; };
@@ -147,6 +149,8 @@
 		AE830D122199353600CD8257 /* LabsSearch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LabsSearch.entitlements; sourceTree = "<group>"; };
 		AE830D1321993B4800CD8257 /* LabsSearchAddEngineAction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LabsSearchAddEngineAction.entitlements; sourceTree = "<group>"; };
 		AE830D142199C0D400CD8257 /* String+isValidFileName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidFileName.swift"; sourceTree = "<group>"; };
+		AE8D0FF8228EFF030069652D /* IntroDefaultEngineTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroDefaultEngineTableViewController.swift; sourceTree = "<group>"; };
+		AE8D0FFA228FC03A0069652D /* IntroExampleShortcutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IntroExampleShortcutViewController.swift; path = "LabsSearch/View Controllers/IntroExampleShortcutViewController.swift"; sourceTree = SOURCE_ROOT; };
 		AEBA473A219D2C0400869E24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AEBA473D219D32B900869E24 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		AEBA474A219DCCFB00869E24 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -241,9 +245,9 @@
 			isa = PBXGroup;
 			children = (
 				AEF665CE21781BAF00DB310D /* Main.storyboard */,
+				AE578E03228BC283004D3324 /* Intro.storyboard */,
 				AE7164A421A4FFDA00BF2441 /* AddEditEngine.storyboard */,
 				AEF665D321781BB100DB310D /* LaunchScreen.storyboard */,
-				AE578E03228BC283004D3324 /* Intro.storyboard */,
 				AE2FFD572181E4DA0081F2EB /* EngineIconView.swift */,
 				AE2FFD55218198730081F2EB /* EngineTableViewCell.swift */,
 				AE2FFD5F2185EFBB0081F2EB /* TableCellTextField.swift */,
@@ -290,6 +294,8 @@
 				AEF665E121781E1B00DB310D /* MainViewController.swift */,
 				AE6C131C228D357000AE9699 /* IntroViewController.swift */,
 				AE578E2C228BE455004D3324 /* IntroPageViewController.swift */,
+				AE8D0FF8228EFF030069652D /* IntroDefaultEngineTableViewController.swift */,
+				AE8D0FFA228FC03A0069652D /* IntroExampleShortcutViewController.swift */,
 				AEE0EF712179969D0003FA13 /* SettingsTableViewController.swift */,
 				AE2FFD5B21859EF30081F2EB /* EngineTableViewController.swift */,
 				AE2FFD592181F14A0081F2EB /* DefaultEngineTableViewController.swift */,
@@ -477,6 +483,7 @@
 				AE810E33222EBE0300DF9CB5 /* DimmableTableViewCellTextField.swift in Sources */,
 				AE093EB2218DB52500CF3361 /* Dictionary+replaceValue.swift in Sources */,
 				AE2FFD582181E4DA0081F2EB /* EngineIconView.swift in Sources */,
+				AE8D0FFB228FC03A0069652D /* IntroExampleShortcutViewController.swift in Sources */,
 				AEF665EA2178263A00DB310D /* SearchController.swift in Sources */,
 				AEF665EC21784D8B00DB310D /* SearchEngine.swift in Sources */,
 				AED892B42216F4B5000A300D /* OpenSearchTableViewController.swift in Sources */,
@@ -484,6 +491,7 @@
 				AEF665CB21781BAF00DB310D /* AppDelegate.swift in Sources */,
 				AEF665E621781F9500DB310D /* Print+Errors.swift in Sources */,
 				AE830D10219807FD00CD8257 /* UrlController.swift in Sources */,
+				AE8D0FF9228EFF030069652D /* IntroDefaultEngineTableViewController.swift in Sources */,
 				AEE0EF74217B60FE0003FA13 /* PropertyKeys.swift in Sources */,
 				AE2FFD5E2185AD8A0081F2EB /* AllEnginesTableViewController.swift in Sources */,
 				AE6C131D228D357000AE9699 /* IntroViewController.swift in Sources */,
