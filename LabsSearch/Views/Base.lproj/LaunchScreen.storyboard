@@ -41,6 +41,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="TemplateIcon" width="53" height="53"/>
+        <image name="TemplateIcon" width="1152" height="1152"/>
     </resources>
 </document>

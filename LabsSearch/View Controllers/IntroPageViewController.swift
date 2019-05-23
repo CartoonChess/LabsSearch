@@ -12,8 +12,10 @@ import UIKit
 extension UIPageViewControllerDelegate {
     /// Called by the UIPageViewController whenever the current number of pages is set or changed.
     ///
-    /// - Parameter pageCount: The new page count.
-    func didUpdatePageCount(to count: Int) {}
+    /// - Parameter count: The new page count.
+    ///
+    /// This function does nothing by default and so any desired behaviour must be implemented in the conforming view controller. Note that the `UIPageViewController` which passes instructions to the delegate must cast the delegate as the delegate view controller's class in order to use that class' implementation of this function.
+    func didUpdatePageCount(to count: Int) { print(.x, "didUpdatePageCount() not implememented!") }
 }
 
 
@@ -24,7 +26,7 @@ class IntroPageViewController: UIPageViewController, UIPageViewControllerDataSou
     
     // Array of all "pages" (view controllers)
     let pages: [UIViewController] = {
-        let viewControllerIDs = ["Intro4", "Intro1", "Intro2", "Intro3"]
+        let viewControllerIDs = ["Intro1", "Intro2", "Intro3", "Intro4"]
         return viewControllerIDs.map {
             return UIStoryboard(name: "Intro", bundle: nil).instantiateViewController(withIdentifier: $0)
         }
@@ -44,8 +46,14 @@ class IntroPageViewController: UIPageViewController, UIPageViewControllerDataSou
         }
         setViewControllers([firstPage], direction: .forward, animated: true, completion: nil)
         
+        // We MUST cast the delegate otherwise it uses the protocol stub function
+        guard let delegate = delegate as? IntroViewController else {
+            print(.x, "Delegate must be IntroVC class.")
+            return
+        }
+        
         // Pass page count to delegate to set page control (dots)
-        delegate?.didUpdatePageCount(to: pages.count)
+        delegate.didUpdatePageCount(to: pages.count)
     }
     
     
