@@ -8,17 +8,60 @@
 
 import UIKit
 
-extension UIPageControl {
+//extension UIPageControl {
+//    var currentPage: Int {
+////        willSet {
+////            print("derp")
+////        }
+////        return 1
+////        let zero = 0
+//        didSet {
+//            print(.d, "oldValue: \(oldValue)")
+//            print(.d, "newValue: \(self.currentPage)")
+//        }
+//        return self.currentPage
+//    }
+//
+//    var previousPage: Int?
+//
+//    override var currentPage: Int {
+//        willSet(newValue) {
+//            print(.d, "newValue: \(newValue)")
+//        }
+//        didSet {
+//            print(.d, "oldValue: \(oldValue)")
+//            previousPage = oldValue
+//        }
+//    }
+//}
+
+/// Adds `previouslyDisplayedPage` and `lastPage` properties to the default `UIPageControl` implementation.
+///
+/// The overridden `currentPage` property automatically passes its previous value to this subclass' `previouslyDisplayedPage` property whenever it is changed. This can be used to identify whether the user tapped on the left or the right side of the control to change the page. However, `previouslyDisplayedPage` will not be updated when the `currentPage` value is changed via Interface Builder. Therefore, an additional function which copies the value of `currentPage` to `previouslyDisplayedPage` whenever the control is touched is advised.
+class IntroPageControl: UIPageControl {
+    var previouslyDisplayedPage: Int?
     
+    override var currentPage: Int {
+        didSet {
+            previouslyDisplayedPage = oldValue
+        }
+    }
+    
+    var lastPage: Int {
+        return numberOfPages - 1
+    }
 }
 
+
+/// The controller for the view which contains the container which contains the controller for the view that holds the view controller pages.
 class IntroViewController: UIViewController, UIPageViewControllerDelegate {
     
     // MARK: - Properties
     
     @IBOutlet weak var container: UIView!
     @IBOutlet weak var nextButton: UIButton!
-    @IBOutlet weak var pageControl: UIPageControl!
+//    @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet weak var pageControl: IntroPageControl!
     
     // The next button has to trigger the PageVC to whom we are the delegate, so basically delegate-delegate
 //    var pageViewControllerDataSource: UIPageViewControllerDataSource?
@@ -31,34 +74,11 @@ class IntroViewController: UIViewController, UIPageViewControllerDelegate {
         updateNextButton()
     }
     
-    /// Trigger the next page function of the PageViewController to which this view controller is delegate.
+    /// Determine whether to advance to the next page or to dismiss the intro altogether.
     @IBAction func nextButtonTapped() {
-        guard let introPageViewController = introPageViewController else {
-                print(.x, "PageVC couldn't be unwrapped in IntroVC.")
-                return
-        }
-        
-        // Get the currently showing page
-        let currentPage = introPageViewController.pages[pageControl.currentPage]
-        
-//        // Get next page from data source
-//        guard let nextPage = introPageViewController.dataSource?.pageViewController(introPageViewController, viewControllerAfter: currentPage) else {
-//            print(.x, "Couldn't find next page from IntroVC.")
-//            return
-//        }
-//
-//        // Trigger transition in the PageVC
-//        introPageViewController.setViewControllers([nextPage], direction: .forward, animated: true, completion: nil)
-//
-//        // Update page control (dots)
-//        pageViewController(introPageViewController, didFinishAnimating: true, previousViewControllers: [currentPage], transitionCompleted: true)
-        
-        // If data source returns the next page, we want to show it
-        if let nextPage = introPageViewController.dataSource?.pageViewController(introPageViewController, viewControllerAfter: currentPage) {
-            // Trigger transition in the PageVC
-            introPageViewController.setViewControllers([nextPage], direction: .forward, animated: true, completion: nil)
-            // Update page control (dots)
-            pageViewController(introPageViewController, didFinishAnimating: true, previousViewControllers: [currentPage], transitionCompleted: true)
+        if pageControl.currentPage != pageControl.lastPage {
+            // As long as we aren't on the last page, advance to the next one
+            changePage()
         } else {
             // Otherwise, we must already be on the last page, so dismiss the IntroVC altogether
             dismiss(animated: true, completion: nil)
@@ -67,27 +87,31 @@ class IntroViewController: UIViewController, UIPageViewControllerDelegate {
     
     /// Change the text of the next button to one of advancement or dismissal.
     func updateNextButton() {
-        let page = pageControl.currentPage
-        let last = pageControl.numberOfPages - 1
-        
-        if page == last {
-            nextButton.setTitle(NSLocalizedString("Intro.nextButton-Close", comment: ""), for: .normal)
-        } else {
+        if pageControl.currentPage != pageControl.lastPage {
             nextButton.setTitle(NSLocalizedString("Intro.nextButton-Next", comment: ""), for: .normal)
+        } else {
+            nextButton.setTitle(NSLocalizedString("Intro.nextButton-Close", comment: ""), for: .normal)
         }
+    }
+    
+    /// Interface Builder does not use the custom `IntroPageControl` override of `currentPage`, so we have to make sure `previouslyDisplayedPage` is up-to-date before the control's value is changed.
+    @IBAction func pageControlValueTouched() {
+        pageControl.previouslyDisplayedPage = pageControl.currentPage
     }
     
     /// Detects when the user changes the highlighted dot in the PageControl by tapping on it, and adjusts the other views accordingly to change the page.
     @IBAction func pageControlValueChanged() {
-        print(.d, "Page control value changed.")
-        
-        // Works, but with two caveats:
-        //- 1. Slides in the wrong direction when reversing
-        //- 2. Does nothing when trying to go to first page from second
-        pageControl.currentPage -= 1
-        nextButtonTapped()
-        
-        //pageControl.previousValue
+        if let previousPage = pageControl.previouslyDisplayedPage,
+            pageControl.currentPage > previousPage {
+            // The counter has to be returned to its previous state before this call, otherwise it advances twice
+            //- Plus the other functions rely on knowing what the index was before the value change
+            pageControl.currentPage -= 1
+            changePage()
+        } else {
+            // If the user tapped on the left side, go backwards
+            pageControl.currentPage += 1
+            changePage(direction: .reverse)
+        }
     }
     
     // Called when transition after swipe has finished (used to update page control [dots])
@@ -126,6 +150,48 @@ class IntroViewController: UIViewController, UIPageViewControllerDelegate {
     func didUpdatePageIndex(to index: Int) {
         pageControl.currentPage = index
         updateNextButton()
+    }
+    
+    /// Transition to the next or previous page, if it exists.
+    ///
+    /// - Parameter direction: Whether to go `forward` or in `reverse`. Defaults to `forward`.
+    func changePage(direction: UIPageViewController.NavigationDirection = .forward) {
+        guard let introPageViewController = introPageViewController else {
+            print(.x, "PageVC couldn't be unwrapped in IntroVC.")
+            return
+        }
+        
+        // Get the currently showing page
+        let currentPage = introPageViewController.pages[pageControl.currentPage]
+        // And prepare for the page we're transitioning to
+        let pageToDisplay: UIViewController
+        
+        switch direction {
+        case .forward:
+            // If data source returns the next page, we want to show it
+            if let nextPage = introPageViewController.dataSource?.pageViewController(introPageViewController, viewControllerAfter: currentPage) {
+                pageToDisplay = nextPage
+            } else {
+                print(.n, "No next page found.")
+                return
+            }
+        case .reverse:
+            if let previousPage = introPageViewController.dataSource?.pageViewController(introPageViewController, viewControllerBefore: currentPage) {
+                pageToDisplay = previousPage
+            } else {
+                print(.n, "No previous page found.")
+                return
+            }
+        @unknown default:
+            print(.x, "Attempted to change pages in a weird direction!")
+            return
+        }
+        
+        // Trigger transition in the PageVC
+        introPageViewController.setViewControllers([pageToDisplay], direction: direction, animated: true, completion: nil)
+        // Update page control (dots)
+        pageViewController(introPageViewController, didFinishAnimating: true, previousViewControllers: [currentPage], transitionCompleted: true)
+        
     }
     
 

@@ -24,12 +24,13 @@
                                     <segue destination="NPg-9P-SxL" kind="embed" id="Amk-dX-rHV"/>
                                 </connections>
                             </containerView>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="2" translatesAutoresizingMaskIntoConstraints="NO" id="lxj-YI-V7r">
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="2" translatesAutoresizingMaskIntoConstraints="NO" id="lxj-YI-V7r" customClass="IntroPageControl" customModule="Chears" customModuleProvider="target">
                                 <rect key="frame" x="176" y="630" width="23" height="37"/>
                                 <color key="pageIndicatorTintColor" red="0.24313725489999999" green="0.039215686270000001" blue="0.1058823529" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="currentPageIndicatorTintColor" red="0.24313725489999999" green="0.039215686270000001" blue="0.1058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <action selector="pageControlValueChanged" destination="cgB-gC-LV8" eventType="valueChanged" id="57E-Xr-tbO"/>
+                                    <action selector="pageControlValueTouched" destination="cgB-gC-LV8" eventType="touchDown" id="hEc-oe-4f6"/>
                                 </connections>
                             </pageControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q9o-Ku-Dg7">
