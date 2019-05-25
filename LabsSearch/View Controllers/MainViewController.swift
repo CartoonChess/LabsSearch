@@ -67,7 +67,7 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
             searchTextField.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         } else {
             // Earlier versions use storyboard default ("Title 1" style)
-            print(.n, "Using iOS<11; setting fixed font size for search field.")
+            print(.i, "Using iOS<11; setting fixed font size for search field.")
         }
         
         // If switching apps, we need to recheck text field
@@ -77,12 +77,18 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if 1 == 1 {
-            // Show the intro on first load
-            performSegue(withIdentifier: SegueKeys.intro, sender: nil)
-        } else {
+        // If the firstLaunch preference is false, don't show the intro
+        if let didSeeIntro = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.introComplete),
+            didSeeIntro {
+            print(.d, "didSeeIntro: \(didSeeIntro)")
             // Show keyboard automatically
             searchTextField.becomeFirstResponder()
+        } else {
+            // Show the intro on first load (setting is false or nil)
+            performSegue(withIdentifier: SegueKeys.intro, sender: nil)
+            // Make firstLaunch false when returning so it never shows again
+            UserDefaults(suiteName: AppKeys.appGroup)?.set(true, forKey: SettingsKeys.introComplete)
+            print(.o, "Intro displayed and didSeeIntro preference set to true.")
         }
     }
     

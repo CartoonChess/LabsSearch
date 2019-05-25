@@ -23,10 +23,12 @@ struct DirectoryKeys {
 
 /// Contains unchanging key names for all in-app settings.
 struct SettingsKeys {
-    static let stayInApp = "StayInApp"
-    static let defaultEngineShortcut = "DefaultEngineShortcut"
+    // Will trigger the intro scene when set to false
+    static let introComplete = "IntroComplete"
     // App extensions will set this to true when they've modified save data
     static let extensionDidChangeData = "extensionDidChangeData"
+    static let defaultEngineShortcut = "DefaultEngineShortcut"
+    static let stayInApp = "StayInApp"
 }
 
 /// Contains unchanging key names for all cell identifiers.

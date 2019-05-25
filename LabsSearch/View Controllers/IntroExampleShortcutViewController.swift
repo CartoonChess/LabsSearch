@@ -23,7 +23,7 @@ class IntroExampleShortcutViewController: UIViewController, EngineIconViewContro
     
     @IBOutlet weak var searchTextField: UITextField!
     
-    let shortcut = NSLocalizedString("SearchEngine.defaultEngines-NaverShortcut", comment: "")
+    let shortcut = NSLocalizedString("SearchEngine.defaultEngines-YouTubeShortcut", comment: "")
     
     override func viewDidLoad() {
         super.viewDidLoad()

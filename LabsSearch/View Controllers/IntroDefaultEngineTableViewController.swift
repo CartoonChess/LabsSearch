@@ -29,8 +29,9 @@ class IntroDefaultEngineTableViewController: DefaultEngineTableViewController, D
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Prevent common shortcuts from being overwritten by all enabled shortcuts if user leaves app during intro
-        // FIXME: Check this actually works!
+        // Parent class typically refreshes allEngines etc. if returning to app after adding from app extension
+        // Prevent commonShortcuts from being overwritten by disabling this ability during intro
+        // Note: User can still add new engines from ext during intro fine, but intro won't break. Good!
         NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
         
         // Replace enabled shortcuts in this VC only with common shortcuts
