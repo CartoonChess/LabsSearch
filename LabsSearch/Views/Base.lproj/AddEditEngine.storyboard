@@ -123,7 +123,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" enablesReturnKeyAutomatically="YES" smartDashesType="no" smartQuotesType="no"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done" enablesReturnKeyAutomatically="YES" smartDashesType="no" smartQuotesType="no"/>
                                                     <connections>
                                                         <action selector="shortcutChanged" destination="kQy-Ui-Ykl" eventType="editingChanged" id="McJ-TF-DLF"/>
                                                         <action selector="shortcutTextFieldReturnKeyPressed" destination="kQy-Ui-Ykl" eventType="primaryActionTriggered" id="TZe-w9-aXe"/>

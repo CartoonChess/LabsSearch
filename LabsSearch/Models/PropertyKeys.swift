@@ -8,12 +8,13 @@
 
 import Foundation
 
-///
+/// Strings useful globally.
 struct AppKeys {
+    static let appName = "Chears"
     static let appGroup = "group.com.distantlabs.LabsSearch"
 }
 
-/// Contains some useful URLs
+/// Contains some useful URLs.
 struct DirectoryKeys {
 //    static let userEnginesUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("engines").appendingPathExtension("plist")
 //    static let userImagesUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Icons", isDirectory: true)
@@ -29,6 +30,7 @@ struct SettingsKeys {
     static let extensionDidChangeData = "extensionDidChangeData"
     static let defaultEngineShortcut = "DefaultEngineShortcut"
     static let stayInApp = "StayInApp"
+    static let developerSettings = "DeveloperSettings"
 }
 
 /// Contains unchanging key names for all cell identifiers.
@@ -42,6 +44,7 @@ struct CellKeys {
 struct SegueKeys {
     static let intro = "IntroSegue"
     static let settings = "SettingsSegue"
+    static let about = "AboutSegue"
     static let defaultEngine = "DefaultEngineSegue"
     static let allEngines = "AllEnginesSegue"
     static let openSearch = "OpenSearchSegue"

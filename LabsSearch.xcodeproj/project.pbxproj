@@ -55,6 +55,7 @@
 		AE782B0521C298330021E963 /* HtmlIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE782B0321C298330021E963 /* HtmlIcon.swift */; };
 		AE782B0721C342B70021E963 /* IconFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE782B0621C342B70021E963 /* IconFetcher.swift */; };
 		AE782B0821C342B70021E963 /* IconFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE782B0621C342B70021E963 /* IconFetcher.swift */; };
+		AE7D5E3D2298E343002D62FC /* AboutTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7D5E3C2298E343002D62FC /* AboutTableViewController.swift */; };
 		AE810E33222EBE0300DF9CB5 /* DimmableTableViewCellTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE810E32222EBE0300DF9CB5 /* DimmableTableViewCellTextField.swift */; };
 		AE810E34222EBE0300DF9CB5 /* DimmableTableViewCellTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE810E32222EBE0300DF9CB5 /* DimmableTableViewCellTextField.swift */; };
 		AE830D10219807FD00CD8257 /* UrlController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE830D0F219807FD00CD8257 /* UrlController.swift */; };
@@ -144,6 +145,7 @@
 		AE7270602195D60C00962D9C /* GetSharedUrl.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = GetSharedUrl.js; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.javascript; };
 		AE782B0321C298330021E963 /* HtmlIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HtmlIcon.swift; sourceTree = "<group>"; };
 		AE782B0621C342B70021E963 /* IconFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconFetcher.swift; sourceTree = "<group>"; };
+		AE7D5E3C2298E343002D62FC /* AboutTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AboutTableViewController.swift; path = "LabsSearch/View Controllers/AboutTableViewController.swift"; sourceTree = SOURCE_ROOT; };
 		AE810E32222EBE0300DF9CB5 /* DimmableTableViewCellTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimmableTableViewCellTextField.swift; sourceTree = "<group>"; };
 		AE830D0F219807FD00CD8257 /* UrlController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlController.swift; sourceTree = "<group>"; };
 		AE830D122199353600CD8257 /* LabsSearch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LabsSearch.entitlements; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 				AE8D0FF8228EFF030069652D /* IntroDefaultEngineTableViewController.swift */,
 				AE8D0FFA228FC03A0069652D /* IntroExampleShortcutViewController.swift */,
 				AEE0EF712179969D0003FA13 /* SettingsTableViewController.swift */,
+				AE7D5E3C2298E343002D62FC /* AboutTableViewController.swift */,
 				AE2FFD5B21859EF30081F2EB /* EngineTableViewController.swift */,
 				AE2FFD592181F14A0081F2EB /* DefaultEngineTableViewController.swift */,
 				AE2FFD5D2185AD8A0081F2EB /* AllEnginesTableViewController.swift */,
@@ -491,6 +494,7 @@
 				AEF665CB21781BAF00DB310D /* AppDelegate.swift in Sources */,
 				AEF665E621781F9500DB310D /* Print+Errors.swift in Sources */,
 				AE830D10219807FD00CD8257 /* UrlController.swift in Sources */,
+				AE7D5E3D2298E343002D62FC /* AboutTableViewController.swift in Sources */,
 				AE8D0FF9228EFF030069652D /* IntroDefaultEngineTableViewController.swift in Sources */,
 				AEE0EF74217B60FE0003FA13 /* PropertyKeys.swift in Sources */,
 				AE2FFD5E2185AD8A0081F2EB /* AllEnginesTableViewController.swift in Sources */,

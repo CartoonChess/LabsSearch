@@ -80,7 +80,6 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         // If the firstLaunch preference is false, don't show the intro
         if let didSeeIntro = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.introComplete),
             didSeeIntro {
-            print(.d, "didSeeIntro: \(didSeeIntro)")
             // Show keyboard automatically
             searchTextField.becomeFirstResponder()
         } else {

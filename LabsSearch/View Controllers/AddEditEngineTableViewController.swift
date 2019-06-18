@@ -59,7 +59,10 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     // These details will be provided by the host app
     var hostAppEngineName: String?
     var hostAppUrlString: String?
-    var hostAppHtml: String?
+    
+    // This can be provided by the host app, OpS controller, or IconFetcher to be shared
+    // Also to be used to check page encoding
+    var html: String?
     
     let urlController = UrlController()
     
@@ -151,7 +154,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
                 print(.o, "Using OpenSearch engine named \"\(openSearch.name)\".")
                 updateUsingOpenSearch(openSearch)
             } else {
-                print(.n, "No OpenSearch object found; proceeding for manual engine creation.")
+                print(.i, "No OpenSearch object found; proceeding for manual engine creation.")
             }
         } else {
             // Editing
@@ -160,7 +163,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
                 return
             }
             
-            // Set title
+            // Set VC title
             navigationItem.title = NSLocalizedString("AddEditEngine.navigationItemTitle-Edit", comment: "")
             
             // Set array of engine shortcuts which excludes the current
@@ -170,6 +173,15 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             setIcon()
             nameTextField.text = engine.name
             shortcutTextField.text = engine.shortcut
+
+            // Must be some code for this somewhere already because disabling it has no effect...
+//            // Prevent looking for a new icon unless the URL host is changed
+//            if engineIconImage.image != nil {
+//                let urlString = engine.baseUrl.absoluteString
+//                if let (_, host) = iconFetcher.getUrlComponents(urlString) {
+//                    mostRecentHost = host
+//                }
+//            }
             
             // Disable toggle entirely if engine is default, otherwise set according to isEnabled property
             if engine == SearchEngines.shared.defaultEngine {
@@ -344,9 +356,11 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         
         // Only segue automatically if adding and when first appearing
         if !viewDidAppear && engine == nil {
-            viewDidAppear.toggle()
             performSegue(withIdentifier: SegueKeys.urlDetails, sender: nil)
         }
+        
+        // This will be set every time the view appears, but it prevents the host data from overwriting user's changes to URL or name/shortcut
+        viewDidAppear = true
     }
     
     
@@ -382,6 +396,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
                 array.removeAll { $0 == "m" }
             }
             // Set name as array items Capitalized and concatenated by spaces
+            // TODO: Consider reversing this so that for eg. images.google.com -> Google Images
             return array.joined(separator: " ").capitalized
         }
     }
@@ -432,7 +447,15 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     /// Update the shortcut text field colour, and icon label when the shortcut changes if there's no image.
     @IBAction func shortcutChanged() {
         // Make sure any user-entered shortcut never contains spaces
-        shortcutTextField.text = shortcutTextField.text?.components(separatedBy: .whitespacesAndNewlines).joined()
+        //- Old method didn't allow hangul blocks to be entered
+        //- New method prevents spaces and line breaks (including pasted) but other whitespace comes up valid
+        //- Shouldn't be a problem for file names or for SearchController functionality though
+//        shortcutTextField.text = shortcutTextField.text?.components(separatedBy: .whitespacesAndNewlines).joined()
+        let whitespace = CharacterSet.whitespacesAndNewlines
+        if let text = shortcutTextField.text,
+            text.rangeOfCharacter(from: whitespace) != nil {
+            shortcutTextField.text = shortcutTextField.text?.replacingOccurrences(of: " ", with: "")
+        }
         
 //        print(.n, "Parent: \"Shortcut changed.\"")
         // Set icon label to reflect shortcut, but only if there's no image already supplied
@@ -523,7 +546,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     // Determine if the URL should really be changed, based on whether or not it is valid
     func updateUrlDetails(baseUrl: URL?, queries: [String: String]) {
-        print(.n, "Called updateUrlDetails with baseUrl \"\(baseUrl?.absoluteString ?? "nil")\" and queries \"\(queries)\" while updatedUrlReceived is \(didReceiveUpdatedUrl).")
+        print(.i, "Called updateUrlDetails with baseUrl \"\(baseUrl?.absoluteString ?? "nil")\" and queries \"\(queries)\" while updatedUrlReceived is \(didReceiveUpdatedUrl).")
         
         // Set up the two possibilities for the label
         let changedText: String
@@ -619,7 +642,6 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
                         UIApplication.shared.isNetworkActivityIndicatorVisible = false
                     #endif
                 }
-                // TODO: Still need to get name and shortcut from URL!
             }
             
         }

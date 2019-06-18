@@ -196,10 +196,10 @@ class IconFetcher: NSObject, XMLParserDelegate {
                         // Preference: Exists, named apple-touch-icon*, largest size
                         
                         if bestIcon.href.isEmpty {
-                            print(.o, "Setting new icon (bestIcon was empty)")
+                            print(.o, "Setting new icon (bestIcon was empty).")
                             bestIcon = icon
                         } else if !bestIcon.rel.contains("apple-touch-icon") && icon.rel.contains("apple-touch-icon") {
-                            print(.o, "Setting new icon (apple-touch-icon preferred).)")
+                            print(.o, "Setting new icon (apple-touch-icon preferred).")
                             bestIcon = icon
                         } else if (
                             (bestIcon.rel.contains("apple-touch-icon") &&                               icon.rel.contains("apple-touch-icon")

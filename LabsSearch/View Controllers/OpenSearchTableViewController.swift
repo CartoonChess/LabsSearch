@@ -69,6 +69,7 @@ class OpenSearchTableViewController: UITableViewController {
         
         // If the user's text is a proper URL, make sure it's https and enable test button
         // Note that the URL validates even for single words, so this isn't very robust
+        
         guard let url = URL(string: urlString) else {
             print(.x, "Could not form a URL from the entered text.")
             self.url = nil

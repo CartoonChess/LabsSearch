@@ -45,15 +45,18 @@ extension URL {
         let plusPlaceholder = String(SearchEngines.shared.termsPlaceholder.reversed())
         let terms = terms.replacingOccurrences(of: "+", with: plusPlaceholder)
         
-        let queries = queries.withValueReplaced(textToReplace, replaceWith: terms)
+//        let hashPlaceholder = "1234567890"
+//        terms = terms.replacingOccurrences(of: "#", with: hashPlaceholder)
         
+        let queries = queries.withValueReplaced(textToReplace, replaceWith: terms)
+//        print(.d, "self: \(self)")
 //        return self.withQueries(queries)
         // First, check for placeholder in queries (most typical case)
         guard let url = self.withQueries(queries) else {
             print(.x, "Could not append queries to base URL.")
             return nil
         }
-        
+//        print(.d, "url: \(url)")
         // Then, check for terms placeholder in base URL (less typical cases)
         guard let encodedTerms = terms.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             print(.x, "Could not percent encode terms.")
@@ -66,6 +69,7 @@ extension URL {
         //- This finishes the process started at the beginning of this function
         // TODO: Provide option in UrlDetails to toggle this on a per-engine basis
         urlString = urlString.replacingOccurrences(of: plusPlaceholder, with: "%2B")
+//        urlString = urlString.replacingOccurrences(of: hashPlaceholder, with: "#")
         
         return URL(string: urlString)
     }

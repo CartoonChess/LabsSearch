@@ -8,7 +8,9 @@
 
 import UIKit
 
-class SettingsTableViewController: UITableViewController, DefaultEngineTableViewControllerDelegate {
+class SettingsTableViewController: UITableViewController, DefaultEngineTableViewControllerDelegate, AboutTableViewControllerDelegate {
+    
+    // MARK: - Properties
     
 //    let defaults = UserDefaults.standard
     let defaults = UserDefaults(suiteName: AppKeys.appGroup)
@@ -22,7 +24,7 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     
     enum Section {
         static let stayInApp = 0
-        static let developerSettings = 2
+        static let developerSettings = 3
     }
     
     enum Cell {
@@ -33,6 +35,8 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     @IBOutlet weak var stayInAppSwitch: UISwitch!
     @IBOutlet weak var defaultEngineNameLabel: UILabel!
     
+    
+    // MARK: - Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +60,6 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     /// Load user's settings to the view
     func loadSettings() {
         // This check returns false whether set by the user or simply nonexistent
-//        stayInAppSwitch.isOn = defaults.bool(forKey: SettingsKeys.stayInApp)
         stayInAppSwitch.isOn = defaults?.bool(forKey: SettingsKeys.stayInApp) ?? false
         updateSectionFooter(Section.stayInApp)
     }
@@ -106,7 +109,7 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     }
     
     
-    // MARK: - Debug features
+    // MARK: - Developer settings (experimental features)
     
     // TODO: These features, like so many other things now, are bloating up our VCs
     //- We should move various functions into pure controllers perhaps
@@ -233,20 +236,31 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
         SearchEngines.shared.loadEngines()
     }
     
+    func didUpdateDeveloperSettings() {
+        print(.i, "Refreshing Settings VC to reflect developer settings preference.")
+        tableView.reloadData()
+    }
+    
     
     // MARK: - Table view methods
     
-    // Show or hide the developer row
-    //- Do we want to allow beta testers to use this?
+    // Show or hide the experimental features row
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // Set the default to be safe
-        var numberOfSections = 2
+//        // Set the default to be safe
+//        var numberOfSections = 3
+//
+//        #if DEBUG || TEST
+//            numberOfSections = 4
+//        #endif
+//
+//        return numberOfSections
         
-        #if DEBUG || TEST
-            numberOfSections = 3
-        #endif
-        
-        return numberOfSections
+        if let enableDeveloperSettings = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.developerSettings),
+            enableDeveloperSettings {
+            return 4
+        } else {
+            return 3
+        }
     }
     
     // Update the footer (explanatory subtitle) for specified sections
@@ -320,11 +334,17 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == SegueKeys.defaultEngine {
+        switch segue.identifier {
+        case SegueKeys.defaultEngine:
             // Get the new view controller using segue.destination
             let destination = segue.destination as! DefaultEngineTableViewController
             // Pass necessary objects to the new view controller
             destination.delegate = self
+        case SegueKeys.about:
+            let destination = segue.destination as! AboutTableViewController
+            destination.delegate = self
+        default:
+            break
         }
     }
 

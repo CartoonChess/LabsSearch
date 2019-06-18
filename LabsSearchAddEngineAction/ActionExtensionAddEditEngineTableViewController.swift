@@ -94,7 +94,7 @@ extension AddEditEngineTableViewController {
                 self.hostAppUrlString = url
                 
                 // Save HTML to try and find favicon or similar
-                self.hostAppHtml = html
+                self.html = html
                 
 //                // Pass URL to the icon fetcher
 //                guard let urlString = url,

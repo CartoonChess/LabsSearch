@@ -158,7 +158,8 @@ struct SearchEngines {
         shortcutsAndNames = shortcutsAndNames.sorted {
             // Sort by name ([1]), but,
             //- if names are the same, sort by shortcut ([0])
-            $1[1] > $0[1] || ($1[1] == $0[1] && $1[0] > $0[0])
+            // (we compare the name lowercased, otherwise eg "eBay" falls after "Z--"
+            $1[1].lowercased() > $0[1].lowercased() || ($1[1] == $0[1] && $1[0] > $0[0])
         }
         // Return a simple array of [shortcuts], but this is still sorted by alphabetical names
         return shortcutsAndNames.map { $0[0] }
@@ -252,6 +253,60 @@ struct SearchEngines {
         //- Also considered making this an array and searching on the objects, but would it be too slow?
         //- https://stackoverflow.com/questions/28727845/find-an-object-in-array
         
+//        let engines = [
+//            SearchEngine(
+//                name: NSLocalizedString("SearchEngine.defaultEngines-GoogleName", comment: ""),
+//                shortcut: NSLocalizedString("SearchEngine.defaultEngines-GoogleShortcut", comment: ""),
+//                baseUrl: URL(string: "https://www.google.com/search")!,
+//                queries: ["q": termsPlaceholder],
+//                isEnabled: true),
+//            SearchEngine(
+//                name: NSLocalizedString("SearchEngine.defaultEngines-AppleMapsName", comment: ""),
+//                shortcut: NSLocalizedString("SearchEngine.defaultEngines-AppleMapsShortcut", comment: ""),
+//                baseUrl: URL(string: "https://maps.apple.com/")!,
+//                queries: ["q": termsPlaceholder],
+//                isEnabled: true),
+//            SearchEngine(
+//                name: NSLocalizedString("SearchEngine.defaultEngines-NamuWikiName", comment: ""),
+//                shortcut: NSLocalizedString("SearchEngine.defaultEngines-NamuWikiShortcut", comment: ""),
+//                baseUrl: URL(string: "https://namu.wiki/go/\(termsPlaceholder)")!,
+//                queries: [:],
+//                isEnabled: false),
+//            SearchEngine(
+//                name: NSLocalizedString("SearchEngine.defaultEngines-NaverName", comment: ""),
+//                shortcut: NSLocalizedString("SearchEngine.defaultEngines-NaverShortcut", comment: ""),
+//                baseUrl: URL(string: "https://search.naver.com/search.naver")!,
+//                queries: ["query": termsPlaceholder],
+//                isEnabled: true),
+//            SearchEngine(
+//                name: NSLocalizedString("SearchEngine.defaultEngines-NaverKoEnDictionaryName", comment: ""),
+//                shortcut: NSLocalizedString("SearchEngine.defaultEngines-NaverKoEnDictionaryShortcut", comment: ""),
+//                baseUrl: URL(string: "https://endic.naver.com/search.nhn")!,
+//                queries: ["query": termsPlaceholder],
+//                isEnabled: false),
+//            SearchEngine(
+//                name: NSLocalizedString("SearchEngine.defaultEngines-QDWikiName", comment: ""),
+//                shortcut: NSLocalizedString("SearchEngine.defaultEngines-QDWikiShortcut", comment: ""),
+//                baseUrl: URL(string: "http://www.qetuodesigns.com/wiki/")!,
+//                queries: [
+//                    "pagename": "Site.Search",
+//                    "q": termsPlaceholder],
+//                isEnabled: false),
+//            SearchEngine(
+//                name: NSLocalizedString("SearchEngine.defaultEngines-WikipediaName", comment: ""),
+//                shortcut: NSLocalizedString("SearchEngine.defaultEngines-WikipediaShortcut", comment: ""),
+//                baseUrl: URL(string: NSLocalizedString("SearchEngine.defaultEngines-WikipediaURL", comment: ""))!,
+//                queries: ["search": termsPlaceholder],
+//                isEnabled: true),
+//            SearchEngine(
+//                name: NSLocalizedString("SearchEngine.defaultEngines-YouTubeName", comment: ""),
+//                shortcut: NSLocalizedString("SearchEngine.defaultEngines-YouTubeShortcut", comment: ""),
+//                baseUrl: URL(string: "https://www.youtube.com/results")!,
+//                queries: ["search_query": termsPlaceholder],
+//                isEnabled: true)
+//        ]
+        
+        // English
         let engines = [
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-GoogleName", comment: ""),
@@ -266,11 +321,27 @@ struct SearchEngines {
                 queries: ["q": termsPlaceholder],
                 isEnabled: true),
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-NamuWikiName", comment: ""),
-                shortcut: NSLocalizedString("SearchEngine.defaultEngines-NamuWikiShortcut", comment: ""),
-                baseUrl: URL(string: "https://namu.wiki/go/\(termsPlaceholder)")!,
-                queries: [:],
-                isEnabled: false),
+                name: NSLocalizedString("SearchEngine.defaultEngines-WikipediaName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-WikipediaShortcut", comment: ""),
+                baseUrl: URL(string: NSLocalizedString("SearchEngine.defaultEngines-WikipediaURL", comment: ""))!,
+                queries: ["search": termsPlaceholder],
+                isEnabled: true),
+            SearchEngine(
+                name: NSLocalizedString("SearchEngine.defaultEngines-YouTubeName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-YouTubeShortcut", comment: ""),
+                baseUrl: URL(string: "https://www.youtube.com/results")!,
+                queries: ["search_query": termsPlaceholder],
+                isEnabled: true)
+        ]
+        
+        // Korean
+        let _ = [
+            SearchEngine(
+                name: NSLocalizedString("SearchEngine.defaultEngines-GoogleName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-GoogleShortcut", comment: ""),
+                baseUrl: URL(string: "https://www.google.com/search")!,
+                queries: ["q": termsPlaceholder],
+                isEnabled: true),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-NaverName", comment: ""),
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-NaverShortcut", comment: ""),
@@ -282,15 +353,13 @@ struct SearchEngines {
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-NaverKoEnDictionaryShortcut", comment: ""),
                 baseUrl: URL(string: "https://endic.naver.com/search.nhn")!,
                 queries: ["query": termsPlaceholder],
-                isEnabled: false),
+                isEnabled: true),
             SearchEngine(
-                name: NSLocalizedString("SearchEngine.defaultEngines-QDWikiName", comment: ""),
-                shortcut: NSLocalizedString("SearchEngine.defaultEngines-QDWikiShortcut", comment: ""),
-                baseUrl: URL(string: "http://www.qetuodesigns.com/wiki/")!,
-                queries: [
-                    "pagename": "Site.Search",
-                    "q": termsPlaceholder],
-                isEnabled: false),
+                name: NSLocalizedString("SearchEngine.defaultEngines-NamuWikiName", comment: ""),
+                shortcut: NSLocalizedString("SearchEngine.defaultEngines-NamuWikiShortcut", comment: ""),
+                baseUrl: URL(string: "https://namu.wiki/go/\(termsPlaceholder)")!,
+                queries: [:],
+                isEnabled: true),
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-WikipediaName", comment: ""),
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-WikipediaShortcut", comment: ""),

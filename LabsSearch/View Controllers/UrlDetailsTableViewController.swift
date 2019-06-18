@@ -24,6 +24,9 @@ protocol UrlDetailsTableViewControllerDelegate: class {
     // Now we can tell AddEdit to reevaluate, i.e. check shortcut
     // in odd event engine was added via action extension inside Safari VC
     func willEnterForeground()
+    
+//    // This is just for debugging
+//    var nameTextField: TableViewCellTextField! { get }
 }
 
 // Note: Code for UITextView is left here and in IB
@@ -346,6 +349,9 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
     // Note that this is also called when testing, but that's not really a problem
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+//        let nameText = delegate?.nameTextField.text
+//        print(.d, "AddEdit name field: \(nameText)")
         
 //        var baseUrl: URL?
 //        var queries = [String: String]()
