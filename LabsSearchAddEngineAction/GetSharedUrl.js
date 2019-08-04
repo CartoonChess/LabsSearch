@@ -26,6 +26,7 @@ GetSharedUrl.prototype = {
         arguments.completionFunction({
             "url": document.URL,
             "title": document.title,
+            "characterEncoding": document.characterSet,
             "html": document.documentElement.outerHTML
          });
     }

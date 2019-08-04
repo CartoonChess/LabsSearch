@@ -56,14 +56,15 @@ struct UrlController {
     ///
     /// - Parameters:
     ///   - string: The string representing a URL. If empty or `nil`, this function will also return `nil`.
+    ///   - encoder: A `CharacterEncoder` object, if available.
     ///   - schemeIsValid: A closure which receives a URL object, and which expects a boolean value based on whether the scheme is compatible within the current app content.
     ///   - url: The URL object to be passed to the enclosure.
     /// - Returns: A URL object if all checks are passed, otherwise `nil`.
     ///
     /// This function will check that the string is not nil and that it conforms to URL expectations. It will then pass a percentage encoded URL to the completion handler, where it expects the calling view to return a boolean value based on whether the app can open the URL based on its scheme (http, etc.).
-    func validUrl(from string: String?, schemeIsValid: (_ url: URL) -> Bool) -> URL? {
+    func validUrl(from string: String?, characterEncoder encoder: CharacterEncoder? = nil, schemeIsValid: (_ url: URL) -> Bool) -> URL? {
         if let urlText = string,
-            let url = urlText.encodedUrl(),
+            let url = urlText.encodedUrl(characterEncoder: encoder),
             schemeIsValid(url) {
             return url
         } else {
@@ -121,11 +122,11 @@ struct UrlController {
     ///   - completion: Sends the `baseUrl` and `queries` for use with `updateUrlDetails()`.
     ///   - baseUrl: The URL string converted to a URL object, minus queries.
     ///   - queries: A dictionary of the URL's key-value queries.
-    func willUpdateUrlDetails(url urlString: String?, magicWord customMagicWord: String? = nil, completion: (_ baseUrl: URL?, _ queries: [String: String]) -> Void) {
+    func willUpdateUrlDetails(url urlString: String?, magicWord customMagicWord: String? = nil, characterEncoder encoder: CharacterEncoder? = nil, completion: (_ baseUrl: URL?, _ queries: [String: String]) -> Void) {
         print(.o, "Getting updated URL to pass back to AddEdit VC.")
         
         guard let urlString = urlString,
-            let urlWithMagicWord = urlString.encodedUrl() else {
+            let urlWithMagicWord = urlString.encodedUrl(characterEncoder: encoder) else {
                 print(.x, "Could not return to Add/Edit VC because text fields failed to unwrap or could not be converted to URL.")
                 return
         }
@@ -153,15 +154,37 @@ struct UrlController {
 //                print(.x, "Could not get URL components, or failed to extract queries.")
 //                return
 //        }
+        
         guard let urlComponents = URLComponents(url: urlWithMagicWord, resolvingAgainstBaseURL: true) else {
                 print(.x, "Could not get URL components.")
                 return
         }
-        // This function no longer returns a nil value; it should return an empty dictionary when no queries present
-        let queryDictionary = urlComponents.queryDictionary()
+        
+        // Determine the best way to handle the queries
+        var queryDictionary: [String: String]
+        if encoder?.encoding.value == .utf8 || encoder == nil {
+            // Use the basic function for UTF
+            // This function no longer returns a nil value; it should return an empty dictionary when no queries present
+            queryDictionary = urlComponents.queryDictionary()
+        } else if #available(iOS 11.0, *) {
+            // Preserve percent encoding for non-UTF URLs
+            // Query items can be get with percent encoding only in later versions of iOS
+            queryDictionary = urlComponents.queryDictionary(keepPercentEncoding: true)
+        } else {
+            // Non-UTF but iOS too old; custom code ahead
+            // Queries are non-UTF percent encoded, but these cannot be fetched before iOS 11
+            let queryItems = urlComponents.percentEncodedQuery?.components(separatedBy: "&") ?? []
+            queryDictionary = [:]
+            
+            for item in queryItems {
+                let side = item.components(separatedBy: "=")
+                queryDictionary[side[0]] = side[1]
+            }
+        }
         
         // Replace the magic word in query (if present) with the terms placeholder before passing it back
         let queries = queryDictionary.withValueReplaced(magicWord, replaceWith: SearchEngines.shared.termsPlaceholder)
+        print(.d, "queries: \(queries)")
         
         // Get URL without queries and replace magic word (if present)
         // TODO: This seems likely to break things. Perhaps it should be done earlier?

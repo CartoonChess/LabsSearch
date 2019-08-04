@@ -1,5 +1,5 @@
 //
-//  MainAppUrlDetailsTableViewController.swift
+//  UrlDetailsTableViewController+mainApp.swift
 //  LabsSearch
 //
 //  Created by Xcode on ’18/10/30.

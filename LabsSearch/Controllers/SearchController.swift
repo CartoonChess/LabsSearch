@@ -165,12 +165,8 @@ struct SearchController {
             searchEngine = defaultEngine
         }
         
-//        // This is sorta hacky, but basically it replaces any empty query with the search terms
-//        let queries = searchEngine.queries
-//        let url = searchEngine.baseUrl.withSearchTerms(terms, using: queries)!
-        
         // Check for placeholder in queries and base URL
-        guard let url = searchEngine.baseUrl.withSearchTerms(terms, using: searchEngine.queries, replacing: SearchEngines.shared.termsPlaceholder) else {
+        guard let url = searchEngine.baseUrl.withSearchTerms(terms, using: searchEngine.queries, replacing: SearchEngines.shared.termsPlaceholder, encoding: searchEngine.encoding) else {
             print(.x, "Failed to inject search terms into URL.")
             return
         }

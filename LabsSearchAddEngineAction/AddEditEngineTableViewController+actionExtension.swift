@@ -85,6 +85,7 @@ extension AddEditEngineTableViewController {
                 // Set variables, if we can
                 let url = results["url"] as? String
                 let title = results["title"] as? String
+                let characterEncoding = results["characterEncoding"] as? String
                 let html = results["html"] as? String
                 
                 // Use web page title to fill in name field
@@ -93,8 +94,19 @@ extension AddEditEngineTableViewController {
                 // Get URL to pass to URL details view
                 self.hostAppUrlString = url
                 
+                // Get character encoding
+//                self.hostAppCharacterEncoding = characterEncoding
+                if let characterEncoding = characterEncoding {
+                    self.searchEngineEditor.characterEncoder = CharacterEncoder(encoding: characterEncoding)
+//                    self.searchEngineEditor.encoding = self.searchEngineEditor.characterEncoder?.encoding
+                }
+                
                 // Save HTML to try and find favicon or similar
-                self.html = html
+                self.hostAppHtml = html
+                self.searchEngineEditor.html = html
+                print(.d, "(Ext)AddEditTVC html: \(html != nil ? String("💚") : String("💔"))")
+                print(.d, "(Ext)AddEditTVC searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
+                print(.d, "(Ext)AddEditTVC characterEncoding: \(characterEncoding ?? "💔")")
                 
 //                // Pass URL to the icon fetcher
 //                guard let urlString = url,

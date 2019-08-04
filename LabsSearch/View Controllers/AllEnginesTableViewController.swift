@@ -15,7 +15,8 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
     
     // This VC can receive the details of an OpenSearch from the OpenSearch VC
     //- It will then pass the object on to AddEdit via viewDidAppear
-    var openSearch: OpenSearch? = nil
+    var openSearch: OpenSearch?
+    var searchEngineEditor: SearchEngineEditor?
     
     var selectedEngine: SearchEngine? {
         get {
@@ -314,8 +315,13 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
             case SegueKeys.addEngine:
                 print(.o, "Segueing to AddEdit view using OpenSearch engine named \"\(openSearch?.name ?? "nil")\".")
                 destination.openSearch = openSearch
+                if let searchEngineEditor = searchEngineEditor {
+                    destination.searchEngineEditor = searchEngineEditor
+                }
+                print(.d, "AllEnginesTVC prepare() searchEngineEditor.html: \(searchEngineEditor?.html != nil ? String("💚") : String("💔"))")
                 // Set AllEngine view's copy to nil so that it doesn't loop when AddEdit is dismissed
                 openSearch = nil
+                searchEngineEditor = nil
             default:
                 print(.x, "Attempted to perform segue with no identifier.")
             }
@@ -336,12 +342,20 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
             switch segue.identifier {
             case SegueKeys.cancelOpenSearchUnwind:
                 print(.i, "Cancelled adding via OpenSearch.")
+                // Set OpS vars to nil, just in case the user somehow cancelled after they were created
+                openSearch = nil
+                searchEngineEditor = nil
             case SegueKeys.skipOpenSearchUnwind:
-                // If user tapped skip button, segue to AddEdit VC with dummy object
-                openSearch = OpenSearch(name: "", url: nil)
+//                // If user tapped skip button, segue to AddEdit VC with dummy object
+//                openSearch = OpenSearch(name: "", url: nil)
+                // If user tapped skip button, segue to AddEdit VC with entered URL, if available
+                openSearch = OpenSearch(name: "", url: source.url)
+                searchEngineEditor = source.searchEngineEditor
             default:
                 // An OpS search was attempted, so pass the OpS object to AddEdit
                 openSearch = source.openSearch
+                searchEngineEditor = source.searchEngineEditor
+                print(.d, "AllEnginesTVC unwind() searchEngineEditor.html: \(searchEngineEditor?.html != nil ? String("💚") : String("💔"))")
             }
             // Don't execute AddEdit segues below
             return

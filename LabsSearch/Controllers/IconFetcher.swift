@@ -20,6 +20,11 @@ class IconFetcher: NSObject, XMLParserDelegate {
     /// This will first receive objects from the XML parser, then be added to by `findIconsInHtml()`.
     var icons = [HtmlIcon]()
     
+    /// If `IconFetcher` successfully retrieves HTML, it will be saved so that a `SearchEngineEditor` object can reuse it.
+    var html: String?
+    // We can just borrow this from SearchEngineEditor in the future hopefully, possibly through delegation
+    var characterEncoder: CharacterEncoder?
+    
     
     // MARK: -
     
@@ -27,11 +32,13 @@ class IconFetcher: NSObject, XMLParserDelegate {
     ///
     /// - Parameter urlString: The URL as a string.
     /// - Returns: A tupple of `URL` and the host string if successful, otherwise `nil`.
-    func getUrlComponents(_ urlString: String) -> (URL, String)? {
+    func getUrlComponents(_ urlString: String, characterEncoder encoder: CharacterEncoder? = nil) -> (URL, String)? {
         // Convert urlString into URL components
-        guard var components = URLComponents(string: urlString) else {
-                print(.x, "Failed to convert URL text field contents to URL for background retrieval.")
-                return nil
+//        guard var components = URLComponents(string: urlString) else {
+        guard let encodedUrl = urlString.encodedUrl(characterEncoder: encoder),
+            var components = URLComponents(url: encodedUrl, resolvingAgainstBaseURL: true) else {
+            print(.x, "Failed to convert URL text field contents to URL for background retrieval.")
+            return nil
         }
         
         // Must be a webpage (not e.g. sms://) for this to work; also, must use https
@@ -237,16 +244,22 @@ class IconFetcher: NSObject, XMLParserDelegate {
         
         // Retrieve HTML in background
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            // Get the HTML character encoding so we can parse it properly
+            let encodingName = response?.textEncodingName ?? "nil"
+            self.characterEncoder = CharacterEncoder(encoding: encodingName)
+            let encoding = self.characterEncoder?.encoding.value
+            
             if let data = data {
                 // Look for icon:
                 
                 //- Just get the <head> part, if it's defined
-                // TODO: Encoding detection? Possibly from response header Content-Type
-                var html = String(data: data, encoding: .utf8)
+                // We'll try to use the page's character encoding if we can get it
+//                var html = String(data: data, encoding: .utf8)
+                var html = String(data: data, encoding: encoding ?? .utf8)
+                // Keep HTML for SearchEngineEditor
+                self.html = html
+                print(.d, "IconFetcher html: \(html != nil ? String("💚") : String("💔"))")
                 let components = html?.components(separatedBy: "<head")
-
-                /* *** DEBUG *** */
-//                print(html ?? "no html!!!")
                 
                 // If the split work, we've got a <head> tag, or possibly <header>
                 if let components = components,

@@ -21,6 +21,21 @@ struct SearchEngine: Equatable, Codable {
 //    var image: Data? = nil
     var isEnabled: Bool
     
+    // Optional properties
+    // Note that these cannot be set when initializing and must be set separately
+    // TODO: We can remove the initializer if we provide default values, starting with Swift 5.1 (Xcode 11)
+    var encoding: CharacterEncoding?
+//    var characterEncoding: String = "UTF-8"
+    
+    init(name: String, shortcut: String, baseUrl: URL, queries: [String: String], isEnabled: Bool, encoding: CharacterEncoding? = nil) {
+        self.name = name
+        self.shortcut = shortcut
+        self.baseUrl = baseUrl
+        self.queries = queries
+        self.isEnabled = isEnabled
+        self.encoding = encoding
+    }
+    
     func getImage() -> UIImage? {
         // Make sure the image actually exists; otherwise give up
         // NOTE: .absoluteString returns false here
@@ -307,7 +322,7 @@ struct SearchEngines {
 //        ]
         
         // English
-        let engines = [
+        let engines: [SearchEngine] = [
             SearchEngine(
                 name: NSLocalizedString("SearchEngine.defaultEngines-GoogleName", comment: ""),
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-GoogleShortcut", comment: ""),
@@ -331,7 +346,21 @@ struct SearchEngines {
                 shortcut: NSLocalizedString("SearchEngine.defaultEngines-YouTubeShortcut", comment: ""),
                 baseUrl: URL(string: "https://www.youtube.com/results")!,
                 queries: ["search_query": termsPlaceholder],
-                isEnabled: true)
+                isEnabled: true),
+            SearchEngine(
+                name: "ShiftJS Test",
+                shortcut: "js",
+                baseUrl: URL(string: "https://kakaku.com/search_results/\(termsPlaceholder)/")!,
+                queries: [:],
+                isEnabled: true,
+                encoding: CharacterEncoding(name: "shift-js", value: .shiftJIS)),
+            SearchEngine(
+                name: "EUC-KR Test",
+                shortcut: "kr",
+                baseUrl: URL(string: "http://search.gmarket.co.kr/search.aspx")!,
+                queries: ["keyword": termsPlaceholder],
+                isEnabled: true,
+                encoding: CharacterEncoding(name: "euc-kr", value: .EUC_KR))
         ]
         
         // Korean
@@ -384,7 +413,8 @@ struct SearchEngines {
                 baseUrl: engine.baseUrl,
                 queries: engine.queries,
 //                image: image,
-                isEnabled: engine.isEnabled)
+                isEnabled: engine.isEnabled,
+                encoding: engine.encoding)
             enginesWithShortcutsAndImages[newEngine.shortcut] = newEngine
         }
         

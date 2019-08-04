@@ -12,6 +12,7 @@ import SafariServices
 /// Allows the add/edit engine table view controller to receive details about the URL status.
 protocol UrlDetailsTableViewControllerDelegate: class {
     var iconFetcher: IconFetcher { get }
+    var searchEngineEditor: SearchEngineEditor { get set }
     /// After the user has modified the URL or magic word, decide whether to prepare to save the changes to the engine object. If the URL and magic word are valid, mark the URL as changed, so that it can be saved later. If either value is invalid, mark the URL as unchanged, so that it will revert back to its original value.
     ///
     /// - Parameters:
@@ -88,8 +89,9 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         // Set up the URL and search term fields
         if let engine = engine {
             // Get the URL from the model, adding in the default search term
-            let url = engine.baseUrl.withSearchTerms(urlController.magicWord, using: engine.queries, replacing: SearchEngines.shared.termsPlaceholder)!
-            print(.o, "Using URL \(url).")
+//            let url = engine.baseUrl.withSearchTerms(urlController.magicWord, using: engine.queries, replacing: SearchEngines.shared.termsPlaceholder)!
+            let url = engine.baseUrl.withSearchTerms(urlController.magicWord, using: engine.queries, replacing: SearchEngines.shared.termsPlaceholder, encoding: delegate?.searchEngineEditor.characterEncoder?.encoding)!
+            print(.i, "Using URL \(url).")
             
             // If we want to set magic world field placeholder text ...
             //magicWordTextField.placeholder = urlController.magicWord
@@ -203,7 +205,7 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         
         
         // First, check that URL itself is valid
-        guard let url = urlController.validUrl(from: urlTextField.text, schemeIsValid: { schemeIsValid(url: $0) }) else {
+        guard let url = urlController.validUrl(from: urlTextField.text, characterEncoder: delegate?.searchEngineEditor.characterEncoder, schemeIsValid: { schemeIsValid(url: $0) }) else {
             // URL field is empty or otherwise invalid
             urlController.urlIsValid = false
             return
@@ -293,7 +295,7 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             // Load the page in the background to look for engine name, shortcut, and icon
             
             guard let urlString = urlTextField.text,
-                let (url, host) = delegate?.iconFetcher.getUrlComponents(urlString) else {
+                let (url, host) = delegate?.iconFetcher.getUrlComponents(urlString, characterEncoder: delegate?.searchEngineEditor.characterEncoder) else {
                 return
             }
             
@@ -312,7 +314,11 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             //- second uses the original full URL if first fails (based on user feedback)
             //- Note: We may be able to use the completion handler to change test buttons; see extension file
             //- Perhaps set completion to default nil so we can use this elsewhere without specifying explicitly
-            if let url = urlTextField.text?.encodedUrl() {
+            if let url = urlTextField.text?.encodedUrl(characterEncoder: delegate?.searchEngineEditor.characterEncoder) {
+                
+                // Simultaneously load the same page with URLSession to look for the character encoding
+                getCharacterEncoding(from: url)
+                
                 // Safari view will crash if not using http
                 if url.schemeIsCompatibleWithSafariView {
                     // http or https
@@ -327,6 +333,24 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         }
     }
     
+    func getCharacterEncoding(from url: URL) {
+        // Simultaneously load the same page with URLSession to look for the character encoding
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        components?.scheme = "https"
+        if let httpsUrl = components?.url {
+            print(.i, "Checking for character encoding using URL \"\(httpsUrl)\".")
+            URLSession.shared.dataTask(with: httpsUrl) { (_, response, error) in
+                // Only set encoding if not nil, as we don't want to delete any previous encoding for now
+                if let encodingName = response?.textEncodingName,
+                    let encoder = CharacterEncoder(encoding: encodingName) {
+                    self.delegate?.searchEngineEditor.characterEncoder = encoder
+                    print(.o, "Detected and set encoding to \(encoder.encoding).")
+                } else if let error = error {
+                    print(.x, "Background fetch for HTML headers failed with the following error: \(error)")
+                }
+            }.resume()
+        }
+    }
     
     @objc override func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         print(.n, "Safari view dismissed.")
@@ -361,7 +385,7 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             // Pass new URL if everything is working, otherwise we'll pass nil
             if urlController.engineIsTestable,
                 let url = urlTextField.text {
-                urlController.willUpdateUrlDetails(url: url, magicWord: magicWordTextField.text) { (baseUrl, queries) in
+                urlController.willUpdateUrlDetails(url: url, magicWord: magicWordTextField.text, characterEncoder: delegate?.searchEngineEditor.characterEncoder) { (baseUrl, queries) in
                     delegate?.updateUrlDetails(baseUrl: baseUrl, queries: queries)
                     delegate?.updateFields(for: url)
                 }

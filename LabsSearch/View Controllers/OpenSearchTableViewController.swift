@@ -13,7 +13,8 @@ class OpenSearchTableViewController: UITableViewController {
     // MARK: - Parameters
     
     // If OpS is found, an engine object will be created and set back to AllEngines to be passed to AddEdit VC
-    var openSearch: OpenSearch? = nil
+    var openSearch: OpenSearch?
+    var searchEngineEditor = SearchEngineEditor()
     
     // A properly formatted URL, in case the user entered a slightly malformed one
     // When set to nil, test button should be disabled
@@ -141,6 +142,14 @@ class OpenSearchTableViewController: UITableViewController {
         
         let openSearchController = OpenSearchController()
         openSearchController.detectOpenSearch(at: url) {
+            // Save HTML so other controllers can use it
+//            var searchEngineEditor = SearchEngineEditor()
+            self.searchEngineEditor.html = openSearchController.html
+            // And the character encoder, in case we found an encoding
+            self.searchEngineEditor.characterEncoder = openSearchController.characterEncoder
+            print(.d, "OpSVC 1st openSearchController.html: \(openSearchController.html != nil ? String("💚") : String("💔"))")
+            print(.d, "OpSVC 1st self.searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
+            
             let name = openSearchController.openSearch.name
             
 //            guard !name.isEmpty,
@@ -164,6 +173,7 @@ class OpenSearchTableViewController: UITableViewController {
             
             // Make sure the segue occurs on the main thread
             DispatchQueue.main.async {
+                print(.d, "OpSVC async searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
                 self.performSegue(withIdentifier: SegueKeys.attemptedOpenSearchUnwind, sender: nil)
             }
         }

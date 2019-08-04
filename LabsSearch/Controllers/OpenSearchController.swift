@@ -13,6 +13,23 @@ struct OpenSearch {
     var url = URL(string: "")
 }
 
+//struct OpenSearch {
+////    var name: String = String()
+////    var url: URL? = URL(string: "")!
+//    var name: String
+//    var url: URL
+//    var html: String?
+//
+////    init(name: String, url: URL, html: String?) {
+//    init(name: String, url: URL) {
+////        self.name = name
+////        self.url = url
+//        self.name = String()
+//        self.url = URL(string: "")
+////        self.html = html
+//    }
+//}
+
 
 class OpenSearchController: NSObject, XMLParserDelegate {
     
@@ -21,6 +38,12 @@ class OpenSearchController: NSObject, XMLParserDelegate {
     // URL the user has specified; we must declare this at the class level for the parser's sake
     var url: URL? = nil
     var openSearch = OpenSearch()
+    
+    // Keep HTML around so we can pass it if SearchEngineEditor asks for it
+    // TODO: We should also be able to ask SearchEngineEditor for this value and skip our first network call
+    var html: String?
+    // Keep the character encoding, too
+    var characterEncoder: CharacterEncoder?
     
     // Determine if we're parsing HTML or OpS XML, which allows the parser to look for the correct elements
     var parsingHtml = true
@@ -69,8 +92,17 @@ class OpenSearchController: NSObject, XMLParserDelegate {
         
         // Unlike IconFetcher, we won't use UserAgent to look for the mobile page, as it often doesn't include OpS declaration :(
         let htmlTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            // Get the HTML character encoding so we can parse it properly
+            let encodingName = response?.textEncodingName ?? "nil"
+            self.characterEncoder = CharacterEncoder(encoding: encodingName)
+            let encoding = self.characterEncoder?.encoding.value
+            
+            // We'll try to use the page's character encoding if we can get it
             if let data = data,
-                let html = String(data: data, encoding: .utf8) {
+//                let html = String(data: data, encoding: .utf8) {
+                let html = String(data: data, encoding: encoding ?? .utf8) {
+                // Copy HTML to self for SearchEngineEditor's use
+                self.html = html
                 
                 // Clear previously found URL, if it exists
                 self.openSearchDescriptionUrl = nil

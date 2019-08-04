@@ -13,7 +13,7 @@ protocol AddEditEngineTableViewControllerDelegate: class {
     func willEnterForeground()
 }
 
-class AddEditEngineTableViewController: UITableViewController, EngineIconViewController, UrlDetailsTableViewControllerDelegate {
+class AddEditEngineTableViewController: UITableViewController, EngineIconViewController, UrlDetailsTableViewControllerDelegate, SearchEngineEditorDelegate {
     
     // MARK: - Properties
     
@@ -35,6 +35,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     var engine: SearchEngine?
     // When adding, an OpenSearch object may have been passed in
     var openSearch: OpenSearch?
+    var searchEngineEditor = SearchEngineEditor()
     // Determines if a new, usable URL was passed back from the URL details VC
     var didReceiveUpdatedUrl: Bool = false
     
@@ -59,12 +60,13 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     // These details will be provided by the host app
     var hostAppEngineName: String?
     var hostAppUrlString: String?
-    
-    // This can be provided by the host app, OpS controller, or IconFetcher to be shared
-    // Also to be used to check page encoding
-    var html: String?
+//    var hostAppCharacterEncoding: String?
+    var hostAppHtml: String?
     
     let urlController = UrlController()
+    
+    // Determines whether to show experimental features
+    let developerSettingsEnabled = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.developerSettings) ?? false
     
     
     // MARK: IB properties
@@ -128,6 +130,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         
             // Get the current web page's URL and title from the host app
             loadUrl()
+            print(.d, "(All)AddEditTVC hostAppHtml: \(hostAppHtml != nil ? String("💚") : String("💔"))")
         #endif
         
         // Note: Be sure to load up engines BEFORE calling this super in app extension
@@ -135,6 +138,9 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         
         // Set upper right save button
         saveButton = navigationItem.rightBarButtonItem
+        
+        // Always be ready to receive updates from the engine editor
+        searchEngineEditor.delegate = self
         
         // Perform setup differently depending on whether we're adding (engine == nil) or editing
         if engine == nil {
@@ -173,6 +179,11 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             setIcon()
             nameTextField.text = engine.name
             shortcutTextField.text = engine.shortcut
+            
+            // Pass data to editor
+            if let encoding = engine.encoding {
+                searchEngineEditor.characterEncoder = CharacterEncoder(encoding: encoding)
+            }
 
             // Must be some code for this somewhere already because disabling it has no effect...
 //            // Prevent looking for a new icon unless the URL host is changed
@@ -257,7 +268,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         }
         
         // First, see if the URL is valid and that it contains the default magic word
-        if let url = urlController.validUrl(from: urlString, schemeIsValid: { (url) -> Bool in
+        if let url = urlController.validUrl(from: urlString, characterEncoder: searchEngineEditor.characterEncoder, schemeIsValid: { (url) -> Bool in
             // TODO: Have this check compatibility differently if using OpS
             return url.schemeIsCompatibleWithSafariView
         }),
@@ -265,7 +276,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             
             print(.o, "URL and default magic word detected; creating engine object.")
             // Create engine object with URL, awaiting further details
-            urlController.willUpdateUrlDetails(url: url.absoluteString) { (baseUrl, queries) in
+            urlController.willUpdateUrlDetails(url: url.absoluteString, characterEncoder: searchEngineEditor.characterEncoder) { (baseUrl, queries) in
                 updateUrlDetails(baseUrl: baseUrl, queries: queries)
             }
             
@@ -500,6 +511,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         }
     }
     
+    
     // This can also be done with delegation and tags:
     //- https://stackoverflow.com/questions/31766896/switching-between-text-fields-on-pressing-return-key-in-swift
     
@@ -507,6 +519,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     @IBAction func nameTextFieldReturnKeyPressed() {
         shortcutTextField.becomeFirstResponder()
     }
+    
     
     /// Hide the keyboard when pressing the return key.
     @IBAction func shortcutTextFieldReturnKeyPressed() {
@@ -618,6 +631,20 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     }
     
     
+    // Just for updating the GUI; stored value is handled by SearchEngineEditor
+    func updateCharacterEncoding(_ encoding: CharacterEncoding?) {
+        if developerSettingsEnabled {
+            if let encoding = encoding {
+                // FIXME: Make sure to have this changed in viewDidLoad too!
+                //- don't use SearchEngine object, in case it's new; use Editor
+//                encodingTextField.text = encoding
+            } else {
+//                encodingTextField.text = ""
+            }
+        }
+    }
+    
+    
     func updateIcon(for url: URL, host: String) {
         // Only look for an icon if icons from this host haven't already been scraped
         if host != mostRecentHost {
@@ -629,6 +656,15 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             #endif
             
             iconFetcher.fetchIcon(for: url) { (icon) in
+                // Save HTML for other objects
+                self.searchEngineEditor.html = self.iconFetcher.html
+                // And the encoding, if found
+                if let characterEncoder = self.iconFetcher.characterEncoder {
+                    self.searchEngineEditor.characterEncoder = characterEncoder
+                    print(.d, "IconFetcher has updated the encoding to \(characterEncoder.encoding).")
+                }
+                print(.d, "AddEditVC self.searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
+                
                 DispatchQueue.main.async {
                     // TODO: We're now overriding EngineIcon functions and checks
                     //- But as they require an engine object and a saved image, what else can we do?
@@ -828,7 +864,8 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         engine?.name = name
         engine?.shortcut = shortcut
         engine?.isEnabled = enabledToggle.isOn
-        
+        // Add the encoding, if found
+        engine?.encoding = searchEngineEditor.characterEncoder?.encoding
         
         // TODO: If we aren't going to continue looking for icons after this is dismissed, kill icon fetcher
         // URLSession.shared.invalidateAndCancel()
