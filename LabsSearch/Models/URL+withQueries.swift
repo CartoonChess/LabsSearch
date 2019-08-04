@@ -36,6 +36,7 @@ extension URL {
             }
         } else if #available(iOS 11.0, *) {
             // Preserve percent encoding for non-UTF URLs
+            print(.d, "percentEncodedQueryItems in withQueries")
             components?.percentEncodedQueryItems = queries.map {
                 URLQueryItem(name: $0.0, value: $0.1)
             }

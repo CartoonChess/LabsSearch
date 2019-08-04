@@ -176,12 +176,38 @@
                                             <segue destination="ZdH-wh-3Lf" kind="show" identifier="UrlDetailsSegue" id="6Nh-e7-T9b"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="ePm-a0-Nmf">
+                                        <rect key="frame" x="0.0" y="288" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ePm-a0-Nmf" id="Z25-u7-Vw8">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Character Encoding" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s3O-5a-om3" customClass="TableViewCellTextField" customModule="Chears" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done" enablesReturnKeyAutomatically="YES" smartDashesType="no" smartQuotesType="no"/>
+                                                    <connections>
+                                                        <action selector="characterEncodingTextFieldChanged" destination="kQy-Ui-Ykl" eventType="editingChanged" id="bGj-OB-62Z"/>
+                                                        <action selector="characterEncodingTextFieldReturnKeyPressed" destination="kQy-Ui-Ykl" eventType="primaryActionTriggered" id="pL3-Ga-8yS"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="s3O-5a-om3" firstAttribute="top" secondItem="Z25-u7-Vw8" secondAttribute="top" id="3bL-nZ-eH4"/>
+                                                <constraint firstItem="s3O-5a-om3" firstAttribute="leading" secondItem="Z25-u7-Vw8" secondAttribute="leadingMargin" constant="-16" id="KPk-j9-XUU"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="s3O-5a-om3" secondAttribute="trailing" constant="-16" id="N4q-Fb-8ai"/>
+                                                <constraint firstAttribute="bottom" secondItem="s3O-5a-om3" secondAttribute="bottom" id="wXg-8c-ZWv"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection id="kap-i4-VVl">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" selectionStyle="default" indentationWidth="10" id="DYG-Fz-cT4">
-                                        <rect key="frame" x="0.0" y="324" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="368" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DYG-Fz-cT4" id="CJV-ed-rtL">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -224,6 +250,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="characterEncodingCell" destination="ePm-a0-Nmf" id="bmN-tL-SJX"/>
+                        <outlet property="characterEncodingTextField" destination="s3O-5a-om3" id="sW7-S3-Uk0"/>
                         <outlet property="deleteButtonCell" destination="DYG-Fz-cT4" id="BKI-cW-BpT"/>
                         <outlet property="enabledToggle" destination="aYW-Mo-VfI" id="6yr-Ai-5oN"/>
                         <outlet property="engineIconImage" destination="IR7-dh-pKG" id="mmT-BS-YG6"/>

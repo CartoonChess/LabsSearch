@@ -48,6 +48,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     enum Cell {
         static let engineName: IndexPath = [0, 0]
         static let shortcut: IndexPath = [0, 1]
+        static let characterEncoding: IndexPath = [1, 1]
         static let deleteButton: IndexPath = [2, 0]
     }
     
@@ -80,6 +81,8 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     @IBOutlet weak var shortcutTextField: TableViewCellTextField!
     
     @IBOutlet weak var urlDetailsChangedLabel: UILabel!
+    @IBOutlet weak var characterEncodingCell: UITableViewCell!
+    @IBOutlet weak var characterEncodingTextField: TableViewCellTextField!
     
     @IBOutlet weak var deleteButtonCell: UITableViewCell!
     
@@ -206,6 +209,14 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             
             // Even if editing, only let corners be rounded once
             viewDidAppear = true
+        }
+        
+        // Show encoding row if using experimental features
+        if developerSettingsEnabled {
+            characterEncodingTextField.text = searchEngineEditor.characterEncoder?.encoding.name
+        } else {
+            // Hide the cell in normal cases
+            characterEncodingCell.isHidden = true
         }
         
         // If switching apps, we need to recheck shortcut validity
@@ -541,7 +552,33 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         if sender != nil { updateSaveButton() }
     }
     
-
+    
+    @IBAction func characterEncodingTextFieldChanged() {
+        let encodingName = characterEncodingTextField.text ?? ""
+        
+        // Check if user has entered an identifiable encoding name
+        if let encoder = CharacterEncoder(encoding: encodingName) {
+            // NOTE: Unlike name/shortcut, this text field's effects take place immediately
+            //- This is so that the URL can be tested with the new encoding
+            
+            // Copy new encoder over EngineEditor's encoder
+            searchEngineEditor.characterEncoder = encoder
+            print(.o, "User changed encoding to \(encoder.encoding).")
+            
+            characterEncodingTextField.textColor = .darkText
+            updateSaveButton()
+        } else {
+            // User's encoding is invalid; do not change engine encoding
+            // User can still press save button if active because previous encoding will be used instead
+            characterEncodingTextField.textColor = .red
+        }
+    }
+    
+    @IBAction func characterEncodingTextFieldReturnKeyPressed() {
+        characterEncodingTextField.endEditing(true)
+    }
+    
+    
     /// Enable the save button when all fields are filled out correctly.
     func updateSaveButton() {
         // Checking for nil engine will ensure URL has been set when adding engine
@@ -633,13 +670,14 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     // Just for updating the GUI; stored value is handled by SearchEngineEditor
     func updateCharacterEncoding(_ encoding: CharacterEncoding?) {
-        if developerSettingsEnabled {
-            if let encoding = encoding {
-                // FIXME: Make sure to have this changed in viewDidLoad too!
-                //- don't use SearchEngine object, in case it's new; use Editor
-//                encodingTextField.text = encoding
+        // This data tends to come from URLSession, so make sure we're on the main thread for GUI updates
+        DispatchQueue.main.async {
+            if self.developerSettingsEnabled,
+                let encoding = encoding {
+                self.characterEncodingTextField.text = encoding.name
+                self.characterEncodingTextField.textColor = .darkText
             } else {
-//                encodingTextField.text = ""
+                self.characterEncodingTextField.text = ""
             }
         }
     }
@@ -690,7 +728,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     // Set this for shortcut now as well so left/right iPad padding doesn't trigger highlight
     override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         switch indexPath {
-        case Cell.engineName, Cell.shortcut:
+        case Cell.engineName, Cell.shortcut, Cell.characterEncoding:
             return false
         default:
             // Other cells should be highlighted

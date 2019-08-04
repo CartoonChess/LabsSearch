@@ -161,16 +161,29 @@ struct CharacterEncoder {
             return string
         }
         
+//        //Create a byte sequece representing the string using the new encoding
+//        guard let encodedData = string.data(using: encoding.value) else {
+//            print(.x, "Failed to encode characters using \"\(encoding)\". Falling back to UTF-8.")
+//            return string
+//        }
+        
         //Create a byte sequece representing the string using the new encoding
-        guard let encodedData = string.data(using: encoding.value) else {
-            print(.x, "Failed to encode characters using \"\(encoding)\". Falling back to UTF-8.")
-            return string
+        var encodedData = string.data(using: encoding.value)
+        // However, encoding can fail if user enters characters outside the encoding table
+        // We must continue to encode with UTF-8 so that URLComponents won't crash when looking for percent encoding
+        if encodedData == nil {
+            guard let utfData = string.data(using: .utf8) else {
+                print(.x, "Failed to encode characters using \"\(encoding)\" and UTF-8. Returning original string without percent encoding, but this may cause a fatal error.")
+                return string
+            }
+            encodedData = utfData
+            print(.n, "Failed to encode characters using \"\(encoding)\". Falling back to UTF-8.")
+        } else {
+            print(.i, "Encoding using \(encoding).")
         }
         
-        print(.i, "Encoding using \(encoding).")
-        
         // Analyze string byte by byte, encode URL-unsafe characters, then reassemble
-        let encodedString = encodedData.map { byte -> String in
+        let encodedString = encodedData!.map { byte -> String in
             // Choose which characters will not be encoded
             var legalCharacters = CharacterSet()
             if fullUrl {
@@ -194,7 +207,7 @@ struct CharacterEncoder {
                 // %% = escaped %, %02X = two digits (w/ leading 0 for single)
                 return String(format: "%%%02X", byte)
             }
-        }.joined()
+            }.joined()
         
         print(.o, "String \"\(string)\" encoded in \(encoding) to produce \"\(encodedString)\".")
         
