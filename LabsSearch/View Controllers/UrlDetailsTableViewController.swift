@@ -20,7 +20,7 @@ protocol UrlDetailsTableViewControllerDelegate: class {
     ///   - queries: A key-value dictionary of query items.
     func updateUrlDetails(baseUrl: URL?, queries: [String: String])
     func updateFields(for url: String)
-    func updateIcon(for url: URL, host: String)
+    func updateIcon(for url: URL, host: String, completion: ((_ encodingChanged: Bool) -> Void)?)
     
     // Now we can tell AddEdit to reevaluate, i.e. check shortcut
     // in odd event engine was added via action extension inside Safari VC
@@ -300,7 +300,17 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             }
             
             // Tell AddEditEngine VC to use the IconFetcher and update its view after fetching icon from server
-            delegate?.updateIcon(for: url, host: host)
+            delegate?.updateIcon(for: url, host: host) { encodingChanged in
+                if encodingChanged {
+                    print(.d, "UrlDetails completion handler: encoding has changed!")
+                    // Double check URL now that encoding has changed
+//                    self.urlTextField.text = encodedUrl
+                    self.urlTextFieldChanged()
+                } else {
+                    // Nothing changed
+                    print(.d, "UrlDetails completion handler: encoding hasn't changed!")
+                }
+            }
             
             // TODO: Look in urlTextFieldChanged() for adding http://
         }
@@ -343,8 +353,40 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
                 // Only set encoding if not nil, as we don't want to delete any previous encoding for now
                 if let encodingName = response?.textEncodingName,
                     let encoder = CharacterEncoder(encoding: encodingName) {
-                    self.delegate?.searchEngineEditor.characterEncoder = encoder
-                    print(.o, "Detected and set encoding to \(encoder.encoding).")
+                    DispatchQueue.main.async {
+                        // Set encoding
+                        self.delegate?.searchEngineEditor.characterEncoder = encoder
+                        print(.o, "Detected and set encoding to \(encoder.encoding). Checking if URL is still valid.")
+                        // Check that the URL still validates in this new encoding
+                        // Copying from AddEdit...
+                        if let urlString = self.urlTextField.text {
+                            print(.d, "url: \(urlString)")
+                            var encodedUrl = encoder.encode(urlString, fullUrl: true)
+                            print(.d, "encodedUrl: \(encodedUrl)")
+                            // This next one (always?) passes when changing utf/nonU->nonU,
+                            //- as well as nonU with no encoding specific characters -> utf
+                            //- It only fails when changing nonU w/ encoding-specific chars -> utf
+                            if let url = self.urlController.validUrl(from: encodedUrl, characterEncoder: encoder, schemeIsValid: {_ in true}) {
+                                print(.d, "validUrl (using \(encoder.encoding)): \(url.absoluteString)")
+                                encodedUrl = url.absoluteString
+                                
+                                // Double check URL now that encoding has changed
+                                // TODO: Is it right to change this?
+                                self.urlTextField.text = encodedUrl
+                                // This should allow newly encoded queries to be passed back, validate/colour URL, etc.
+                                self.urlTextFieldChanged()
+                            } else {
+                                // If the URL is no longer valid, red the text field and remove engine's queries
+                                print(.x, "validUrl failed; removing queries from AddEdit's engine object.")
+                                self.delegate?.searchEngineEditor.delegate?.removeQueries()
+                                // FIXME: Can we still call this safely??
+                                self.urlTextFieldChanged()
+                            }
+                        } else {
+                            print(.x, "urlString failed.")
+                        }
+                    }
+                    
                 } else if let error = error {
                     print(.x, "Background fetch for HTML headers failed with the following error: \(error)")
                 }

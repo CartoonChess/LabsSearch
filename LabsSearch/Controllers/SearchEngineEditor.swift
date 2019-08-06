@@ -21,7 +21,9 @@ protocol SearchEngineEditorDelegate {
     /// Inform the delegate of any changes to the character encoding.
     ///
     /// - Parameter encoding: A `CharacterEncoding` object, possibly `nil`.
-    func updateCharacterEncoding(_ encoding: CharacterEncoding?)
+    func characterEncodingDidChange(_ encoding: CharacterEncoding?)
+    /// Allows UrlDetails to request that queries be removed when changing the encoding, in case it can't later return safe queries.
+    func removeQueries()
 }
 
 /// Handles all business related to creating and modifying `SearchEngine` objects.
@@ -39,7 +41,7 @@ struct SearchEngineEditor {
     // The CharacterEncoding can be accessed via characterEncoder.encoding
     var characterEncoder: CharacterEncoder? {
         // Alert the delegate whenever this value is changed
-        willSet { delegate?.updateCharacterEncoding(newValue?.encoding) }
+        willSet { delegate?.characterEncodingDidChange(newValue?.encoding) }
     }
     
     // TODO: Getting the HTML directly from SearchEngineEditor.
