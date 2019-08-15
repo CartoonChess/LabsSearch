@@ -18,7 +18,7 @@ protocol UrlDetailsTableViewControllerDelegate: class {
     /// - Parameters:
     ///   - baseUrl: The URL without queries.
     ///   - queries: A key-value dictionary of query items.
-    func updateUrlDetails(baseUrl: URL?, queries: [String: String])
+    func updateUrlDetails(baseUrl: URL?, queries: [String: String], updateView: Bool)
     func updateFields(for url: String)
     func updateIcon(for url: URL, host: String, completion: ((_ encodingChanged: Bool) -> Void)?)
     
@@ -204,9 +204,50 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         //- (Put another way: If looking for a custom word (whether present or not), this is false
         
         
-        // First, check that URL itself is valid
-        guard let url = urlController.validUrl(from: urlTextField.text, characterEncoder: delegate?.searchEngineEditor.characterEncoder, schemeIsValid: { schemeIsValid(url: $0) }) else {
-            // URL field is empty or otherwise invalid
+//        // First, check that URL itself is valid
+//        guard let url = urlController.validUrl(from: urlTextField.text, characterEncoder: delegate?.searchEngineEditor.characterEncoder, schemeIsValid: { schemeIsValid(url: $0) }) else {
+//            // URL field is empty or otherwise invalid
+//            urlController.urlIsValid = false
+//            return
+//        }
+        
+        
+//        // First, check that URL itself is valid
+//        var url = urlController.validUrl(from: urlTextField.text, characterEncoder: delegate?.searchEngineEditor.characterEncoder, schemeIsValid: { schemeIsValid(url: $0) })
+//
+//        // If the URL isn't valid, try changing the encoding to "invalid utf-8" and try again
+//        if url == nil {
+//            let invalidEncoding = CharacterEncoding(name: "invalid utf-8", value: .invalid)
+//            let invalidEncoder = CharacterEncoder(encoding: invalidEncoding)
+//            guard let encodedUrl = urlController.validUrl(from: urlTextField.text, characterEncoder: invalidEncoder, schemeIsValid: { schemeIsValid(url: $0) }) else {
+//                // URL field is empty or otherwise invalid
+//                urlController.urlIsValid = false
+//                return
+//            }
+//            // If the encoding was the problem, change it, and keep going
+//            delegate?.searchEngineEditor.updateCharacterEncoding(encoder: invalidEncoder, urlString: encodedUrl.absoluteString, completion: nil)
+//            url = encodedUrl
+//        }
+        
+        
+        
+        // Quit if URL field is empty
+        guard let urlString = urlTextField.text,
+            !urlString.isEmpty else {
+            urlController.urlIsValid = false
+            return
+        }
+        
+        var possibleUrl: URL?
+        // Check if URL is valid, and if it contains differently-encoded characters
+        //- If using UTF-8, non-UTF URL will set "invalid utf-8"
+        delegate?.searchEngineEditor.updateCharacterEncoding(encoder: delegate?.searchEngineEditor.characterEncoder, urlString: urlString, allowNilEncoder: true)
+        
+        // If encoding was changed or was unnecessary, this will work, otherwise we will fail with invalid URL
+        possibleUrl = urlController.validUrl(from: urlString, characterEncoder: delegate?.searchEngineEditor.characterEncoder, schemeIsValid: { self.schemeIsValid(url: $0) })
+        
+        // Quit if URL field is not a valid URL
+        guard let url = possibleUrl else {
             urlController.urlIsValid = false
             return
         }
@@ -300,12 +341,14 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             }
             
             // Tell AddEditEngine VC to use the IconFetcher and update its view after fetching icon from server
-            delegate?.updateIcon(for: url, host: host) { encodingChanged in
-                if encodingChanged {
+            delegate?.updateIcon(for: url, host: host) { encodingDidChange in
+                if encodingDidChange {
                     print(.d, "UrlDetails completion handler: encoding has changed!")
                     // Double check URL now that encoding has changed
 //                    self.urlTextField.text = encodedUrl
+                    // TODO: Is this even necessary?
                     self.urlTextFieldChanged()
+                    // TODO: This, and the whole completion handler... are they even necessary?
                 } else {
                     // Nothing changed
                     print(.d, "UrlDetails completion handler: encoding hasn't changed!")
@@ -327,7 +370,7 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             if let url = urlTextField.text?.encodedUrl(characterEncoder: delegate?.searchEngineEditor.characterEncoder) {
                 
                 // Simultaneously load the same page with URLSession to look for the character encoding
-                getCharacterEncoding(from: url)
+                updateCharacterEncoding(from: url)
                 
                 // Safari view will crash if not using http
                 if url.schemeIsCompatibleWithSafariView {
@@ -343,56 +386,130 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         }
     }
     
-    func getCharacterEncoding(from url: URL) {
-        // Simultaneously load the same page with URLSession to look for the character encoding
+    /// Use the testing URL in the background to look for the character encoding.
+    ///
+    /// - Parameter url: The `URL` whose header might contain character encoding information. The scheme will automatically be changed to `https`.
+    func updateCharacterEncoding(from url: URL) {
+        // Change scheme to https
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
         components?.scheme = "https"
-        if let httpsUrl = components?.url {
-            print(.i, "Checking for character encoding using URL \"\(httpsUrl)\".")
-            URLSession.shared.dataTask(with: httpsUrl) { (_, response, error) in
-                // Only set encoding if not nil, as we don't want to delete any previous encoding for now
-                if let encodingName = response?.textEncodingName,
-                    let encoder = CharacterEncoder(encoding: encodingName) {
-                    DispatchQueue.main.async {
-                        // Set encoding
-                        self.delegate?.searchEngineEditor.characterEncoder = encoder
-                        print(.o, "Detected and set encoding to \(encoder.encoding). Checking if URL is still valid.")
-                        // Check that the URL still validates in this new encoding
-                        // Copying from AddEdit...
-                        if let urlString = self.urlTextField.text {
-                            print(.d, "url: \(urlString)")
-                            var encodedUrl = encoder.encode(urlString, fullUrl: true)
-                            print(.d, "encodedUrl: \(encodedUrl)")
-                            // This next one (always?) passes when changing utf/nonU->nonU,
-                            //- as well as nonU with no encoding specific characters -> utf
-                            //- It only fails when changing nonU w/ encoding-specific chars -> utf
-                            if let url = self.urlController.validUrl(from: encodedUrl, characterEncoder: encoder, schemeIsValid: {_ in true}) {
-                                print(.d, "validUrl (using \(encoder.encoding)): \(url.absoluteString)")
-                                encodedUrl = url.absoluteString
-                                
-                                // Double check URL now that encoding has changed
-                                // TODO: Is it right to change this?
-                                self.urlTextField.text = encodedUrl
-                                // This should allow newly encoded queries to be passed back, validate/colour URL, etc.
-                                self.urlTextFieldChanged()
-                            } else {
-                                // If the URL is no longer valid, red the text field and remove engine's queries
-                                print(.x, "validUrl failed; removing queries from AddEdit's engine object.")
-                                self.delegate?.searchEngineEditor.delegate?.removeQueries()
-                                // FIXME: Can we still call this safely??
-                                self.urlTextFieldChanged()
-                            }
-                        } else {
-                            print(.x, "urlString failed.")
-                        }
-                    }
-                    
-                } else if let error = error {
-                    print(.x, "Background fetch for HTML headers failed with the following error: \(error)")
-                }
-            }.resume()
+        
+        guard let httpsUrl = components?.url else {
+            print(.x, "Could not create https URL.")
+            return
         }
+        
+        print(.i, "Checking for character encoding at URL \"\(httpsUrl)\".")
+        URLSession.shared.dataTask(with: httpsUrl) { (_, response, error) in
+            //                if let engine = self.engine,
+            //                    let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: self.searchEngineEditor.characterEncoder?.encoding)?.absoluteString {
+            //                    // Attempt to update encoding
+            //                    let encodingChanged = self.searchEngineEditor.updateCharacterEncoding(encoder: self.iconFetcher.characterEncoder, urlString: urlString)
+            //                    // Let the caller (should be UrlDetails) know if the encoding has changed
+            //                    if let completion = completion { completion(encodingChanged) }
+            //                } else {
+            //                    print(.x, "No engine found, or urlString failed.")
+            //                }
+            if let encodingName = response?.textEncodingName {
+                // Encoding header was found
+                let encoder = CharacterEncoder(encoding: encodingName)
+                // Have to call this async because AddEdit's URL "changed/saved" label may change
+                DispatchQueue.main.async {
+                    // Attempt to update encoding
+                    // FIXME: Will this cause double percent encoding?
+                    self.delegate?.searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: httpsUrl.absoluteString, completion: nil)
+                    
+                    // FIXME: If we leave this out, will e.g.UTF+emoji -> EUC cause errors?
+                    //- Will everything update and save okay?
+                    //- We also removed the Changed() call from when queries are totally removed
+//                        // Double check URL now that encoding has changed
+//                        self.urlTextField.text = encodedUrl
+//                        // This should allow newly encoded queries to be passed back, validate/colour URL, etc.
+//                        self.urlTextFieldChanged()
+                }
+            } else if let error = error {
+                print(.n, "Background fetch for HTML headers failed with the following error: \(error)")
+            } else {
+                print(.i, "No character encoding found.")
+            }
+        }.resume()
+        
     }
+    
+//    /// Use the testing URL in the background to look for the character encoding.
+//    ///
+//    /// - Parameter url: The `URL` whose header might contain character encoding information. The scheme will automatically be changed to `https`.
+//    func updateCharacterEncoding(from url: URL) {
+//        // Change scheme to https
+//        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+//        components?.scheme = "https"
+//
+//        if let httpsUrl = components?.url {
+//            print(.i, "Checking for character encoding at URL \"\(httpsUrl)\".")
+//            URLSession.shared.dataTask(with: httpsUrl) { (_, response, error) in
+////                if let engine = self.engine,
+////                    let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: self.searchEngineEditor.characterEncoder?.encoding)?.absoluteString {
+////                    // Attempt to update encoding
+////                    let encodingChanged = self.searchEngineEditor.updateCharacterEncoding(encoder: self.iconFetcher.characterEncoder, urlString: urlString)
+////                    // Let the caller (should be UrlDetails) know if the encoding has changed
+////                    if let completion = completion { completion(encodingChanged) }
+////                } else {
+////                    print(.x, "No engine found, or urlString failed.")
+////                }
+//                if let encodingName = response?.textEncodingName {
+//                    // Encoding header was found
+//                    let encoder = CharacterEncoder(encoding: encodingName)
+//                    DispatchQueue.main.async {
+//                        // Attempt to update encoding
+//                        // FIXME: Will this cause double percent encoding?
+//                        let encodingDidChange = self.delegate?.searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: httpsUrl.absoluteString)
+//
+//
+////                        // Set encoding
+////                        self.delegate?.searchEngineEditor.characterEncoder = encoder
+////                        print(.o, "Detected and set encoding to \(encoder.encoding). Checking if URL is still valid.")
+////                        // Check that the URL still validates in this new encoding
+////                        // Copying from AddEdit...
+////                        if let urlString = self.urlTextField.text {
+////                            print(.d, "url: \(urlString)")
+////                            var encodedUrl = encoder.encode(urlString, fullUrl: true)
+////                            print(.d, "encodedUrl: \(encodedUrl)")
+////                            // This next one (always?) passes when changing utf/nonU->nonU,
+////                            //- as well as nonU with no encoding specific characters -> utf
+////                            //- It only fails when changing nonU w/ encoding-specific chars -> utf
+////                            if let url = self.urlController.validUrl(from: encodedUrl, characterEncoder: encoder, schemeIsValid: {_ in true}) {
+////                                print(.d, "validUrl (using \(encoder.encoding)): \(url.absoluteString)")
+////                                encodedUrl = url.absoluteString
+//
+//                                // Double check URL now that encoding has changed
+//                                // TODO: Is it right to change this?
+//                        // FIXME: If we leave this out, will e.g.UTF+emoji -> EUC cause errors?
+//                        //- Will everything update and save okay?
+////                                self.urlTextField.text = encodedUrl
+////                                // This should allow newly encoded queries to be passed back, validate/colour URL, etc.
+////                                self.urlTextFieldChanged()
+//                            } else {
+//                                // If the URL is no longer valid, red the text field and remove engine's queries
+//                                print(.x, "validUrl failed; removing queries from AddEdit's engine object.")
+//                                self.delegate?.searchEngineEditor.delegate?.removeQueries()
+//                                // FIXME: Can we still call this safely??
+//                                self.urlTextFieldChanged()
+//                            }
+//                        } else {
+//                            print(.x, "urlString failed.")
+//                        }
+//                    }
+//
+//                } else if let error = error {
+//                    print(.n, "Background fetch for HTML headers failed with the following error: \(error)")
+//                } else {
+//                    print(.i, "No character encoding found.")
+//                }
+//            }.resume()
+//        } else {
+//            print(.x, "Could not create https URL.")
+//        }
+//    }
     
     @objc override func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         print(.n, "Safari view dismissed.")
@@ -428,7 +545,7 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             if urlController.engineIsTestable,
                 let url = urlTextField.text {
                 urlController.willUpdateUrlDetails(url: url, magicWord: magicWordTextField.text, characterEncoder: delegate?.searchEngineEditor.characterEncoder) { (baseUrl, queries) in
-                    delegate?.updateUrlDetails(baseUrl: baseUrl, queries: queries)
+                    delegate?.updateUrlDetails(baseUrl: baseUrl, queries: queries, updateView: true)
                     delegate?.updateFields(for: url)
                 }
             }

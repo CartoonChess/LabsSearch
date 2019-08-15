@@ -65,6 +65,9 @@ extension String.Encoding {
     static let windowsVietnamese = CFStringEncodings.windowsVietnamese.toStringEncoding()
     static let windowsHebrew = CFStringEncodings.windowsHebrew.toStringEncoding()
     
+    // This is specifically for when an encoding is invalid
+    static let invalid = kCFStringEncodingInvalidId.toStringEncoding()
+    
     /// Provides the relevant `Encoding` based on commonly used aliases.
     ///
     /// - Parameter encoding: Encoding name containing only lowercase letters and/or numbers. Other characters will be stripped out, but accented characters like `é` will cause this function to return `nil`.
@@ -204,6 +207,9 @@ extension String.Encoding {
             return .utf32BigEndian
         case "utf32le":
             return .utf32LittleEndian
+        // Invalid case
+        case "invalid", "invalidutf8":
+            return .invalid
         default:
             return nil
         }

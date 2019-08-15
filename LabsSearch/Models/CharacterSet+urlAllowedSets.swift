@@ -59,6 +59,12 @@ extension CharacterSet {
         return set
     }
     
+//    /// Characters valid not in the entire query of a URL, but in each individual query item (key and value).
+//    static var urlQueryItemAllowed: CharacterSet {
+//        // FIXME: Shouldn't we be using .remove() instead?
+//        return self.urlQueryAllowed.union(CharacterSet(charactersIn: "?&="))
+//    }
+    
     /// Character set including colon, forward slash, and other undesirables.
     static var invalidFileNameCharacters: CharacterSet {
         return CharacterSet(charactersIn: [

@@ -22,14 +22,24 @@ protocol SearchEngineEditorDelegate {
     ///
     /// - Parameter encoding: A `CharacterEncoding` object, possibly `nil`.
     func characterEncodingDidChange(_ encoding: CharacterEncoding?)
-    /// Allows UrlDetails to request that queries be removed when changing the encoding, in case it can't later return safe queries.
+    // So we can call this remotely in AddEdit
+    // TODO: This is actually UrlDetail's delegate function, which means we're repeating it here...
+    func updateUrlDetails(baseUrl: URL?, queries: [String: String], updateView: Bool)
+    /// Allows UrlDetails to request that queries be removed when changing the encoding, in case it can't later return safe queries. This should never have to be used.
     func removeQueries()
 }
 
 /// Handles all business related to creating and modifying `SearchEngine` objects.
 ///
 /// At the moment, most of this controller's functionality is actually performed by `AddEditTableViewController`. This will be remedied in a future revision.
-struct SearchEngineEditor {
+class SearchEngineEditor {
+    
+    // Note on being a class rather than a struct:
+    // updateCharacterEncoding()+updateEncoderAndUrl() were mutating functions (changes the encoding),
+    // however, this creates an access conflict when calling updateUrlDetails(),
+    // because that eventually updates the save button, which requests the encoding.
+    // Changing this to a class solves the issue.
+    
     
     // MARK: - Properties
     
@@ -44,6 +54,8 @@ struct SearchEngineEditor {
         willSet { delegate?.characterEncodingDidChange(newValue?.encoding) }
     }
     
+    let urlController = UrlController()
+    
     // TODO: Getting the HTML directly from SearchEngineEditor.
     // As most other objects under this require the HTML, we should fetch it here.
     // We should also grab the header info, so that eg. CharacterEncoder can try to use that instead
@@ -53,9 +65,111 @@ struct SearchEngineEditor {
     
     // MARK: - Methods
     
-    // TODO: Are we going to use this?
-//    func getCharacterEncoding() {
-//        _ = CharacterEncoder(encoding: "")
-//    }
+//    func updateCharacterEncoding(encoder: CharacterEncoder?, urlString: String) -> Bool {
+    func updateCharacterEncoding(encoder possibleEncoder: CharacterEncoder?, urlString: String, allowNilEncoder: Bool = false, completion: ((_ encodingDidChange: Bool) -> Void)? = nil) {
+        
+        // Create mutable copy of encoder, in case using allowNilEncoder
+        var temporaryEncoder = possibleEncoder
+        
+        // Update encoding even if nil (or unchanged)
+        if allowNilEncoder && possibleEncoder == nil {
+            //- If URL is non-UTF and encoding nil, encoding will be changed to "invalid"
+            temporaryEncoder = CharacterEncoder(encoding: .utf8)
+        }
+        
+        // Only set encoding if not nil, as we don't want to delete any previous encoding for now
+        guard let encoder = temporaryEncoder else {
+            print(.i, "No new encoding detected, so encoding was not changed.")
+            completion?(false)
+            return
+        }
+        
+        // And don't bother if the new encoding is the same as the old one
+        if !allowNilEncoder {
+            guard encoder.encoding != characterEncoder?.encoding else {
+                print(.i, "Encoding is already \(encoder.encoding).")
+                completion?(false)
+                return
+            }
+        }
+        
+            
+        // Percent-encode with the new encoding
+        let encodedUrl = encoder.encode(urlString, fullUrl: true)
+        print(.d, "Used \(encoder.encoding) to encode \"\(urlString)\" to \"\(encodedUrl)\".")
+        
+        // Check validity of newly encoded URL
+        //- This should pass except when converting to UTF-8 while URL contains non-UTF characters
+        if let url = urlController.validUrl(from: encodedUrl, characterEncoder: encoder)?.absoluteString {
+            
+             if allowNilEncoder && possibleEncoder == nil {
+                // No encoder, but URL is already UTF-8 compliant, so no change
+                // But let the caller know the URL didn't need encoding
+                completion?(false)
+                return
+            } else {
+                // Under normal circumstances,
+                // make sure queries are encoded properly, then save them along with new encoding
+                updateEncoderAndUrl(encoder: encoder, url: url)
+            }
+            
+            
+            // FIXME: How do we implement UrlDetails changes?
+            //- Should we have a shell function that calls this one but returns a different type of value?
+            //- Alternately a completion handler that passes everything, so we can pick and choose?
+            //- Note that the Bool value returned by the function might not be available then...
+            
+//            // Double check URL now that encoding has changed
+//            // TODO: Is it right to change this?
+//            self.urlTextField.text = url
+//            // This should allow newly encoded queries to be passed back, validate/colour URL, etc.
+//            self.urlTextFieldChanged()
+        } else {
+            // If changing to UTF-8 and differently encoded characters are present, use "invalid" encoding
+            //- This imitates UTF-8 while continuing to percent-encode using the custom encoder
+            print(.n, "URL validity check failed, most likely because non-UTF characters are in the query. Changing encoding to InvalidID.")
+            
+//            let invalidEncoding = CharacterEncoding(name: "invalid utf-8", value: .invalid)
+//            let invalidEncoder = CharacterEncoder(encoding: invalidEncoding)
+            let invalidEncoder = CharacterEncoder(encoding: CharacterEncoder.invalidEncoding)
+            
+            // Check URL validity again. This should never fail
+            if let url = urlController.validUrl(from: encodedUrl, characterEncoder: invalidEncoder)?.absoluteString {
+                updateEncoderAndUrl(encoder: invalidEncoder, url: url)
+                
+                // FIXME: Same UrlDetails question/implementation as above
+//
+            } else if !allowNilEncoder {
+                // The URL is no longer valid
+                //- We won't do this with allowNilEncoder as that's mostly just for checking URL validity
+                //- Otherwise, we should never get here, but we provide this for safety
+                // If the URL is no longer valid, red the text field and remove engine's queries
+                print(.x, "URL validity check failed even with InvalidID encoding.")
+                delegate?.removeQueries()
+                // Nonetheless, we will allow the encoding to update to what was passed in
+                // If no value was passed in, encoder is now nil
+                characterEncoder = possibleEncoder
+                
+                // FIXME: Another UrlDetails question...
+//                // Can we still call this safely??
+//                self.urlTextFieldChanged()
+            }
+        }
+        
+        // Let the caller know the encoding has changed
+        completion?(true)
+    }
+    
+    /// Make sure queries are encoded properly, then save them along with new encoding
+    private func updateEncoderAndUrl(encoder: CharacterEncoder, url: String) {
+        urlController.willUpdateUrlDetails(url: url, magicWord: SearchEngines.shared.termsPlaceholder, characterEncoder: encoder) { (baseUrl, queries) in
+            // Set encoding here, or else updateUrlDetails will crash
+            characterEncoder = encoder
+            delegate?.updateUrlDetails(baseUrl: baseUrl, queries: queries, updateView: false)
+            print(.o, "Successfully updated encoding to \(encoder.encoding).")
+            print(.d, "Encoded URL: \(url)")
+        }
+    }
+    
     
 }

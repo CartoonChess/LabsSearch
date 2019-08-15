@@ -12,10 +12,12 @@ extension URL {
     
     /// Adds query items to a given URL.
     ///
-    /// - Parameter queries: Dictionary of keys and values to be added to the URL.
-    /// - Returns: An optional URL with queries appended in the correct format.
+    /// - Parameters:
+    ///   - queries: Dictionary of keys and values to be added to the URL.
+    ///   - encoding: A `CharacterEncoding`. Optional.
+    /// - Returns: A URL, if queries can be appended in the correct format, otherwise `nil`.
     ///
-    /// As this function uses `URLComponents`, there is some automatic percent encoding happening here. Be sure to test each case so that double encoding etc. does not occur.
+    /// As this function uses `URLComponents`, there is some automatic percent encoding happening here if the encoding is UTF-8 or not set. If a different encoding is provided, the function will expect manually percent-encoded queries. This has the potential to cause a fatal error, so care should be taken.
     func withQueries(_ queries: [String: String], characterEncoding encoding: CharacterEncoding? = nil) -> URL? {
         // Don't make any changes unless there are actually queries
         // This is done for backward compatibility reasons
@@ -24,9 +26,6 @@ extension URL {
         }
         
         var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
-//        components?.queryItems = queries.map {
-//            URLQueryItem(name: $0.0, value: $0.1)
-//        }
         
         // Determine the best way to handle the queries
         if encoding?.value == .utf8 || encoding?.value == nil {
@@ -34,25 +33,196 @@ extension URL {
             components?.queryItems = queries.map {
                 URLQueryItem(name: $0.0, value: $0.1)
             }
+            
         } else if #available(iOS 11.0, *) {
             // Preserve percent encoding for non-UTF URLs
             print(.d, "percentEncodedQueryItems in withQueries")
+            
+            // Make sure the query is actually percent-encoded properly, or else the app will crash
+            // Get all query keys and values into one string
+            var testQuery = queries.keys.joined()
+            testQuery += queries.values.joined()
+            // Check for safety
+            guard queryIsProperlyPercentEncoded(testQuery, encoding: encoding) else { return nil }
+            
+            // Safely (hopefully) assign manually percent encoded query items
             components?.percentEncodedQueryItems = queries.map {
                 URLQueryItem(name: $0.0, value: $0.1)
             }
         } else {
             // Non-UTF but iOS too old
-            var queryString = ""
-            for query in queries {
-                let query = "\(query.key)=\(query.value)"
-                if !queryString.isEmpty { queryString += "&" }
-                queryString += query
-            }
+            
+            // Make sure the query is actually percent-encoded properly, or else the app will crash
+            // Get all query keys and values into one string
+            let queryPairs = queries.map { "\($0.0)=\($0.1)" }
+            let queryString = queryPairs.joined(separator: "&")
+            // Check for safety
+            guard queryIsProperlyPercentEncoded(queryString, encoding: encoding) else { return nil }
+            
+            // Safely (hopefully) assign manually constructed query
             components?.percentEncodedQuery = queryString
         }
     
         return components?.url
     }
+    
+    /// Checks that a query is properly percent encoded.
+    ///
+    /// - Parameters:
+    ///   - query: A string representing the full query. This can be formatted to separate keys and values and those pairs with `=` and `&`, but for the purpose of testing, isn't strictly necessary.
+    ///   - encoding: The `String.Encoding`, if available. Optional; only used for providing error details.
+    /// - Returns: `true` if the string is a properly encoded query, otherwise `false`.
+    ///
+    /// Note that this function does not check whether percent-encoded characters are valid UTF-8 characters, nor does it compare against any encoding passed to it. This function only checks that the query will not cause a fatal error when assigned to `URLComponents.percentEncodedQuery` or similar.
+    private func queryIsProperlyPercentEncoded(_ query: String, encoding: CharacterEncoding? = nil) -> Bool {
+        // Create a testable URL
+        let baseUrl = "https://www.example.com/?"
+        // If all queries are percent encoded, this should pass
+        if URLComponents(string: baseUrl + query) != nil {
+            // Note: Query items could still contain query characters (?&=), but it doesn't crash
+            print(.i, "Percent encoded query items can be used safely.")
+            return true
+        } else {
+            print(.x, "URL.withQueries() expects properly percent-encoded query items when using \(encoding?.name ?? "nil") encoding. URL will be set to nil to avoid a fatal error, but calling URL.withQueries() this way is unintended and may result in unexpected behaviour.")
+            return false
+        }
+    }
+    
+// Below is an earlier attempt at manually checking percent encoding, before the URLComponents method was discovered.
+    
+//    func safeQueryItem(from item: String) -> String? {
+//        // We will allow the % sign for now, and check for proper encoding later on
+//        let allowedCharacters = CharacterSet.urlQueryItemAllowed.union(CharacterSet(charactersIn: "%"))
+//
+//        // First check that there are no illegal characters (other than % sign)
+//        if !allowedCharacters.isSuperset(of: CharacterSet(charactersIn: item)) {
+//            // If the item contains illegal characters, attempt to percent encode it (though this will be UTF-8)
+//            guard let safeItem = item.addingPercentEncoding(withAllowedCharacters: .urlQueryItemAllowed) else {
+//                // If the item cannot be encoded, we have to give up altogether
+//                print(.x, "Cannot percent encode query item \"\(item)\".")
+//                //            properlyPercentEncoded = false
+//                return nil
+//            }
+//            //        safeQueries.removeValue(forKey: key)
+//            //        safeQueries[safeKey] = value
+//            return safeItem
+//        } else {
+//            // If the item was safe to begin with, return unmodified string
+//            return item
+//        }
+//    }
+//
+//
+//    func queryItemIsProperlyPercentEncoded(_ item: String) -> Bool {
+//        //    // If the item begins with a percent sign, note for later
+//        //    var beginsWithPercentSign = false
+//        //    if item.first == "%" { beginsWithPercentSign = true }
+//
+//        // Then, split the string into pieces using percent sign as a delimiter
+//        let components = item.split(separator: "%", maxSplits: Int.max, omittingEmptySubsequences: false)
+//        //    let foo = item.components(separatedBy: "%")
+//        //    // If there wasn't a leading percent sign in the original string, delete the first component
+//        //    if beginsWithPercentSign { components.dropFirst() }
+//        let testableComponents = components.dropFirst()
+//
+//        // Check that all values after percent signs are valid percent encoding (%XX), where X is hex
+//        for component in testableComponents {
+//            // First check that the component is at least two characters long
+//            //        let length = component.count
+//            let prefix = component.prefix(2)
+//            //        print(.i, "Length of \"\(component)\" is \(length).")
+//            //        guard length >= 2 else {
+//            guard prefix.count == 2 else {
+//                print(.x, "Percent sign is followed by fewer than two characters (\"\(component)\").")
+//                return false
+//            }
+//            //        // Cut off all characters after the first two in every component
+//            //        component.dropLast(length - 2)
+//            //        let testableComponent = component.range
+//            // Test that no component returns nil using Int(component, radix: 16)
+//            //        let hex = Int(component, radix: 16)
+//            guard Int(prefix, radix: 16) != nil else {
+//                print(.x, "Percent-encoded character \"%\(prefix)\" is not proper hexadecimal.")
+//                return false
+//            }
+//        }
+//
+//        // If no problematic encoding was found, this string is safe
+//        return true
+//    }
+//
+//    // ... withQueries ... //
+//    // Make a copy of queries so we can percent encode them if necessary
+//    var safeQueries = queries
+//
+//    // Make sure the query is actually percent-encoded properly, or else the app will crash
+//    var properlyPercentEncoded = true
+//    //// We will allow the % sign for now, and check for proper encoding later on
+//    //let allowedCharacters = CharacterSet.urlQueryItemAllowed.union(CharacterSet(charactersIn: "%"))
+//
+//    //// Get all query keys and values into one array to check them all
+//    //var queryItems: [String] = queries.keys.map { $0 }
+//    //queryItems.append(contentsOf: queries.values.map { $0 })
+//
+//    for (key, value) in safeQueries {
+//        // Check that key doesn't contain any illegal characters
+//        guard let safeKey = safeQueryItem(from: key) else {
+//            // If the key cannot be encoded, we have to give up altogether
+//            properlyPercentEncoded = false
+//            break
+//        }
+//        // Update the queries if the key was reencoded
+//        if safeKey != key {
+//            safeQueries.removeValue(forKey: key)
+//            safeQueries[safeKey] = value
+//        }
+//
+//        // Value next
+//        guard let safeValue = safeQueryItem(from: value) else {
+//            properlyPercentEncoded = false
+//            break
+//        }
+//        if safeValue != value {
+//            safeQueries[safeKey] = safeValue
+//        }
+//    }
+//
+//    // If there are no illegal characters, check that any % signs represent properly encoded characters
+//    if properlyPercentEncoded {
+//        for (key, value) in safeQueries {
+//            // If string ends with a percent sign, fail
+//            guard key.last != "%" && value.last != "%" else {
+//                print(.x, "Key or value ends with a percent sign, which is illegal.")
+//                properlyPercentEncoded = false
+//                break
+//            }
+//
+//            // Check if there are any percent signs, and simply move on if there aren't
+//            if key.contains("%") {
+//                // Check that any encoded characters are encoded correctly
+//                print(.i, "Key \"\(key)\" contains a percent sign; verifying encoding.")
+//                guard queryItemIsProperlyPercentEncoded(key) else {
+//                    properlyPercentEncoded = false
+//                    break
+//                }
+//            }
+//            if value.contains("%") {
+//                print(.i, "Value \"\(value)\" contains a percent sign; verifying encoding.")
+//                guard queryItemIsProperlyPercentEncoded(value) else {
+//                    properlyPercentEncoded = false
+//                    break
+//                }
+//            }
+//        }
+//    }
+//    // Finally, we can safely assign the query items if they are properly percent encoded
+//    if properlyPercentEncoded {
+//        // existing code in main app
+//        print(.o, "All queries are properly percent encoded; proceeding to affix to URL.")
+//    } else {
+//        print(.x, "Queries could not be assigned.")
+//    }
+    
     
     
 //    /// Takes a base URL, a set of queries, and a search term string, and returns the URL with the queries appended. The search term string will appear anywhere in the URL in place of the value passed in as `replacing`; if this property is omitted, the string will replace any and all empty query keys.

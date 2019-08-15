@@ -54,6 +54,9 @@ struct CharacterEncoder {
 //    let encoding: String.Encoding
     let encoding: CharacterEncoding
     
+    /// Forces the encoder to encode UTF-8 strings
+    static let invalidEncoding = CharacterEncoding(name: "invalid utf-8", value: .invalid)
+    
     
     // MARK: - Initializers
     
@@ -161,6 +164,12 @@ struct CharacterEncoder {
             return string
         }
         
+//        // Use UTF-8 if using the invalid encoding
+//        if encoding.value == .invalid {
+//            print(.i, "Using UTF-8 because encoding is set to invalid.")
+//            
+//        }
+        
 //        //Create a byte sequece representing the string using the new encoding
 //        guard let encodedData = string.data(using: encoding.value) else {
 //            print(.x, "Failed to encode characters using \"\(encoding)\". Falling back to UTF-8.")
@@ -185,13 +194,11 @@ struct CharacterEncoder {
         // Analyze string byte by byte, encode URL-unsafe characters, then reassemble
         let encodedString = encodedData!.map { byte -> String in
             // Choose which characters will not be encoded
-            var legalCharacters = CharacterSet()
+            // By default, encode URL control characters if this is a query
+            var legalCharacters = CharacterSet.urlSafeCharacters
             if fullUrl {
                 // If a full URL, do not escape control characters
                 legalCharacters = CharacterSet.urlAllowedCharacters.union(CharacterSet(charactersIn: "%"))
-            } else {
-                // Encode URL control characters if this is a query
-                legalCharacters = CharacterSet.urlSafeCharacters
             }
             
             // Check for ASCII printable characters:

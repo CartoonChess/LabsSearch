@@ -73,7 +73,7 @@ class IconFetcher: NSObject, XMLParserDelegate {
     /// This is the only method which should be called from a view controller.
     ///
     /// The inner workings of this function and those related to it perform asynchronously on the background thread. If updating the UI with the image this function fetches, be sure to update on the main thread.
-    func fetchIcon(for url: URL, completion: @escaping (_ icon: UIImage) -> Void) {
+    func fetchIcon(for url: URL, completion: @escaping (_ icon: UIImage?) -> Void) {
         // Give URL to class so parser can access it
         self.url = url
         // Clear out icons in case this isn't the first time we're checking
@@ -86,6 +86,9 @@ class IconFetcher: NSObject, XMLParserDelegate {
                 let icon = UIImage(data: data) {
                 print(.o, "Creating icon from HtmlIcon data (URL \(bestIcon.href)).")
                 completion(icon)
+            } else {
+                // Return nil so that we can still update encoding
+                completion(nil)
             }
         }
     }

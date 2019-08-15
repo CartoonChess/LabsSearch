@@ -278,6 +278,15 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             urlString = hostAppUrlString
         }
         
+        
+//        // *** DEBUG *** //
+//        var encoder_ = CharacterEncoder(encoding: .invalid)
+//        if let foo = searchEngineEditor.characterEncoder {
+//            encoder_ = foo
+//        }
+//        // *** DEBUG *** //
+        
+        
         // First, see if the URL is valid and that it contains the default magic word
         if let url = urlController.validUrl(from: urlString, characterEncoder: searchEngineEditor.characterEncoder, schemeIsValid: { (url) -> Bool in
             // TODO: Have this check compatibility differently if using OpS
@@ -288,7 +297,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             print(.o, "URL and default magic word detected; creating engine object.")
             // Create engine object with URL, awaiting further details
             urlController.willUpdateUrlDetails(url: url.absoluteString, characterEncoder: searchEngineEditor.characterEncoder) { (baseUrl, queries) in
-                updateUrlDetails(baseUrl: baseUrl, queries: queries)
+                updateUrlDetails(baseUrl: baseUrl, queries: queries, updateView: true)
             }
             
         }
@@ -332,7 +341,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     func prepareToUpdateIcon(for url: String?) {
         // Pass URL to the icon fetcher
         guard let urlString = url,
-            let (fetchableUrl, host) = iconFetcher.getUrlComponents(urlString) else {
+            let (fetchableUrl, host) = iconFetcher.getUrlComponents(urlString, characterEncoder: searchEngineEditor.characterEncoder) else {
                 return
         }
         
@@ -376,13 +385,45 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         }
         #endif
         
-        // Only segue automatically if adding and when first appearing
-        if !viewDidAppear && engine == nil {
-            performSegue(withIdentifier: SegueKeys.urlDetails, sender: nil)
+        print(.d, "viewDidAppear = \(viewDidAppear), engine = \(engine != nil ? "made" : "nil")")
+        
+//        // Only segue automatically if adding and when first appearing
+//        if !viewDidAppear && engine == nil {
+//            performSegue(withIdentifier: SegueKeys.urlDetails, sender: nil)
+//        }
+        
+//        // Only segue to UrlDetails automatically when first appearing
+//        if !viewDidAppear {
+//            // And make sure the engine isn't testable (i.e. we're adding; sometimes encoding creates engine though, so we test for the magic word instead)
+//            if let engine = engine,
+//                let url = engine.baseUrl.withQueries(engine.queries),
+//                urlController.detectMagicWord(in: url, magicWord: SearchEngines.shared.termsPlaceholder) {
+//                print(.d, "Looks like the magic word was found.")
+//            } else {
+//                // i.e. engine == nil
+//                performSegue(withIdentifier: SegueKeys.urlDetails, sender: nil)
+//            }
+//        }
+        
+        // Only segue to UrlDetails automatically when first appearing
+        if !viewDidAppear {
+            // And make sure the engine isn't testable (i.e. we're adding; sometimes encoding creates engine though, so we test for the magic word instead)
+            if let engine = engine,
+                let url = engine.baseUrl.withQueries(engine.queries),
+                urlController.detectMagicWord(in: url, magicWord: SearchEngines.shared.termsPlaceholder) {
+                // Nothing needs to be done here
+                print(.d, "Looks like the magic word was found.")
+            } else {
+                // i.e. engine == nil
+                performSegue(withIdentifier: SegueKeys.urlDetails, sender: nil)
+            }
+            
+            // Prevent this from happening more than once and from the host data overwriting user's changes to URL or name/shortcut
+            viewDidAppear = true
         }
         
-        // This will be set every time the view appears, but it prevents the host data from overwriting user's changes to URL or name/shortcut
-        viewDidAppear = true
+//        // This will be set every time the view appears, but it prevents the host data from overwriting user's changes to URL or name/shortcut
+//        viewDidAppear = true
     }
     
     
@@ -420,6 +461,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // Set name as array items Capitalized and concatenated by spaces
             // TODO: Consider reversing this so that for eg. images.google.com -> Google Images
             return array.joined(separator: " ").capitalized
+            // TODO: Consider marking name/shortcut as "saved" when editing engine or user has modified them on adding an engine, that way if they change the URL host it will also update the name/shortcut, assuming they haven't modified them, in which case we would keep their custom name/shortcut
         }
     }
     
@@ -555,40 +597,26 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     @IBAction func characterEncodingTextFieldChanged() {
         let encodingName = characterEncodingTextField.text ?? ""
-        print(.d, "encodingName \(encodingName)")
+        print(.d, "--- i. encodingName \(encodingName)")
         // Check if user has entered an identifiable encoding name
         if let encoder = CharacterEncoder(encoding: encodingName) {
             // NOTE: Unlike name/shortcut, this text field's effects take place immediately
             //- This is so that the URL can be tested with the new encoding
+            print(.d, "--- o. encoder created: \(encoder.encoding)")
             
             // Check that URL can be encoded in new encoding (i.e. does not contain any out-of-encoding characters)
             if let engine = engine {
+                print(.d, "--- i. engine exists.")
                 if let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: searchEngineEditor.characterEncoder?.encoding)?.absoluteString {
-//                if let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: engine.encoding)?.absoluteString {
-                    print(.d, "url: \(urlString)")
-                    var encodedUrl = encoder.encode(urlString, fullUrl: true)
-                    print(.d, "encodedUrl: \(encodedUrl)")
-                    // This next one (always?) passes when changing utf/nonU->nonU,
-                    //- as well as nonU with no encoding specific characters -> utf
-                    //- It only fails when changing nonU w/ encoding-specific chars -> utf
-                    if let url = urlController.validUrl(from: encodedUrl, characterEncoder: encoder, schemeIsValid: {_ in true}) {
-                        print(.d, "validUrl (using \(encoder.encoding)): \(url.absoluteString)")
-                        encodedUrl = url.absoluteString
-                    }
-                    
-                    // Next: Overwrite engine queries
-                    // I guess this should trigger the illusive "not changed" status if changing to utf w/ non-utf chars
-                    urlController.willUpdateUrlDetails(url: encodedUrl, magicWord: SearchEngines.shared.termsPlaceholder, characterEncoder: encoder) { (baseUrl, queries) in
-                        updateUrlDetails(baseUrl: baseUrl, queries: queries)
-                    }
-                    
-                    //- and then execute existing code below (changing encoder+encoding officially)
-                    // Copy new encoder over EngineEditor's encoder
-                    searchEngineEditor.characterEncoder = encoder
+                    print(.d, "--- i. url: \(urlString)")
+                    // Change encoding; and URL, if necessary
+                    searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: urlString)
+                    // We assume the call above always ends with a valid encoding
+                    // As passing the same encoding returns false in the completion handler, we will just make sure the text is black here
+                    print(.d, "--- encoding changed to below (or invalid utf-8):")
                     print(.o, "User changed encoding to \(encoder.encoding).")
-//                    // As well as to the engine (otherwise we won't be able to test above reliably again)
-//                    self.engine?.encoding = encoder.encoding
                     
+                    // This also happens in characterEncodingDidChange, but that won't trigger if the encoding matches the previously valid encoding
                     characterEncodingTextField.textColor = .darkText
                     updateSaveButton()
                 }
@@ -597,9 +625,58 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         } else {
             // User's encoding is invalid; do not change engine encoding
             // User can still press save button if active because previous encoding will be used instead
+            print(.d, "--- x. unrecognized encoding")
             characterEncodingTextField.textColor = .red
         }
     }
+    
+//    @IBAction func characterEncodingTextFieldChanged() {
+//        let encodingName = characterEncodingTextField.text ?? ""
+//        print(.d, "encodingName \(encodingName)")
+//        // Check if user has entered an identifiable encoding name
+//        if let encoder = CharacterEncoder(encoding: encodingName) {
+//            // NOTE: Unlike name/shortcut, this text field's effects take place immediately
+//            //- This is so that the URL can be tested with the new encoding
+//
+//            // Check that URL can be encoded in new encoding (i.e. does not contain any out-of-encoding characters)
+//            if let engine = engine {
+//                if let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: searchEngineEditor.characterEncoder?.encoding)?.absoluteString {
+////                if let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: engine.encoding)?.absoluteString {
+//                    print(.d, "url: \(urlString)")
+//                    var encodedUrl = encoder.encode(urlString, fullUrl: true)
+//                    print(.d, "encodedUrl: \(encodedUrl)")
+//                    // This next one (always?) passes when changing utf/nonU->nonU,
+//                    //- as well as nonU with no encoding specific characters -> utf
+//                    //- It only fails when changing nonU w/ encoding-specific chars -> utf
+//                    if let url = urlController.validUrl(from: encodedUrl, characterEncoder: encoder, schemeIsValid: {_ in true}) {
+//                        print(.d, "validUrl (using \(encoder.encoding)): \(url.absoluteString)")
+//                        encodedUrl = url.absoluteString
+//                    }
+//
+//                    // Next: Overwrite engine queries
+//                    // I guess this should trigger the illusive "not changed" status if changing to utf w/ non-utf chars
+//                    urlController.willUpdateUrlDetails(url: encodedUrl, magicWord: SearchEngines.shared.termsPlaceholder, characterEncoder: encoder) { (baseUrl, queries) in
+//                        updateUrlDetails(baseUrl: baseUrl, queries: queries)
+//                    }
+//
+//                    //- and then execute existing code below (changing encoder+encoding officially)
+//                    // Copy new encoder over EngineEditor's encoder
+//                    searchEngineEditor.characterEncoder = encoder
+//                    print(.o, "User changed encoding to \(encoder.encoding).")
+////                    // As well as to the engine (otherwise we won't be able to test above reliably again)
+////                    self.engine?.encoding = encoder.encoding
+//
+//                    characterEncodingTextField.textColor = .darkText
+//                    updateSaveButton()
+//                }
+//            }
+//
+//        } else {
+//            // User's encoding is invalid; do not change engine encoding
+//            // User can still press save button if active because previous encoding will be used instead
+//            characterEncodingTextField.textColor = .red
+//        }
+//    }
     
     @IBAction func characterEncodingTextFieldReturnKeyPressed() {
         characterEncodingTextField.endEditing(true)
@@ -613,6 +690,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             nameTextField.text != "",
             shortcutIsValid() {
             // Check above that URL contains magic word, in case it was stripped off when converting to UTF-8
+            // Note that the following is the line that forced us to change SearchEngineEditor to a class
             if let url = engine.baseUrl.withQueries(engine.queries, characterEncoding: searchEngineEditor.characterEncoder?.encoding),
                 urlController.detectMagicWord(in: url, magicWord: SearchEngines.shared.termsPlaceholder) {
                 saveButton.isEnabled = true
@@ -630,18 +708,29 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     // MARK: - Delegate functions
     
     // Determine if the URL should really be changed, based on whether or not it is valid
-    func updateUrlDetails(baseUrl: URL?, queries: [String: String]) {
+    func updateUrlDetails(baseUrl: URL?, queries: [String: String], updateView: Bool) {
         print(.i, "Called updateUrlDetails with baseUrl \"\(baseUrl?.absoluteString ?? "nil")\" and queries \"\(queries)\" while updatedUrlReceived is \(didReceiveUpdatedUrl).")
         
         // Set up the two possibilities for the label
-        let changedText: String
+        var changedText = String()
+        // Grab the current text, in case we don't want to change it (when updating URL encoding)
+//        if let currentLabel = urlDetailsChangedLabel.text {
+//            changedText = currentLabel
+//        } else {
+//            changedText = ""
+//        }
         
-        // Use slightly different wording when adding or editing engine
-        if engine == nil {
-            changedText = NSLocalizedString("AddEditEngine.urlDetails-Saved", comment: "URL added for new engine.")
-        } else {
-            changedText = NSLocalizedString("AddEditEngine.urlDetails-Changed", comment: "URL of existing engine changed.")
-        }
+//        changedText = urlDetailsChangedLabel.text
+        
+//        // Change label (unless we're just updating the URL encoding)
+//        if updateView {
+            // Use slightly different wording when adding or editing engine
+            if engine == nil {
+                changedText = NSLocalizedString("AddEditEngine.urlDetails-Saved", comment: "URL added for new engine.")
+            } else {
+                changedText = NSLocalizedString("AddEditEngine.urlDetails-Changed", comment: "URL of existing engine changed.")
+            }
+//        }
         
         // If url isn't nil, note that URL has been changed (i.e. can be saved)
         if let baseUrl = baseUrl {
@@ -649,8 +738,10 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             didReceiveUpdatedUrl = true
             
             // Update URL details cell right label
-            urlDetailsChangedLabel.text = changedText
-//            urlDetailsChangedLabel.isHidden = false
+            if updateView {
+                urlDetailsChangedLabel.text = changedText
+                urlDetailsChangedLabel.isHidden = false
+            }
             
             // If we're adding a new engine, we need to make a fake one whose properties we can change
             if engine == nil {
@@ -670,17 +761,20 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             // TODO: Update save/cancel buttons to show alerts (we've drawn details on paper)
             
         } else if baseUrl == nil && !didReceiveUpdatedUrl {
-            // TODO: Does this ever actually execute?
             // Engine was modified for the first time, but it wasn't usable (i.e. can't be saved)
+            // So far we only triggered this by setting the encoding to UTF-16
             print(.n, "Invalid URL entered; notifying user.")
             // Update URL details cell right label
 //            urlDetailsChangedLabel.text = String(format: NSLocalizedString("AddEditEngine.urlDetails-NotUpdated", comment: "Negative form of Saved or Changed."), changedText)
+            // Update this even if we asked not to change the view
             urlDetailsChangedLabel.text = NSLocalizedString("AddEditEngine.urlDetails-NotUpdated", comment: "Negative form of Saved or Changed.")
-//            urlDetailsChangedLabel.isHidden = false
+            urlDetailsChangedLabel.isHidden = false
         }
         
-        // This function is called whenever text fields change, so we'll always want to show some status
-        urlDetailsChangedLabel.isHidden = false
+//        // This function is called whenever text fields change, so we'll always want to show some status
+//        if updateView {
+//            urlDetailsChangedLabel.isHidden = false
+//        }
         updateSaveButton()
         
         // If no URL was passed in but we already changed it at least once, do nothing
@@ -712,14 +806,17 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
                 self.characterEncodingTextField.text = encoding.name
                 self.characterEncodingTextField.textColor = .darkText
             } else {
+                // TODO: Pretty sure this is useless
                 self.characterEncodingTextField.text = ""
             }
         }
     }
     
+    // Note that this should never have to be triggered
     func removeQueries() {
         // Remove existing queries, in case of encoding mismatch, and wait for UrlDetails to return new ones
         engine?.queries = [:]
+        print(.x, "Removed queries in order to prevent a crash. This may cause unexpected behaviour.")
         updateSaveButton()
     }
     
@@ -731,111 +828,181 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             
             // Show network activity indicator
             #if !EXTENSION
-                UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
             #endif
             
             iconFetcher.fetchIcon(for: url) { (icon) in
                 // Save HTML for other objects
                 self.searchEngineEditor.html = self.iconFetcher.html
-//                // And the encoding, if found
-//                if let characterEncoder = self.iconFetcher.characterEncoder {
-//                    self.searchEngineEditor.characterEncoder = characterEncoder
-//                    print(.d, "IconFetcher has updated the encoding to \(characterEncoder.encoding).")
-//                }
-                
-                
-                
-                print(.d, "AddEditVC self.searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
                 
                 DispatchQueue.main.async {
                     // TODO: We're now overriding EngineIcon functions and checks
                     //- But as they require an engine object and a saved image, what else can we do?
                     // TODO: Mutliple calls stack up; need to cancel existing if this happens
                     // TODO: Animate this?
-                    self.engineIconImage.image = icon
-                    self.engineIconImage.alpha = 1
-                    self.engineIconLabel.isHidden = true
-                    
-                    // Encoding update
-                    
-                    // Only set encoding if not nil, as we don't want to delete any previous encoding for now
-                    if let encoder = self.iconFetcher.characterEncoder {
-                        print(.o, "IconFetcher wants to update the encoding to \(encoder.encoding). Checking if URL is still valid.")
-                        // Check that the URL still validates in this new encoding
-                        // Copying from UrlDetails, which was from another part of AddEdit...
-//                        if let urlString = self.urlTextField.text {
-                        if let engine = self.engine,
-                            let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: self.searchEngineEditor.characterEncoder?.encoding)?.absoluteString {
-                            print(.d, "url: \(urlString)")
-                            var encodedUrl = encoder.encode(urlString, fullUrl: true)
-                            print(.d, "encodedUrl: \(encodedUrl)")
-                            // This next one (always?) passes when changing utf/nonU->nonU,
-                            //- as well as nonU with no encoding specific characters -> utf
-                            //- It only fails when changing nonU w/ encoding-specific chars -> utf
-                            if let url = self.urlController.validUrl(from: encodedUrl, characterEncoder: encoder, schemeIsValid: {_ in true}) {
-                                print(.d, "validUrl (using \(encoder.encoding)): \(url.absoluteString)")
-                                encodedUrl = url.absoluteString
-                                
-                                // If we're keeping the queries, make sure they're encoded properly
-                                self.urlController.willUpdateUrlDetails(url: encodedUrl, magicWord: SearchEngines.shared.termsPlaceholder, characterEncoder: encoder) { (baseUrl, queries) in
-                                    // Set encoding here, or else updateUrlDetails will crash
-                                    self.searchEngineEditor.characterEncoder = encoder
-                                    self.updateUrlDetails(baseUrl: baseUrl, queries: queries)
-                                }
-                                
-//                                // Double check URL now that encoding has changed
-//                                // TODO: Is it right to change this?
-//                                self.urlTextField.text = encodedUrl
-//                                // This should allow newly encoded queries to be passed back, validate/colour URL, etc.
-//                                self.urlTextFieldChanged()
-                            } else {
-                                // If the URL is no longer valid, red the text field and remove engine's queries
-                                print(.x, "validUrl failed; removing queries from AddEdit's engine object.")
-                                self.removeQueries()
-//                                // FIXME: Can we still call this safely??
-//                                self.urlTextFieldChanged()
-                            }
-                        } else {
-                            print(.x, "No engine found, or urlString failed.")
-                        }
-                        
-                        // Set encoding
-                        // We already did it above but we have to make sure it gets done in case we didn't take that particular if/else path
-                        self.searchEngineEditor.characterEncoder = encoder
-                        // Let the caller know the encoding has changed; in this case, UrlDetails
-                        if let completion = completion { completion(true) }
-                        
-                        // FIXME: Completion handler, so UrlDetails can update text field if still showing!
-                        //- Where does it go, bro?
-//                    // // TEMPORARY, FOR ENCLOSURE TEST
-//                    var encodingChanged = false
-//                    if let characterEncoder = self.iconFetcher.characterEncoder {
-//                        self.searchEngineEditor.characterEncoder = characterEncoder
-//                        print(.d, "IconFetcher has updated the encoding to \(characterEncoder.encoding).")
-//                        encodingChanged = true
-//                    }
-//
-//                    if let completion = completion {
-//                        completion(encodingChanged)
-//                    }
-                        
-                    } else {
-                        print(.d, "No encoding change...")
-                        if let completion = completion { completion(false) }
+                    if let icon = icon {
+                        self.engineIconImage.image = icon
+                        self.engineIconImage.alpha = 1
+                        self.engineIconLabel.isHidden = true
                     }
                     
-                    
-                    // FIXME: Completion handler to change UrlDets, if we're still there!
-                    
+                    // Update encoding, if we found it
+                    print(.i, "IconFetcher wants to update the encoding.")
+//                    if let engine = self.engine,
+//                        let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: self.searchEngineEditor.characterEncoder?.encoding)?.absoluteString {
+                        // Attempt to update encoding
+                    self.searchEngineEditor.updateCharacterEncoding(encoder: self.iconFetcher.characterEncoder, urlString: url.absoluteString) { encodingDidChange in
+                        // Let the caller (should be UrlDetails) know if the encoding has changed
+                        completion?(encodingDidChange)
+                    }
                     
                     #if !EXTENSION
-                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
                     #endif
                 }
             }
             
         }
     }
+    
+//    func updateIcon(for url: URL, host: String, completion: ((_ encodingChanged: Bool) -> Void)?) {
+//        // Only look for an icon if icons from this host haven't already been scraped
+//        if host != mostRecentHost {
+//            mostRecentHost = host
+//
+//            // Show network activity indicator
+//            #if !EXTENSION
+//                UIApplication.shared.isNetworkActivityIndicatorVisible = true
+//            #endif
+//
+//            iconFetcher.fetchIcon(for: url) { (icon) in
+//                // Save HTML for other objects
+//                self.searchEngineEditor.html = self.iconFetcher.html
+//
+//                DispatchQueue.main.async {
+//                    // TODO: We're now overriding EngineIcon functions and checks
+//                    //- But as they require an engine object and a saved image, what else can we do?
+//                    // TODO: Mutliple calls stack up; need to cancel existing if this happens
+//                    // TODO: Animate this?
+//                    if let icon = icon {
+//                        self.engineIconImage.image = icon
+//                        self.engineIconImage.alpha = 1
+//                        self.engineIconLabel.isHidden = true
+//                    }
+//
+//                    // Encoding update
+//
+////                    // Only set encoding if not nil, as we don't want to delete any previous encoding for now
+////                    if var encoder = self.iconFetcher.characterEncoder {
+////                        print(.o, "IconFetcher wants to update the encoding to \(encoder.encoding). Checking if URL is still valid.")
+////                        // Check that the URL still validates in this new encoding
+////                        // Copying from UrlDetails, which was from another part of AddEdit...
+//////                        if let urlString = self.urlTextField.text {
+//                        if let engine = self.engine,
+//                            let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: self.searchEngineEditor.characterEncoder?.encoding)?.absoluteString {
+//                            print(.d, "url: \(urlString)")
+////                            var encodedUrl = encoder.encode(urlString, fullUrl: true)
+////                            print(.d, "encodedUrl: \(encodedUrl)")
+////                            // This next one (always?) passes when changing utf/nonU->nonU,
+////                            //- as well as nonU with no encoding specific characters -> utf
+////                            //- It only fails when changing nonU w/ encoding-specific chars -> utf
+////                            if let url = self.urlController.validUrl(from: encodedUrl, characterEncoder: encoder, schemeIsValid: {_ in true}) {
+////                                print(.d, "validUrl (using \(encoder.encoding)): \(url.absoluteString)")
+////                                encodedUrl = url.absoluteString
+////
+////                                // If we're keeping the queries, make sure they're encoded properly
+////                                self.urlController.willUpdateUrlDetails(url: encodedUrl, magicWord: SearchEngines.shared.termsPlaceholder, characterEncoder: encoder) { (baseUrl, queries) in
+////                                    // Set encoding here, or else updateUrlDetails will crash
+////                                    self.searchEngineEditor.characterEncoder = encoder
+////                                    self.updateUrlDetails(baseUrl: baseUrl, queries: queries)
+////                                }
+////
+//////                                // Double check URL now that encoding has changed
+//////                                // TODO: Is it right to change this?
+//////                                self.urlTextField.text = encodedUrl
+//////                                // This should allow newly encoded queries to be passed back, validate/colour URL, etc.
+//////                                self.urlTextFieldChanged()
+////                            } else {
+////                                // If the URL is no longer valid, red the text field and remove engine's queries
+//////                                print(.x, "validUrl failed; removing queries from AddEdit's engine object.")
+//////                                self.removeQueries()
+//////                                // FIXME: Can we still call this safely??
+//////                                self.urlTextFieldChanged()
+////
+////                                print(.n, "validUrl failed, most likely because non-UTF characters are in the query. Changing encoding to InvalidID.")
+////
+////                                let invalidEncoding = CharacterEncoding(name: "invalid utf-8", value: .invalid)
+////                                let invalidEncoder = CharacterEncoder(encoding: invalidEncoding)
+////
+////                                if let url = self.urlController.validUrl(from: encodedUrl, characterEncoder: invalidEncoder, schemeIsValid: {_ in true}) {
+////                                    print(.d, "validUrl (using \(invalidEncoder.encoding)): \(url.absoluteString)")
+////                                    encodedUrl = url.absoluteString
+////
+////                                    // If we're keeping the queries, make sure they're encoded properly
+////                                    self.urlController.willUpdateUrlDetails(url: encodedUrl, magicWord: SearchEngines.shared.termsPlaceholder, characterEncoder: invalidEncoder) { (baseUrl, queries) in
+////                                        // Set encoding here, or else updateUrlDetails will crash
+////                                        self.searchEngineEditor.characterEncoder = invalidEncoder
+////                                        // And overwrite this too, since it gets called again way below
+////                                        encoder = invalidEncoder
+////                                        self.updateUrlDetails(baseUrl: baseUrl, queries: queries)
+////                                    }
+////
+////                                    //                                // Double check URL now that encoding has changed
+////                                    //                                // TODO: Is it right to change this?
+////                                    //                                self.urlTextField.text = encodedUrl
+////                                    //                                // This should allow newly encoded queries to be passed back, validate/colour URL, etc.
+////                                    //                                self.urlTextFieldChanged()
+////                                } else {
+////                                    // If the URL is no longer valid, red the text field and remove engine's queries
+////                                    print(.x, "validUrl failed; removing queries from AddEdit's engine object.")
+////                                    self.removeQueries()
+//////                                    print(.n, "validUrl failed, most likely because non-UTF characters are in the query. Changing encoding to InvalidID.")
+////
+////
+////                                    //                                // FIXME: Can we still call this safely??
+////                                    //                                self.urlTextFieldChanged()
+////                                }
+////
+////                            }
+//                        } else {
+//                            print(.x, "No engine found, or urlString failed.")
+//                        }
+////
+////                        // Set encoding
+////                        // We already did it above but we have to make sure it gets done in case we didn't take that particular if/else path
+////                        self.searchEngineEditor.characterEncoder = encoder
+////                        // Let the caller know the encoding has changed; in this case, UrlDetails
+////                        if let completion = completion { completion(true) }
+////
+////                        // FIXME: Completion handler, so UrlDetails can update text field if still showing!
+////                        //- Where does it go, bro?
+//////                    // // TEMPORARY, FOR ENCLOSURE TEST
+//////                    var encodingChanged = false
+//////                    if let characterEncoder = self.iconFetcher.characterEncoder {
+//////                        self.searchEngineEditor.characterEncoder = characterEncoder
+//////                        print(.d, "IconFetcher has updated the encoding to \(characterEncoder.encoding).")
+//////                        encodingChanged = true
+//////                    }
+//////
+//////                    if let completion = completion {
+//////                        completion(encodingChanged)
+//////                    }
+//
+//
+////                    } else {
+////                        print(.d, "No encoding change...")
+////                        if let completion = completion { completion(false) }
+////                    }
+//
+//
+//                    #if !EXTENSION
+//                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//                    #endif
+//                }
+//            }
+//
+//        }
+//    }
     
     
     // MARK: - Table view

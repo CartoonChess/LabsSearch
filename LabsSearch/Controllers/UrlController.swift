@@ -19,7 +19,7 @@ struct UrlController {
     // State of the current URL/magic word combo:
     // False cascades down to details (magic word), true bubbles up to basics (URL)
     
-    // If the URL is invalid, all other state vales are also false
+    // If the URL is invalid, all other state values are also false
     var urlIsValid = false {
         willSet {
             if !newValue {
@@ -57,15 +57,16 @@ struct UrlController {
     /// - Parameters:
     ///   - string: The string representing a URL. If empty or `nil`, this function will also return `nil`.
     ///   - encoder: A `CharacterEncoder` object, if available.
-    ///   - schemeIsValid: A closure which receives a URL object, and which expects a boolean value based on whether the scheme is compatible within the current app content.
+    ///   - schemeIsValid: A closure which receives a URL object, and which expects a boolean value based on whether the scheme is compatible within the current app content. Optional; defaults to `true`.
     ///   - url: The URL object to be passed to the enclosure.
     /// - Returns: A URL object if all checks are passed, otherwise `nil`.
     ///
     /// This function will check that the string is not nil and that it conforms to URL expectations. It will then pass a percentage encoded URL to the completion handler, where it expects the calling view to return a boolean value based on whether the app can open the URL based on its scheme (http, etc.).
-    func validUrl(from string: String?, characterEncoder encoder: CharacterEncoder? = nil, schemeIsValid: (_ url: URL) -> Bool) -> URL? {
+//    func validUrl(from string: String?, characterEncoder encoder: CharacterEncoder? = nil, schemeIsValid: (_ url: URL) -> Bool) -> URL? {
+    func validUrl(from string: String?, characterEncoder encoder: CharacterEncoder? = nil, schemeIsValid: ((_ url: URL) -> Bool)? = nil) -> URL? {
         if let urlText = string,
             let url = urlText.encodedUrl(characterEncoder: encoder),
-            schemeIsValid(url) {
+            schemeIsValid?(url) ?? true {
             return url
         } else {
             // Return nil if any conditions are not met

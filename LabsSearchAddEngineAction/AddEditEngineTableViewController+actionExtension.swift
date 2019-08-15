@@ -94,12 +94,58 @@ extension AddEditEngineTableViewController {
                 // Get URL to pass to URL details view
                 self.hostAppUrlString = url
                 
-                // Get character encoding
-//                self.hostAppCharacterEncoding = characterEncoding
-                if let characterEncoding = characterEncoding {
-                    self.searchEngineEditor.characterEncoder = CharacterEncoder(encoding: characterEncoding)
-//                    self.searchEngineEditor.encoding = self.searchEngineEditor.characterEncoder?.encoding
+                
+                
+//                // Get character encoding
+//                // TODO: Use Editor.updateCharacterEncoding!!!
+//                // Adapted from OpS version (in turn from UrlDetails...)
+//
+//                // First, check if URL contains non-UTF characters
+//                // If it does, set invalid encoding, in case a real one isn't found later
+//                var urlEncoder: CharacterEncoder?
+//                if url?.removingPercentEncoding == nil {
+//                    let invalidEncoding = CharacterEncoding(name: "invalid utf-8", value: .invalid)
+//                    urlEncoder = CharacterEncoder(encoding: invalidEncoding)
+//                    self.searchEngineEditor.characterEncoder = urlEncoder
+//                }
+//                // Next, decide which encoding to use
+//                if let remoteEncoding = characterEncoding,
+//                    let remoteEncoder = CharacterEncoder(encoding: remoteEncoding) {
+//
+//                    switch (remoteEncoder.encoding.value, urlEncoder?.encoding.value) {
+//                    case (.utf8, String.Encoding.invalid):
+//                        // Keep invalid utf-8
+//                        break
+//                    default:
+//                        self.searchEngineEditor.characterEncoder = remoteEncoder
+//                    }
+//                }
+                
+                // Update encoding, if found, and keep non-UTF URLs valid
+                // FIXME: Doesn't work if no encoding is found and URL is non-UTF!
+                if let url = url {
+                    
+//                    if let characterEncoding = characterEncoding {
+//                        // Encoding header was found
+//                        let encoder = CharacterEncoder(encoding: characterEncoding)
+//                        // Attempt to update encoding
+//                        self.searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: url)
+//                    }
+                    
+                    // First, assume no encoding was found
+                    var encoder = CharacterEncoder(encoding: "") // nil
+                    // And only create a real encoder if we found an encoding
+                    if let characterEncoding = characterEncoding {
+                        encoder = CharacterEncoder(encoding: characterEncoding)
+                    }
+                    
+                    // Update encoding if found, otherwise at least check URL
+                    //- No encoding (or UTF-8) with non-UTF URL will set "invalid utf-8"
+                    self.searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: url, allowNilEncoder: true)
+                
                 }
+                
+                
                 
                 // Save HTML to try and find favicon or similar
                 self.hostAppHtml = html
