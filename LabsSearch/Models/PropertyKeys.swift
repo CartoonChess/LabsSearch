@@ -10,7 +10,7 @@ import Foundation
 
 /// Strings useful globally.
 struct AppKeys {
-    static let appName = "Chears"
+    static let appName = NSLocalizedString("LabsSearch.appName", comment: "")
     static let appGroup = "group.com.distantlabs.LabsSearch"
 }
 

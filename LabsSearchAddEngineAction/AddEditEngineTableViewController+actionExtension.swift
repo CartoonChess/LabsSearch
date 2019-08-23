@@ -93,9 +93,7 @@ extension AddEditEngineTableViewController {
                 
                 // Get URL to pass to URL details view
                 self.hostAppUrlString = url
-                
-                
-                
+
 //                // Get character encoding
 //                // TODO: Use Editor.updateCharacterEncoding!!!
 //                // Adapted from OpS version (in turn from UrlDetails...)
@@ -122,16 +120,7 @@ extension AddEditEngineTableViewController {
 //                }
                 
                 // Update encoding, if found, and keep non-UTF URLs valid
-                // FIXME: Doesn't work if no encoding is found and URL is non-UTF!
                 if let url = url {
-                    
-//                    if let characterEncoding = characterEncoding {
-//                        // Encoding header was found
-//                        let encoder = CharacterEncoder(encoding: characterEncoding)
-//                        // Attempt to update encoding
-//                        self.searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: url)
-//                    }
-                    
                     // First, assume no encoding was found
                     var encoder = CharacterEncoder(encoding: "") // nil
                     // And only create a real encoder if we found an encoding
@@ -142,10 +131,7 @@ extension AddEditEngineTableViewController {
                     // Update encoding if found, otherwise at least check URL
                     //- No encoding (or UTF-8) with non-UTF URL will set "invalid utf-8"
                     self.searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: url, allowNilEncoder: true)
-                
                 }
-                
-                
                 
                 // Save HTML to try and find favicon or similar
                 self.hostAppHtml = html

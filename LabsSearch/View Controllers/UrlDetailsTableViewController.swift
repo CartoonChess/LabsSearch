@@ -416,12 +416,8 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
                 // Have to call this async because AddEdit's URL "changed/saved" label may change
                 DispatchQueue.main.async {
                     // Attempt to update encoding
-                    // FIXME: Will this cause double percent encoding?
                     self.delegate?.searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: httpsUrl.absoluteString, completion: nil)
-                    
-                    // FIXME: If we leave this out, will e.g.UTF+emoji -> EUC cause errors?
-                    //- Will everything update and save okay?
-                    //- We also removed the Changed() call from when queries are totally removed
+
 //                        // Double check URL now that encoding has changed
 //                        self.urlTextField.text = encodedUrl
 //                        // This should allow newly encoded queries to be passed back, validate/colour URL, etc.

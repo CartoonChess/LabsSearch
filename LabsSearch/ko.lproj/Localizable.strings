@@ -8,36 +8,104 @@
 //
 
 
-// MARK: - Search Engine
+// MARK: - =Global=
+"LabsSearch.appName" = "Chears";
 
-// MARK: Names
-"SearchEngine.defaultEngines-GoogleName" = "구글";
-"SearchEngine.defaultEngines-AppleMapsName" = "애플 지도";
-"SearchEngine.defaultEngines-NamuWikiName" = "나무위키";
-"SearchEngine.defaultEngines-NaverName" = "네이버";
-"SearchEngine.defaultEngines-NaverKoEnDictionaryName" = "네이버 한영사전";
-"SearchEngine.defaultEngines-QDWikiName" = "QD Wiki";
-"SearchEngine.defaultEngines-WikipediaName" = "위키피디아";
-"SearchEngine.defaultEngines-YouTubeName" = "유투브";
 
-// MARK: Shortcuts
-"SearchEngine.defaultEngines-GoogleShortcut" = "ㄱ";
-"SearchEngine.defaultEngines-AppleMapsShortcut" = "ㅈ";
-"SearchEngine.defaultEngines-NamuWikiShortcut" = "ㄴㅁ";
-"SearchEngine.defaultEngines-NaverShortcut" = "ㄴ";
-"SearchEngine.defaultEngines-NaverKoEnDictionaryShortcut" = "ㄴㅅ";
-"SearchEngine.defaultEngines-QDWikiShortcut" = "q";
-"SearchEngine.defaultEngines-WikipediaShortcut" = "ㅇㅋ";
-"SearchEngine.defaultEngines-YouTubeShortcut" = "ㅇ";
-
-// MARK: URLs
-"SearchEngine.defaultEngines-WikipediaURL" = "https://ko.m.wikipedia.org/w/";
+// MARK: - =Search Engine=
 
 // MARK: Default engine shortcut
 "SearchEngine.loadEngines-DefaultEngineShortcut" = "ㄴ";
 
+// MARK: - Names
+// MARK: : 0.1.0
+// MARK: :: Enabled
+"SearchEngine.defaultEngines-AppleMapsName" = "애플 지도";
+"SearchEngine.defaultEngines-GoogleName" = "구글";
+"SearchEngine.defaultEngines-WikipediaName" = "위키피디아";
+"SearchEngine.defaultEngines-YouTubeName" = "유투브";
+// MARK: :: Disabled
+//"SearchEngine.defaultEngines-QDWikiName" = "QD Wiki";
+// MARK: : 1.0.0
+// MARK: :: Enabled
+"SearchEngine.defaultEngines-AirbnbName" = "에어비앤비";
+"SearchEngine.defaultEngines-AmazonName" = "아마존";
+"SearchEngine.defaultEngines-BingName" = "빙";
+"SearchEngine.defaultEngines-FacebookName" = "페이스북";
+"SearchEngine.defaultEngines-GmailName" = "지메일";
+"SearchEngine.defaultEngines-GoogleImagesName" = "구글 이미지";
+"SearchEngine.defaultEngines-GoogleMapsName" = "구글 지도";
+"SearchEngine.defaultEngines-GoogleTranslateName" = "그글 번역";
+"SearchEngine.defaultEngines-HotelsDotComName" = "호텔스닷컴";
+"SearchEngine.defaultEngines-LinkedInName" = "링크드인";
+"SearchEngine.defaultEngines-NetflixName" = "넷플릭스";
+"SearchEngine.defaultEngines-TwitchName" = "트위치";
+"SearchEngine.defaultEngines-TwitterName" = "트위터";
+// MARK: :: Disabled
+"SearchEngine.defaultEngines-AliExpressName" = "알리익스프레스";
+"SearchEngine.defaultEngines-DailymotionName" = "데일리모션";
+"SearchEngine.defaultEngines-GoogleDriveName" = "구글 드라이브";
+"SearchEngine.defaultEngines-RobloxName" = "로블록스";
+// MARK: :: Korean (KR)
+"SearchEngine.defaultEngines-KakaoMapName" = "카카오맵";
+"SearchEngine.defaultEngines-NaverName" = "네이버";
+"SearchEngine.defaultEngines-NaverMapName" = "네이버 지도";
+"SearchEngine.defaultEngines-PapagoName" = "파파고";
+"SearchEngine.defaultEngines-TheCallName" = "더콜";
+"SearchEngine.defaultEngines-WatchaName" = "왓차";
 
-// MARK: - Settings
+// MARK: - Shortcuts
+// MARK: : 0.1.0
+// MARK: :: Enabled
+"SearchEngine.defaultEngines-AppleMapsShortcut" = "ㅇㅍㅈ";
+"SearchEngine.defaultEngines-GoogleShortcut" = "ㄱ";
+"SearchEngine.defaultEngines-WikipediaShortcut" = "ㅇㅋ";
+"SearchEngine.defaultEngines-YouTubeShortcut" = "ㅇㅌ";
+// MARK: :: Disabled
+//"SearchEngine.defaultEngines-NaverKoEnDictionaryShortcut" = "ㄴㅅ";
+// MARK: : 1.0.0
+// MARK: :: Enabled
+"SearchEngine.defaultEngines-AirbnbShortcut" = "ㅇㅇ";
+"SearchEngine.defaultEngines-AmazonShortcut" = "ㅇㅁㅈ";
+"SearchEngine.defaultEngines-BingShortcut" = "빙";
+"SearchEngine.defaultEngines-FacebookShortcut" = "ㅍ";
+"SearchEngine.defaultEngines-GmailShortcut" = "ㅈㅁㅇ";
+"SearchEngine.defaultEngines-GoogleImagesShortcut" = "ㄲㅇ";
+"SearchEngine.defaultEngines-GoogleMapsShortcut" = "ㄲㅈ";
+"SearchEngine.defaultEngines-GoogleTranslateShortcut" = "ggb";
+"SearchEngine.defaultEngines-HotelsDotComShortcut" = "ㅎㅌㅅ";
+"SearchEngine.defaultEngines-LinkedInShortcut" = "ㄹㅋ";
+"SearchEngine.defaultEngines-NetflixShortcut" = "ㄴㅍ";
+"SearchEngine.defaultEngines-TwitchShortcut" = "ㅌㅇㅊ";
+"SearchEngine.defaultEngines-TwitterShortcut" = "ㅌㅇㅌ";
+// MARK: :: Disabled
+"SearchEngine.defaultEngines-AliExpressShortcut" = "ㅇㄹㅇ";
+"SearchEngine.defaultEngines-DailymotionShortcut" = "ㄷㅇㄹ";
+"SearchEngine.defaultEngines-GoogleDriveShortcut" = "ㄲㄷ";
+"SearchEngine.defaultEngines-RobloxShortcut" = "ㄹㅂㄹ";
+// MARK: :: Korean (KR)
+"SearchEngine.defaultEngines-KakaoMapShortcut" = "ㅋㅁ";
+"SearchEngine.defaultEngines-NaverShortcut" = "ㄴ";
+"SearchEngine.defaultEngines-NaverMapShortcut" = "ㅈㄷ";
+"SearchEngine.defaultEngines-PapagoShortcut" = "ㅍㅍ";
+"SearchEngine.defaultEngines-TheCallShortcut" = "ㄷㅋ";
+"SearchEngine.defaultEngines-WatchaShortcut" = "ㅇㅊ";
+
+// MARK: - URLs
+// MARK: : 0.0.1
+// MARK: :: Enabled
+"SearchEngine.defaultEngines-WikipediaURL" = "https://ko.m.wikipedia.org/w/";
+// MARK: :: Disabled
+// MARK: : 1.0.0
+// MARK: :: Enabled
+"SearchEngine.defaultEngines-GoogleTranslateURL" = "https://translate.google.com/#view=home&op=translate&sl=auto&tl=ko&text=%@";
+    "SearchEngine.defaultEngines-GoogleTranslateQuery.hl" = "ko";
+// MARK: :: Disabled
+// MARK: :: Korean (KR)
+"SearchEngine.defaultEngines-WatchaURL" = "https://watcha.com/ko-KR/search";
+
+
+// MARK: - =Settings=
 
 // MARK: Stay In App explanation
 "Settings.stayInAppFooter-On" = "가능한 경우 검색 결과가 앱 내에서 보여집니다.";
@@ -51,8 +119,13 @@
 "Settings.resetAppAlert-Reset" = "재설정";
 "Settings.resetAppAlert-Cancel" = "취소";
 
+// MARK: About
 
-// MARK: - Add/Edit Engine
+
+// MARK: - =OpenSearch=
+
+
+// MARK: - =Add/Edit Engine=
 
 "AddEditEngine.navigationItemTitle-Add" = "검색 엔진 추가";
 "AddEditEngine.navigationItemTitle-Edit" = "검색 엔진 수정";
@@ -67,6 +140,6 @@
 "AddEditEngine.deleteEngine-Cancel" = "취소";
 
 
-// MARK: - URL Details
+// MARK: - =URL Details=
 
 "UrlDetails.firstSection-InstructionsStart" = "새로운 검색 엔진을 추가하기 위해서는 먼저 Safari를 이용해 새로운 검색 엔진에 접속해 검색을 시작하세요. 검색 결과가 나타나면, 링크를 복사 후 아래에 붙여넣습니다. 팁: 검색어를 %@으로 사용해 검색할 경우, 다음 단계는 자동적으로 완료됩니다.";

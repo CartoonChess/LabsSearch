@@ -11,17 +11,16 @@ import UIKit
 /// Shows a short list of most used engines so that the user can select the default engine.
 class IntroDefaultEngineTableViewController: DefaultEngineTableViewController, DefaultEngineTableViewControllerDelegate {
     
-    // MARK: - Properties
-    
-    // Only offer up the most common engines for the given region
-    // FIXME: Compute this based on region!
-    var commonShortcuts: [String] {
-        return [
-            NSLocalizedString("SearchEngine.defaultEngines-GoogleShortcut", comment: ""),
-            NSLocalizedString("SearchEngine.defaultEngines-WikipediaShortcut", comment: ""),
-            NSLocalizedString("SearchEngine.defaultEngines-NaverShortcut", comment: "")
-        ]
-    }
+//    // MARK: - Properties
+//
+//    // Only offer up the most common engines for the given region
+//    var commonShortcuts: [String] {
+//        return [
+//            NSLocalizedString("SearchEngine.defaultEngines-GoogleShortcut", comment: ""),
+//            NSLocalizedString("SearchEngine.defaultEngines-WikipediaShortcut", comment: ""),
+//            NSLocalizedString("SearchEngine.defaultEngines-NaverShortcut", comment: "")
+//        ]
+//    }
     
     
     // MARK: - Methods
@@ -35,11 +34,14 @@ class IntroDefaultEngineTableViewController: DefaultEngineTableViewController, D
         NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
         
         // Replace enabled shortcuts in this VC only with common shortcuts
-        enabledShortcuts = commonShortcuts
+//        enabledShortcuts = commonShortcuts
+        enabledShortcuts = SearchEngines.shared.commonShortcuts ?? []
         
         // This VC will act as its own delegate to send default engine selection
         delegate = self
     }
+    
+    // MARK: - Delegate methods
     
     func didSelectDefaultEngine(_ engine: SearchEngine) {
         SearchEngines.shared.defaultEngine = engine

@@ -504,6 +504,16 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     /// Update save button when name field is changed.
     @IBAction func nameChanged(_ sender: UITextField) {
         // TODO: Check that name does not conflict with other names
+        
+        // Set icon label to reflect name, but only if there's no image already supplied
+        // TODO: This function should be more rolled into EngineIconLabel
+        //- This used shortcut before, and we changed it in EngineIconView but not here
+        //- Then we ended up with two different letters in there. Bad form!
+        if engineIconImage.image == nil,
+            let name = nameTextField.text {
+            engineIconLabel.setLetter(using: name)
+        }
+        
         updateSaveButton()
     }
 
@@ -522,11 +532,11 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         }
         
 //        print(.n, "Parent: \"Shortcut changed.\"")
-        // Set icon label to reflect shortcut, but only if there's no image already supplied
-        if engineIconImage.image == nil,
-            let shortcut = shortcutTextField.text {
-            engineIconLabel.setLetter(using: shortcut)
-        }
+//        // Set icon label to reflect shortcut, but only if there's no image already supplied
+//        if engineIconImage.image == nil,
+//            let shortcut = shortcutTextField.text {
+//            engineIconLabel.setLetter(using: shortcut)
+//        }
 
         // Set text colour based on validity
         // Also, update the save button

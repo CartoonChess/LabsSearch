@@ -68,6 +68,9 @@ class SearchEngineEditor {
 //    func updateCharacterEncoding(encoder: CharacterEncoder?, urlString: String) -> Bool {
     func updateCharacterEncoding(encoder possibleEncoder: CharacterEncoder?, urlString: String, allowNilEncoder: Bool = false, completion: ((_ encodingDidChange: Bool) -> Void)? = nil) {
         
+        // If the encoding ever changes, update this value, for the completion handler
+        var encodingDidChange = false
+        
         // Create mutable copy of encoder, in case using allowNilEncoder
         var temporaryEncoder = possibleEncoder
         
@@ -80,7 +83,7 @@ class SearchEngineEditor {
         // Only set encoding if not nil, as we don't want to delete any previous encoding for now
         guard let encoder = temporaryEncoder else {
             print(.i, "No new encoding detected, so encoding was not changed.")
-            completion?(false)
+            completion?(encodingDidChange)
             return
         }
         
@@ -88,7 +91,7 @@ class SearchEngineEditor {
         if !allowNilEncoder {
             guard encoder.encoding != characterEncoder?.encoding else {
                 print(.i, "Encoding is already \(encoder.encoding).")
-                completion?(false)
+                completion?(encodingDidChange)
                 return
             }
         }
@@ -96,7 +99,6 @@ class SearchEngineEditor {
             
         // Percent-encode with the new encoding
         let encodedUrl = encoder.encode(urlString, fullUrl: true)
-        print(.d, "Used \(encoder.encoding) to encode \"\(urlString)\" to \"\(encodedUrl)\".")
         
         // Check validity of newly encoded URL
         //- This should pass except when converting to UTF-8 while URL contains non-UTF characters
@@ -104,20 +106,15 @@ class SearchEngineEditor {
             
              if allowNilEncoder && possibleEncoder == nil {
                 // No encoder, but URL is already UTF-8 compliant, so no change
-                // But let the caller know the URL didn't need encoding
-                completion?(false)
-                return
+//                // But let the caller know the URL didn't need encoding
+//                completion?(encodingDidChange)
+//                return
             } else {
                 // Under normal circumstances,
                 // make sure queries are encoded properly, then save them along with new encoding
                 updateEncoderAndUrl(encoder: encoder, url: url)
+                encodingDidChange = true
             }
-            
-            
-            // FIXME: How do we implement UrlDetails changes?
-            //- Should we have a shell function that calls this one but returns a different type of value?
-            //- Alternately a completion handler that passes everything, so we can pick and choose?
-            //- Note that the Bool value returned by the function might not be available then...
             
 //            // Double check URL now that encoding has changed
 //            // TODO: Is it right to change this?
@@ -136,9 +133,8 @@ class SearchEngineEditor {
             // Check URL validity again. This should never fail
             if let url = urlController.validUrl(from: encodedUrl, characterEncoder: invalidEncoder)?.absoluteString {
                 updateEncoderAndUrl(encoder: invalidEncoder, url: url)
-                
-                // FIXME: Same UrlDetails question/implementation as above
-//
+                encodingDidChange = true
+
             } else if !allowNilEncoder {
                 // The URL is no longer valid
                 //- We won't do this with allowNilEncoder as that's mostly just for checking URL validity
@@ -149,15 +145,15 @@ class SearchEngineEditor {
                 // Nonetheless, we will allow the encoding to update to what was passed in
                 // If no value was passed in, encoder is now nil
                 characterEncoder = possibleEncoder
+                encodingDidChange = true
                 
-                // FIXME: Another UrlDetails question...
 //                // Can we still call this safely??
 //                self.urlTextFieldChanged()
             }
         }
         
         // Let the caller know the encoding has changed
-        completion?(true)
+        completion?(encodingDidChange)
     }
     
     /// Make sure queries are encoded properly, then save them along with new encoding
@@ -167,7 +163,6 @@ class SearchEngineEditor {
             characterEncoder = encoder
             delegate?.updateUrlDetails(baseUrl: baseUrl, queries: queries, updateView: false)
             print(.o, "Successfully updated encoding to \(encoder.encoding).")
-            print(.d, "Encoded URL: \(url)")
         }
     }
     

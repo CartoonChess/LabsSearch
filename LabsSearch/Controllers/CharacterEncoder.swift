@@ -34,6 +34,10 @@ struct CharacterEncoding: CustomStringConvertible, Equatable, Codable {
     }
     
     var description: String { return name }
+//    // For debugging
+//    var description: String {
+//        return "CharacterEncoding(name: \"\(name)\", value: \".\")"
+//    }
     
     // Necessary due to Codable
     init(name: String, value: String.Encoding) {

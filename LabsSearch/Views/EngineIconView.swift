@@ -125,9 +125,11 @@ extension EngineIconViewController {
             // Change background colour to white, in case image has transparencies
             engineIconView.backgroundColor = .white
         } else {
-            // No image for engine, so use first letter of shortcut as label
+            // No image for engine, so use first letter of name as label
             print(.n, "\(engine.name) has no image; setting label for icon.")
-            engineIconLabel.setLetter(using: engine.shortcut)
+//            engineIconLabel.setLetter(using: engine.shortcut)
+            // This is more useful than shortcut in non-Latin alphabets
+            engineIconLabel.setLetter(using: engine.name)
             engineIconLabel.isHidden = false
             // Change background colour back to grey, in case image was previously shown
             engineIconView.backgroundColor = engineIconView.defaultBackgroundColor
@@ -159,11 +161,11 @@ class EngineIconView: UIView {
 
 /// The label view of an engine icon, which shows when no image is available.
 class EngineIconLabel: UILabel {
-    /// Set the label to the first letter of the search shortcut.
+    /// Set the label to the first letter of the search engine name.
     ///
-    /// - Parameter shortcut: The `SearchEngine` shortcut.
-    func setLetter(using shortcut: String) {
-        text = String(shortcut.uppercased().first ?? "🔍")
+    /// - Parameter shortcut: The `SearchEngine` name.
+    func setLetter(using name: String) {
+        text = String(name.uppercased().first ?? "🔍")
     }
 }
 
