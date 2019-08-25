@@ -261,7 +261,7 @@ class IconFetcher: NSObject, XMLParserDelegate {
                 var html = String(data: data, encoding: encoding ?? .utf8)
                 // Keep HTML for SearchEngineEditor
                 self.html = html
-                print(.d, "IconFetcher html: \(html != nil ? String("💚") : String("💔"))")
+//                print(.d, "IconFetcher html: \(html != nil ? String("💚") : String("💔"))")
                 let components = html?.components(separatedBy: "<head")
                 
                 // If the split work, we've got a <head> tag, or possibly <header>

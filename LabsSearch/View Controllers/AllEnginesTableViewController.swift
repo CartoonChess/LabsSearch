@@ -318,7 +318,7 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
                 if let searchEngineEditor = searchEngineEditor {
                     destination.searchEngineEditor = searchEngineEditor
                 }
-                print(.d, "AllEnginesTVC prepare() searchEngineEditor.html: \(searchEngineEditor?.html != nil ? String("💚") : String("💔"))")
+//                print(.d, "AllEnginesTVC prepare() searchEngineEditor.html: \(searchEngineEditor?.html != nil ? String("💚") : String("💔"))")
                 // Set AllEngine view's copy to nil so that it doesn't loop when AddEdit is dismissed
                 openSearch = nil
                 searchEngineEditor = nil
@@ -355,7 +355,7 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
                 // An OpS search was attempted, so pass the OpS object to AddEdit
                 openSearch = source.openSearch
                 searchEngineEditor = source.searchEngineEditor
-                print(.d, "AllEnginesTVC unwind() searchEngineEditor.html: \(searchEngineEditor?.html != nil ? String("💚") : String("💔"))")
+//                print(.d, "AllEnginesTVC unwind() searchEngineEditor.html: \(searchEngineEditor?.html != nil ? String("💚") : String("💔"))")
             }
             // Don't execute AddEdit segues below
             return

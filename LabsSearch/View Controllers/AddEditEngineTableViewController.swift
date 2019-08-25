@@ -133,7 +133,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         
             // Get the current web page's URL and title from the host app
             loadUrl()
-            print(.d, "(All)AddEditTVC hostAppHtml: \(hostAppHtml != nil ? String("💚") : String("💔"))")
+//            print(.d, "(All)AddEditTVC hostAppHtml: \(hostAppHtml != nil ? String("💚") : String("💔"))")
         #endif
         
         // Note: Be sure to load up engines BEFORE calling this super in app extension
@@ -385,7 +385,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         }
         #endif
         
-        print(.d, "viewDidAppear = \(viewDidAppear), engine = \(engine != nil ? "made" : "nil")")
+//        print(.d, "viewDidAppear = \(viewDidAppear), engine = \(engine != nil ? "made" : "nil")")
         
 //        // Only segue automatically if adding and when first appearing
 //        if !viewDidAppear && engine == nil {
@@ -412,7 +412,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
                 let url = engine.baseUrl.withQueries(engine.queries),
                 urlController.detectMagicWord(in: url, magicWord: SearchEngines.shared.termsPlaceholder) {
                 // Nothing needs to be done here
-                print(.d, "Looks like the magic word was found.")
+//                print(.d, "Looks like the magic word was found.")
             } else {
                 // i.e. engine == nil
                 performSegue(withIdentifier: SegueKeys.urlDetails, sender: nil)
@@ -607,23 +607,23 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     @IBAction func characterEncodingTextFieldChanged() {
         let encodingName = characterEncodingTextField.text ?? ""
-        print(.d, "--- i. encodingName \(encodingName)")
+//        print(.d, "--- i. encodingName \(encodingName)")
         // Check if user has entered an identifiable encoding name
         if let encoder = CharacterEncoder(encoding: encodingName) {
             // NOTE: Unlike name/shortcut, this text field's effects take place immediately
             //- This is so that the URL can be tested with the new encoding
-            print(.d, "--- o. encoder created: \(encoder.encoding)")
+//            print(.d, "--- o. encoder created: \(encoder.encoding)")
             
             // Check that URL can be encoded in new encoding (i.e. does not contain any out-of-encoding characters)
             if let engine = engine {
-                print(.d, "--- i. engine exists.")
+//                print(.d, "--- i. engine exists.")
                 if let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: searchEngineEditor.characterEncoder?.encoding)?.absoluteString {
-                    print(.d, "--- i. url: \(urlString)")
+//                    print(.d, "--- i. url: \(urlString)")
                     // Change encoding; and URL, if necessary
                     searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: urlString)
                     // We assume the call above always ends with a valid encoding
                     // As passing the same encoding returns false in the completion handler, we will just make sure the text is black here
-                    print(.d, "--- encoding changed to below (or invalid utf-8):")
+//                    print(.d, "--- encoding changed to below (or invalid utf-8):")
                     print(.o, "User changed encoding to \(encoder.encoding).")
                     
                     // This also happens in characterEncodingDidChange, but that won't trigger if the encoding matches the previously valid encoding
@@ -635,7 +635,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         } else {
             // User's encoding is invalid; do not change engine encoding
             // User can still press save button if active because previous encoding will be used instead
-            print(.d, "--- x. unrecognized encoding")
+//            print(.d, "--- x. unrecognized encoding")
             characterEncodingTextField.textColor = .red
         }
     }

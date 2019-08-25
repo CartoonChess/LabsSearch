@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="6eL-EQ-iQE">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -13,7 +13,7 @@
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
             <objects>
-                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="old-launch-screen-view" id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -37,7 +37,47 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="-145" y="375"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="KE2-QE-iLu">
+            <objects>
+                <viewController id="6eL-EQ-iQE" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BiL-L8-45T">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="zNs-az-Wg9">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l2n-If-iqH">
+                                        <rect key="frame" x="0.0" y="0.0" width="125" height="667"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TemplateIcon" translatesAutoresizingMaskIntoConstraints="NO" id="9Pt-3s-Ry2">
+                                        <rect key="frame" x="125" y="0.0" width="125" height="667"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </imageView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6sq-X1-Pyj">
+                                        <rect key="frame" x="250" y="0.0" width="125" height="667"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.24313725489999999" green="0.039215686270000001" blue="0.1058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="zNs-az-Wg9" firstAttribute="top" secondItem="Rvz-7z-0Wy" secondAttribute="top" constant="-20" id="55U-Ob-Rm9"/>
+                            <constraint firstItem="Rvz-7z-0Wy" firstAttribute="bottom" secondItem="zNs-az-Wg9" secondAttribute="bottom" id="Yja-8y-lw7"/>
+                            <constraint firstItem="zNs-az-Wg9" firstAttribute="leading" secondItem="Rvz-7z-0Wy" secondAttribute="leading" id="ZQZ-CK-4ZD"/>
+                            <constraint firstItem="Rvz-7z-0Wy" firstAttribute="trailing" secondItem="zNs-az-Wg9" secondAttribute="trailing" id="nP8-nY-60B"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Rvz-7z-0Wy"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lC0-3r-UbR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="710" y="375"/>
         </scene>
     </scenes>
     <resources>

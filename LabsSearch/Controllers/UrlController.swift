@@ -185,7 +185,7 @@ struct UrlController {
         
         // Replace the magic word in query (if present) with the terms placeholder before passing it back
         let queries = queryDictionary.withValueReplaced(magicWord, replaceWith: SearchEngines.shared.termsPlaceholder)
-        print(.d, "queries: \(queries)")
+//        print(.d, "queries: \(queries)")
         
         // Get URL without queries and replace magic word (if present)
         // TODO: This seems likely to break things. Perhaps it should be done earlier?

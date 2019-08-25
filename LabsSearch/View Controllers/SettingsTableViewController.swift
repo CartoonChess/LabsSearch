@@ -32,6 +32,7 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
         static let resetApp: IndexPath = [Section.developerSettings, 1]
     }
     
+    @IBOutlet weak var stayInAppLabel: UILabel!
     @IBOutlet weak var stayInAppSwitch: UISwitch!
     @IBOutlet weak var defaultEngineNameLabel: UILabel!
     
@@ -40,6 +41,9 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Localize "stay in app" label and include app name
+        stayInAppLabel.text = String(format: NSLocalizedString("Settings.stayInApp-Label", comment: ""), AppKeys.appName)
         
         loadSettings()
     }
@@ -268,7 +272,7 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
         switch section {
         case Section.stayInApp:
             if stayInAppSwitch.isOn {
-                return NSLocalizedString("Settings.stayInAppFooter-On", comment: "")
+                return String(format: NSLocalizedString("Settings.stayInAppFooter-On", comment: ""), AppKeys.appName)
             } else {
                 return NSLocalizedString("Settings.stayInAppFooter-Off", comment: "")
             }

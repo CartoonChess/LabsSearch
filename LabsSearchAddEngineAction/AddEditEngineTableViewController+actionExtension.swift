@@ -136,9 +136,9 @@ extension AddEditEngineTableViewController {
                 // Save HTML to try and find favicon or similar
                 self.hostAppHtml = html
                 self.searchEngineEditor.html = html
-                print(.d, "(Ext)AddEditTVC html: \(html != nil ? String("💚") : String("💔"))")
-                print(.d, "(Ext)AddEditTVC searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
-                print(.d, "(Ext)AddEditTVC characterEncoding: \(characterEncoding ?? "💔")")
+//                print(.d, "(Ext)AddEditTVC html: \(html != nil ? String("💚") : String("💔"))")
+//                print(.d, "(Ext)AddEditTVC searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
+//                print(.d, "(Ext)AddEditTVC characterEncoding: \(characterEncoding ?? "💔")")
                 
 //                // Pass URL to the icon fetcher
 //                guard let urlString = url,

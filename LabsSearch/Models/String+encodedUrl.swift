@@ -47,7 +47,7 @@ extension String {
         if encoder?.encoding.value != .utf8,
             // Custom encode the URL if using non-Unicode
             let characterEncodedString = encoder?.encode(self, fullUrl: true) {
-            print(.d, "Percent-encoding URL with non-UTF8 encoding.")
+//            print(.d, "Percent-encoding URL with non-UTF8 encoding.")
             //            guard let characterEncodedString = encoder?.encode(self, fullUrl: true) else {
             //                print(.x, "String could not be encoded as URL: failed to add percent encoding using specified character encoding.")
             //                return nil
@@ -85,7 +85,7 @@ extension String {
 //        print(.d, "percentEncodedString: \(percentEncodedString)")
 //        // Create URL from encoded string, or nil if failed
 //        return URL(string: percentEncodedString)
-        print(.d, "String encoded as URL: \(percentEncodedUrl)")
+//        print(.d, "String encoded as URL: \(percentEncodedUrl)")
 //        print(.d, "Can open in Safari view: \(components.url?.schemeIsCompatibleWithSafariView ?? false)")
         return percentEncodedUrl
     }

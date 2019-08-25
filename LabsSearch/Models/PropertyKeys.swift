@@ -10,7 +10,8 @@ import Foundation
 
 /// Strings useful globally.
 struct AppKeys {
-    static let appName = NSLocalizedString("LabsSearch.appName", comment: "")
+//    static let appName = NSLocalizedString("LabsSearch.appName", comment: "")
+    static let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "LabsSearch"
     static let appGroup = "group.com.distantlabs.LabsSearch"
 }
 

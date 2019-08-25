@@ -140,7 +140,7 @@ class OpenSearchTableViewController: UITableViewController {
 //            // URL is UTF-8 friendly, but we don't know the real encoding
 //            searchEngineEditor.characterEncoder = nil
 //        }
-        print(.d, "encodedUrl = \(url)")
+//        print(.d, "encodedUrl = \(url)")
 
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             print(.n, "Failed to break URL into components.")
@@ -260,8 +260,8 @@ class OpenSearchTableViewController: UITableViewController {
             }
             
             
-            print(.d, "OpSVC 1st openSearchController.html: \(openSearchController.html != nil ? String("💚") : String("💔"))")
-            print(.d, "OpSVC 1st self.searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
+//            print(.d, "OpSVC 1st openSearchController.html: \(openSearchController.html != nil ? String("💚") : String("💔"))")
+//            print(.d, "OpSVC 1st self.searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
             
             let name = openSearchController.openSearch.name
             
@@ -286,7 +286,7 @@ class OpenSearchTableViewController: UITableViewController {
             
             // Make sure the segue occurs on the main thread
             DispatchQueue.main.async {
-                print(.d, "OpSVC async searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
+//                print(.d, "OpSVC async searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
                 self.performSegue(withIdentifier: SegueKeys.attemptedOpenSearchUnwind, sender: nil)
             }
         }

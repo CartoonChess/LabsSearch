@@ -343,16 +343,17 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
             // Tell AddEditEngine VC to use the IconFetcher and update its view after fetching icon from server
             delegate?.updateIcon(for: url, host: host) { encodingDidChange in
                 if encodingDidChange {
-                    print(.d, "UrlDetails completion handler: encoding has changed!")
+//                    print(.d, "UrlDetails completion handler: encoding has changed!")
                     // Double check URL now that encoding has changed
 //                    self.urlTextField.text = encodedUrl
                     // TODO: Is this even necessary?
                     self.urlTextFieldChanged()
                     // TODO: This, and the whole completion handler... are they even necessary?
-                } else {
-                    // Nothing changed
-                    print(.d, "UrlDetails completion handler: encoding hasn't changed!")
                 }
+//                } else {
+//                    // Nothing changed
+//                    print(.d, "UrlDetails completion handler: encoding hasn't changed!")
+//                }
             }
             
             // TODO: Look in urlTextFieldChanged() for adding http://

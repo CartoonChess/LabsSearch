@@ -71,6 +71,7 @@ extension EngineIconViewController {
         }
         
         // FIXME: Corners are wrong due to iPhone vs. iPad traits.
+        //- (mainly in add/edit?)
         // engineIconView.frame.width reports based on IB preview rather than actual device
         //- iPad IB, iPad device: Main 120, AddEdit 120
         //- iPad IB, iPhone device: Main 120 (60 when returning from Settings), AddEdit 120

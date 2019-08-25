@@ -55,6 +55,7 @@
 "aEb-i6-kyU.text" = "Remove";
 
 /* Class = "UILabel"; text = "Stay in App"; ObjectID = "ah2-Wb-uGZ"; */
+/* This will be overridden in code to include app name */
 "ah2-Wb-uGZ.text" = "Stay in App";
 
 /* Class = "UINavigationItem"; title = "Search"; ObjectID = "b5k-0u-G3Y"; */

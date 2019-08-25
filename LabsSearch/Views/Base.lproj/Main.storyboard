@@ -334,6 +334,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="defaultEngineNameLabel" destination="jEF-2Q-fPm" id="ybu-Xw-C0k"/>
+                        <outlet property="stayInAppLabel" destination="ah2-Wb-uGZ" id="Dyn-nt-Sq0"/>
                         <outlet property="stayInAppSwitch" destination="2gX-d9-1FB" id="vLi-8H-1mM"/>
                     </connections>
                 </tableViewController>

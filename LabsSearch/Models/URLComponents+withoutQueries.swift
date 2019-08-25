@@ -30,7 +30,7 @@ extension URLComponents {
         if keepPercentEncoding,
             #available(iOS 11.0, *) {
             // We use this case when we have to preserve non-UTF encoding
-            print(.d, "percentEncodedQueryItems in withoutQueries")
+//            print(.d, "percentEncodedQueryItems in withoutQueries")
             possibleQueryItems = self.percentEncodedQueryItems
         } else {
             // If the URL components don't include a query, return empty dictionary (for legacy reasons)
