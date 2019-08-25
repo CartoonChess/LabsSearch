@@ -45,6 +45,9 @@ class DefaultEngineTableViewController: EngineTableViewController {
             print(.o, "Showing checkmark in default engine cell.")
             cell.accessoryType = .checkmark
             selectedEngineCell = cell
+        } else {
+            // This prevents "phantom" checkmarks from showing in reused cells while scrolling
+            cell.accessoryType = .none
         }
         
         return cell

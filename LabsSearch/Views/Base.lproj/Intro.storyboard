@@ -217,12 +217,12 @@
         <!--Intro2-->
         <scene sceneID="iHz-uz-tyA">
             <objects>
-                <viewController storyboardIdentifier="Intro2" title="Intro2" id="Jww-K6-Xey" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Intro2" title="Intro2" id="Jww-K6-Xey" customClass="IntroExampleViewController" customModule="Chears" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BWk-64-cMw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[default search explanation]" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bkq-1T-8gU">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="IntroExample.defaultSearch-explanation" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bkq-1T-8gU">
                                 <rect key="frame" x="16" y="52" width="343" height="20.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <nil key="textColor"/>
@@ -303,6 +303,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="4PL-Q9-6f9"/>
                     </view>
+                    <connections>
+                        <outlet property="defaultSearchExplanationLabel" destination="Bkq-1T-8gU" id="GVD-ld-b5k"/>
+                        <outlet property="searchTextField" destination="pn9-YP-a5P" id="YDN-Bx-8ee"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BuX-Vb-wx7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -23,11 +23,16 @@ class IntroExampleShortcutViewController: UIViewController, EngineIconViewContro
     
     @IBOutlet weak var searchTextField: UITextField!
     
-    let shortcut = NSLocalizedString("SearchEngine.defaultEngines-YouTubeShortcut", comment: "")
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        var shortcut = NSLocalizedString("SearchEngine.defaultEngines-YouTubeShortcut", comment: "")
+        
+        if !SearchEngines.shared.enabledShortcuts.contains(shortcut) {
+            // No YouTube in this language; just use first engine in list
+            shortcut = SearchEngines.shared.enabledShortcuts.first ?? "gif"
+        }
+        
         // Set sample engine to YouTube for icon
         engine = SearchEngine(
             name: "",
@@ -37,9 +42,7 @@ class IntroExampleShortcutViewController: UIViewController, EngineIconViewContro
             isEnabled: true
         )
         
-        // FIXME: This needs to be localized!
-        //- It should share with the textfield text from the "default search" intro VC
-        searchTextField.text = "\(shortcut) cute cats"
+        searchTextField.text = shortcut + " " + NSLocalizedString("Intro.searchTextField-example", comment: "")
         highlightSearchShortcut(shortcut, in: searchTextField)
     }
     
