@@ -12,6 +12,7 @@ import Foundation
 struct AppKeys {
 //    static let appName = NSLocalizedString("LabsSearch.appName", comment: "")
     static let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "LabsSearch"
+    static let appExtensionName = Bundle.init(path: Bundle.main.bundlePath + "/PlugIns/LabsSearchAddEngineAction.appex")?.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "Add Engine"
     static let appGroup = "group.com.distantlabs.LabsSearch"
 }
 

@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  LabsSearch
+
+  Created by Xcode on ’19/08/26.
+  Copyright © 2019 Distant Labs. All rights reserved.
+*/
+
+/* Localized Bundle Display Name */
+"CFBundleDisplayName" = "Chears";

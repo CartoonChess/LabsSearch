@@ -35,11 +35,24 @@ class AboutTableViewController: UITableViewController {
         print(.o, "Exerimental features preference udpated to \(sender.isOn).")
         UserDefaults(suiteName: AppKeys.appGroup)?.set(sender.isOn, forKey: SettingsKeys.developerSettings)
         
+        // Update the view so that the version number will show/hide
+        tableView.reloadData()
+        
         delegate?.didUpdateDeveloperSettings()
     }
     
     
     // MARK: - Table view methods
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        // We can test for the switch rather than the settings key here
+        switch (section, developerSettingsSwitch.isOn) {
+        case (0, true):
+            return "\(AppKeys.appName) \(AppVersion.number) b\(AppVersion.build) (\(AppVersion.date) @\(AppVersion.time))"
+        default:
+            return nil
+        }
+    }
     
     // Update the footer (explanatory subtitle) for specified sections
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {

@@ -41,7 +41,7 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Make main view controller the delegate in order to update engine image and search field visuals
+       // Make main view controller the delegate in order to update engine image and search field visuals
         searchController.delegate = self
         
         // Populate list of engines, using saves or defaults

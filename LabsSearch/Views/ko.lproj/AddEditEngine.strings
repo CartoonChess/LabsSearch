@@ -2,38 +2,40 @@
 /* Class = "UITextField"; placeholder = "Link"; ObjectID = "2Vn-9d-eDi"; */
 "2Vn-9d-eDi.placeholder" = "주소";
 
+/* Class = "UILabel"; text = "Link Details"; ObjectID = "5IN-Np-NjY"; */
+"5IN-Np-NjY.text" = "주소 상세 설정";
+
 /* Class = "UITableViewSection"; headerTitle = "Advanced Options"; ObjectID = "AD0-OO-J4n"; */
 "AD0-OO-J4n.headerTitle" = "고급 설정";
 
 /* Class = "UILabel"; text = "Test"; ObjectID = "Dl1-QI-dM8"; */
 "Dl1-QI-dM8.text" = "확인";
 
+/* Class = "UILabel"; text = "Remove"; ObjectID = "G8q-R1-xeD"; */
+"G8q-R1-xeD.text" = "삭제";
+
 /* Class = "UITextField"; placeholder = "Shortcut"; ObjectID = "I8j-4N-2gH"; */
 "I8j-4N-2gH.placeholder" = "단축키";
 
-/* Class = "UITableViewSection"; footerTitle = "[instructions]"; ObjectID = "Kt4-5b-gNP"; */
-"Kt4-5b-gNP.footerTitle" = "[instructions]";
-
-/* Class = "UITableViewSection"; headerTitle = "Instructions"; ObjectID = "Kt4-5b-gNP"; */
-//"Kt4-5b-gNP.headerTitle" = "검색 엔진 추가 방법";
-
-/* Class = "UILabel"; text = "Link Details"; ObjectID = "W2a-yn-IkE"; */
-"W2a-yn-IkE.text" = "세부사항";
-
-/* Class = "UILabel"; text = "Remove"; ObjectID = "aEb-i6-kyU"; */
-"aEb-i6-kyU.text" = "삭제";
-
-/* Class = "UILabel"; text = "Not Set"; ObjectID = "d1X-Kd-UI9"; */
-"d1X-Kd-UI9.text" = "변경 없음";
-
-/* Class = "UINavigationItem"; title = "Add/Edit Service"; ObjectID = "k8y-gI-Jfn"; */
-"k8y-gI-Jfn.title" = "Add/Edit Service";
+/* Class = "UILabel"; text = "Not Set"; ObjectID = "UNd-ch-Eye"; */
+"UNd-ch-Eye.text" = "저장 안됨";
 
 /* Class = "UITextField"; placeholder = "Search word"; ObjectID = "rZI-wk-SzI"; */
 "rZI-wk-SzI.placeholder" = "검색어";
 
+/* Class = "UITextField"; placeholder = "Character Encoding"; ObjectID = "s3O-5a-om3"; */
+"s3O-5a-om3.placeholder" = "utf-8";
+
 /* Class = "UITextField"; placeholder = "Name"; ObjectID = "y8L-a9-9iD"; */
 "y8L-a9-9iD.placeholder" = "이름";
+
+/* Invisible strings */
+
+/* Class = "UITableViewSection"; footerTitle = "[instructions]"; ObjectID = "Kt4-5b-gNP"; */
+"Kt4-5b-gNP.footerTitle" = "검색 엔진 추가 방법";
+
+/* Class = "UINavigationItem"; title = "Add/Edit Service"; ObjectID = "k8y-gI-Jfn"; */
+"k8y-gI-Jfn.title" = "Add/Edit Service";
 
 /* Class = "UILabel"; text = "🔍"; ObjectID = "zdb-9v-L09"; */
 "zdb-9v-L09.text" = "🔍";

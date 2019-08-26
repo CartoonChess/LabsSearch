@@ -1,6 +1,30 @@
 
 /* Class = "UILabel"; text = "Choose your main search service."; ObjectID = "AEF-kH-Xur"; */
-"AEF-kH-Xur.text" = "Choose your main search service.";
+"AEF-kH-Xur.text" = "기본으로 설정하실 검색 엔진을 선택해 주세요.";
+
+/* Class = "UILabel"; text = "Search using your favorite services."; ObjectID = "JID-Br-nUU"; */
+"JID-Br-nUU.text" = "가장 좋아하는 검색 엔진으로 검색하세요!";
+
+/* Class = "UILabel"; text = "More"; ObjectID = "LsN-Wd-HxQ"; */
+// Check what this says in Safari share sheet
+"LsN-Wd-HxQ.text" = "더 보기";
+
+/* Class = "UIButton"; normalTitle = "Skip"; ObjectID = "QdN-4G-U7m"; */
+"QdN-4G-U7m.normalTitle" = "생략";
+
+/* Class = "UILabel"; text = "You can find more search services in the settings."; ObjectID = "ijg-TW-4bc"; */
+"ijg-TW-4bc.text" = "다른 검색 엔진들도 '설정'에서 찾을 수 있어요.";
+
+/* Class = "UILabel"; text = "You can add new services in the settings or directly from Safari."; ObjectID = "ndu-pC-Xay"; */
+"ndu-pC-Xay.text" = "새로운 검색 엔진은 '설정'이나 Safari에서 바로 추가할 수 있어요.";
+
+/* Class = "UIButton"; normalTitle = "☰"; ObjectID = "Zft-n1-UZI"; */
+"Zft-n1-UZI.normalTitle" = "☰";
+
+/* Class = "UILabel"; text = "…"; ObjectID = "gJm-6Q-0gb"; */
+"gJm-6Q-0gb.text" = "…";
+
+/* Invisible strings */
 
 /* Class = "UILabel"; text = "IntroExample.defaultSearch-explanation"; ObjectID = "Bkq-1T-8gU"; */
 "Bkq-1T-8gU.text" = "IntroExample.defaultSearch-explanation";
@@ -8,14 +32,8 @@
 /* Class = "UILabel"; text = "X"; ObjectID = "HQ3-aA-wjv"; */
 "HQ3-aA-wjv.text" = "X";
 
-/* Class = "UILabel"; text = "Search using your favorite services."; ObjectID = "JID-Br-nUU"; */
-"JID-Br-nUU.text" = "Search using your favorite services.";
-
 /* Class = "UIViewController"; title = "Intro2"; ObjectID = "Jww-K6-Xey"; */
 "Jww-K6-Xey.title" = "Intro2";
-
-/* Class = "UILabel"; text = "More"; ObjectID = "LsN-Wd-HxQ"; */
-"LsN-Wd-HxQ.text" = "More";
 
 /* Class = "UIViewController"; title = "Intro3"; ObjectID = "Nbq-wb-na3"; */
 "Nbq-wb-na3.title" = "Intro3";
@@ -23,14 +41,8 @@
 /* Class = "UILabel"; text = "Add Search Service"; ObjectID = "PXN-Dc-EVX"; */
 "PXN-Dc-EVX.text" = "Add Search Service";
 
-/* Class = "UIButton"; normalTitle = "Skip"; ObjectID = "QdN-4G-U7m"; */
-"QdN-4G-U7m.normalTitle" = "Skip";
-
 /* Class = "UILabel"; text = "X"; ObjectID = "WSe-gJ-KDG"; */
 "WSe-gJ-KDG.text" = "X";
-
-/* Class = "UIButton"; normalTitle = "☰"; ObjectID = "Zft-n1-UZI"; */
-"Zft-n1-UZI.normalTitle" = "☰";
 
 /* Class = "UITextField"; placeholder = "Search"; ObjectID = "bE2-To-haS"; */
 "bE2-To-haS.placeholder" = "Search";
@@ -38,23 +50,14 @@
 /* Class = "UITextField"; text = "y cute cats"; ObjectID = "bE2-To-haS"; */
 "bE2-To-haS.text" = "y cute cats";
 
-/* Class = "UILabel"; text = "…"; ObjectID = "gJm-6Q-0gb"; */
-"gJm-6Q-0gb.text" = "…";
-
 /* Class = "UIViewController"; title = "Intro1"; ObjectID = "heq-5u-agJ"; */
 "heq-5u-agJ.title" = "Intro1";
-
-/* Class = "UILabel"; text = "You can find more search services in the settings."; ObjectID = "ijg-TW-4bc"; */
-"ijg-TW-4bc.text" = "You can find more search services in the settings.";
 
 /* Class = "UILabel"; text = "Engine Name"; ObjectID = "kr5-6E-ma9"; */
 "kr5-6E-ma9.text" = "Engine Name";
 
 /* Class = "UILabel"; text = "X"; ObjectID = "ltL-as-reO"; */
 "ltL-as-reO.text" = "X";
-
-/* Class = "UILabel"; text = "You can add new services in the settings or directly from Safari."; ObjectID = "ndu-pC-Xay"; */
-"ndu-pC-Xay.text" = "You can add new services in the settings or directly from Safari.";
 
 /* Class = "UITextField"; placeholder = "Search"; ObjectID = "pn9-YP-a5P"; */
 "pn9-YP-a5P.placeholder" = "Search";
@@ -63,7 +66,7 @@
 "pn9-YP-a5P.text" = "cute cats";
 
 /* Class = "UIButton"; normalTitle = "Next"; ObjectID = "q9o-Ku-Dg7"; */
-"q9o-Ku-Dg7.normalTitle" = "Next";
+"q9o-Ku-Dg7.normalTitle" = "다음으로";
 
 /* Class = "UIViewController"; title = "Intro4"; ObjectID = "tak-fz-eW1"; */
 "tak-fz-eW1.title" = "Intro4";

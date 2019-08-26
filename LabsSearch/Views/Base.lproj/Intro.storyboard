@@ -415,7 +415,7 @@
         <!--Intro4-->
         <scene sceneID="ezt-jD-IZB">
             <objects>
-                <viewController storyboardIdentifier="Intro4" title="Intro4" id="tak-fz-eW1" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Intro4" title="Intro4" id="tak-fz-eW1" customClass="IntroAddEngineViewController" customModule="Chears" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wBI-A5-mZM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -483,8 +483,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Search Service" textAlignment="center" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PXN-Dc-EVX">
-                                                        <rect key="frame" x="2" y="68" width="56.5" height="52"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Search Service" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PXN-Dc-EVX">
+                                                        <rect key="frame" x="6.5" y="68" width="47.5" height="52"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -574,6 +574,9 @@
                     </view>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="appExtensionNameLabel" destination="PXN-Dc-EVX" id="AsH-dB-w5o"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m5L-xT-e2c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
