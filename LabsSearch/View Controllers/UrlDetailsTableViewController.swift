@@ -292,7 +292,7 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         // Change the URL text colour based on validity
         if urlController.urlIsValid {
             print(.o, "URL is valid.")
-            urlTextField.textColor = UIColor.darkText
+            urlTextField.textColor = UIColor.adaptiveLabel
         } else {
             print(.n, "URL is invalid.")
             urlTextField.textColor = .red
@@ -310,7 +310,7 @@ class UrlDetailsTableViewController: UITableViewController, SFSafariViewControll
         switch (valid, testable, custom) {
         case (_, _, true):
             magicWordCell.isHidden = false
-            magicWordTextField.textColor = .black
+            magicWordTextField.textColor = .adaptiveLabel
         case (true, false, _):
             magicWordCell.isHidden = false
             magicWordTextField.textColor = .red

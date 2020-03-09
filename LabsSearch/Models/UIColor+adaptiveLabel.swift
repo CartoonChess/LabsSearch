@@ -9,7 +9,8 @@
 import UIKit
 
 extension UIColor {
-    var adaptiveLabel: UIColor {
+    /// Returns the system label colour, regardless of system version or appearance.
+    static var adaptiveLabel: UIColor {
         if #available(iOS 13.0, *) {
             return .label
         } else {

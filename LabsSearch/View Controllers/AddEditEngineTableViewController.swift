@@ -542,7 +542,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
         // Also, update the save button
         if shortcutIsValid() {
             print(.o, "Shortcut is valid.")
-            shortcutTextField.textColor = .black
+            shortcutTextField.textColor = .adaptiveLabel
             updateSaveButton()
         } else {
             print(.n, "Shortcut is invalid.")
@@ -607,27 +607,23 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
     
     @IBAction func characterEncodingTextFieldChanged() {
         let encodingName = characterEncodingTextField.text ?? ""
-//        print(.d, "--- i. encodingName \(encodingName)")
+
         // Check if user has entered an identifiable encoding name
         if let encoder = CharacterEncoder(encoding: encodingName) {
             // NOTE: Unlike name/shortcut, this text field's effects take place immediately
             //- This is so that the URL can be tested with the new encoding
-//            print(.d, "--- o. encoder created: \(encoder.encoding)")
-            
+
             // Check that URL can be encoded in new encoding (i.e. does not contain any out-of-encoding characters)
             if let engine = engine {
-//                print(.d, "--- i. engine exists.")
                 if let urlString = engine.baseUrl.withQueries(engine.queries, characterEncoding: searchEngineEditor.characterEncoder?.encoding)?.absoluteString {
-//                    print(.d, "--- i. url: \(urlString)")
                     // Change encoding; and URL, if necessary
                     searchEngineEditor.updateCharacterEncoding(encoder: encoder, urlString: urlString)
                     // We assume the call above always ends with a valid encoding
                     // As passing the same encoding returns false in the completion handler, we will just make sure the text is black here
-//                    print(.d, "--- encoding changed to below (or invalid utf-8):")
                     print(.o, "User changed encoding to \(encoder.encoding).")
                     
                     // This also happens in characterEncodingDidChange, but that won't trigger if the encoding matches the previously valid encoding
-                    characterEncodingTextField.textColor = .darkText
+                    characterEncodingTextField.textColor = .adaptiveLabel
                     updateSaveButton()
                 }
             }
@@ -814,7 +810,7 @@ class AddEditEngineTableViewController: UITableViewController, EngineIconViewCon
             if self.developerSettingsEnabled,
                 let encoding = encoding {
                 self.characterEncodingTextField.text = encoding.name
-                self.characterEncodingTextField.textColor = .darkText
+                self.characterEncodingTextField.textColor = .adaptiveLabel
             } else {
                 // TODO: Pretty sure this is useless
                 self.characterEncodingTextField.text = ""

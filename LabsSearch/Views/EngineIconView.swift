@@ -94,11 +94,7 @@ extension EngineIconViewController {
 //        layer.borderWidth = 0.1
         // This seems to be closest to as it appears in iOS Settings app.
 //        layer.borderColor = UIColor(white: 0, alpha: 0.8).cgColor
-        if #available(iOS 13.0, *) {
-            layer.borderColor = UIColor.label.withAlphaComponent(0.8).cgColor
-        } else {
-            layer.borderColor = UIColor.black.withAlphaComponent(0.8).cgColor
-        }
+        layer.borderColor = UIColor.adaptiveLabel.withAlphaComponent(0.8).cgColor
         layer.borderWidth = 0.05
     }
     

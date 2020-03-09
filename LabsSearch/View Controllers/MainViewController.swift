@@ -165,10 +165,10 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
         } else if detectedEngine != nil {
             engine = detectedEngine
             engineIconView.alpha = 0.5
-            searchTextField.textColor = .black
+            searchTextField.textColor = .adaptiveLabel
         } else {
             engineIconView.alpha = 0
-            searchTextField.textColor = .black
+            searchTextField.textColor = .adaptiveLabel
         }
     }
     
