@@ -30,8 +30,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AEF665C621781BAF00DB310D"
-               BuildableName = "Chears.app"
-               BlueprintName = "Chears"
+               BuildableName = "LabsSearch.app"
+               BlueprintName = "LabsSearch"
                ReferencedContainer = "container:LabsSearch.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -61,6 +61,7 @@
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       language = "ko"
+      region = "KR"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -78,8 +79,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AEF665C621781BAF00DB310D"
-            BuildableName = "Chears.app"
-            BlueprintName = "Chears"
+            BuildableName = "LabsSearch.app"
+            BlueprintName = "LabsSearch"
             ReferencedContainer = "container:LabsSearch.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -98,8 +99,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AEF665C621781BAF00DB310D"
-            BuildableName = "Chears.app"
-            BlueprintName = "Chears"
+            BuildableName = "LabsSearch.app"
+            BlueprintName = "LabsSearch"
             ReferencedContainer = "container:LabsSearch.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

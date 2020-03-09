@@ -8,3 +8,6 @@
 
 /* Localized Bundle Display Name */
 "CFBundleDisplayName" = "Add Search Service";
+
+/* Localized bundle name (not the one that usually shows) */
+"CFBundleName" = "Add Search Service";

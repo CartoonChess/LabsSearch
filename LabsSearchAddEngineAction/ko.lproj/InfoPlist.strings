@@ -8,3 +8,6 @@
 
 /* Localized Bundle Display Name */
 "CFBundleDisplayName" = "검색 엔진 추가";
+
+/* Localized bundle name (not the one that usually shows) */
+"CFBundleName" = "검색 엔진 추가";
