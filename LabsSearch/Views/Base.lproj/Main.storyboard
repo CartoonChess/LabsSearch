@@ -104,6 +104,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="kfJ-ib-658" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="2Yb-V8-c4I"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="kfJ-ib-658" secondAttribute="bottom" id="91O-wh-1IR"/>

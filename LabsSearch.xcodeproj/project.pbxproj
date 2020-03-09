@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A44803224166B640072CDB8 /* UIColor+adaptiveLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44803124166B640072CDB8 /* UIColor+adaptiveLabel.swift */; };
+		4A44803324166B640072CDB8 /* UIColor+adaptiveLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44803124166B640072CDB8 /* UIColor+adaptiveLabel.swift */; };
 		AE072A6622BA0D8500DF19FD /* CharacterEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE072A6522BA0D8500DF19FD /* CharacterEncoder.swift */; };
 		AE072A6722BA14EA00DF19FD /* CharacterEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE072A6522BA0D8500DF19FD /* CharacterEncoder.swift */; };
 		AE093EB0218DB4E300CF3361 /* URLComponents+withoutQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE093EAF218DB4E300CF3361 /* URLComponents+withoutQueries.swift */; };
@@ -124,6 +126,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4A44803124166B640072CDB8 /* UIColor+adaptiveLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+adaptiveLabel.swift"; sourceTree = "<group>"; };
 		AE072A6522BA0D8500DF19FD /* CharacterEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterEncoder.swift; sourceTree = "<group>"; };
 		AE093EAF218DB4E300CF3361 /* URLComponents+withoutQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLComponents+withoutQueries.swift"; sourceTree = "<group>"; };
 		AE093EB1218DB52500CF3361 /* Dictionary+replaceValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+replaceValue.swift"; sourceTree = "<group>"; };
@@ -305,6 +308,7 @@
 				AE093F1E2194A4AD00CF3361 /* URL+schemeIsValidForSafariView.swift */,
 				AE093EAF218DB4E300CF3361 /* URLComponents+withoutQueries.swift */,
 				AE093EB1218DB52500CF3361 /* Dictionary+replaceValue.swift */,
+				4A44803124166B640072CDB8 /* UIColor+adaptiveLabel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -479,6 +483,7 @@
 				AE093ED5219325E200CF3361 /* AddEditEngineTableViewController+actionExtension.swift in Sources */,
 				AE093EE5219329F200CF3361 /* EngineIconView.swift in Sources */,
 				AECD595522EDFB5400A4560B /* String.Encoding+alias.swift in Sources */,
+				4A44803324166B640072CDB8 /* UIColor+adaptiveLabel.swift in Sources */,
 				AE093EE32193292F00CF3361 /* URLComponents+withoutQueries.swift in Sources */,
 				AE093EDB2193274200CF3361 /* String+encodedUrl.swift in Sources */,
 				AEE194AC2311619700258052 /* DefaultSearchEngine.swift in Sources */,
@@ -551,6 +556,7 @@
 				AE830D152199C0D400CD8257 /* String+isValidFileName.swift in Sources */,
 				AE35DEBA21809F390044B490 /* String+UITextField+textWithAttributes.swift in Sources */,
 				AEE0EF722179969D0003FA13 /* SettingsTableViewController.swift in Sources */,
+				4A44803224166B640072CDB8 /* UIColor+adaptiveLabel.swift in Sources */,
 				AE6AF71A2312ECED0092CFCD /* IntroAddEngineViewController.swift in Sources */,
 				AECD595422EDFB5400A4560B /* String.Encoding+alias.swift in Sources */,
 				AE2FFD5C21859EF30081F2EB /* EngineTableViewController.swift in Sources */,
