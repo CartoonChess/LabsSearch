@@ -104,24 +104,6 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
         }
     }
     
-//    // Recycling cells
-//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        // Step 1: Dequeue cell
-//        // Force unwrapping as per tutorial...
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "EmojiCell", for: indexPath) as! EmojiTableViewCell
-//
-//        // Step 2: Fetch model for display
-//        // MARK: Conditional was removed...
-//        let emoji = emojisCategorized[indexPath.section][indexPath.row]
-//
-//        // Step 3: Configure cell
-//        cell.update(with: emoji)
-//        cell.showsReorderControl = true
-//
-//        // Step 4: Return cell
-//        return cell
-//    }
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellKeys.allEnginesTable, for: indexPath) as! AllEnginesTableViewCell
         
@@ -129,6 +111,11 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
         prepareCell(cell, at: indexPath)
         
         return cell
+    }
+    
+    func deselectRow() {
+        guard let selectedRow = tableView.indexPathForSelectedRow else { return }
+        tableView.deselectRow(at: selectedRow, animated: false)
     }
     
     
@@ -318,7 +305,6 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
                 if let searchEngineEditor = searchEngineEditor {
                     destination.searchEngineEditor = searchEngineEditor
                 }
-//                print(.d, "AllEnginesTVC prepare() searchEngineEditor.html: \(searchEngineEditor?.html != nil ? String("💚") : String("💔"))")
                 // Set AllEngine view's copy to nil so that it doesn't loop when AddEdit is dismissed
                 openSearch = nil
                 searchEngineEditor = nil
@@ -355,7 +341,6 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
                 // An OpS search was attempted, so pass the OpS object to AddEdit
                 openSearch = source.openSearch
                 searchEngineEditor = source.searchEngineEditor
-//                print(.d, "AllEnginesTVC unwind() searchEngineEditor.html: \(searchEngineEditor?.html != nil ? String("💚") : String("💔"))")
             }
             // Don't execute AddEdit segues below
             return
