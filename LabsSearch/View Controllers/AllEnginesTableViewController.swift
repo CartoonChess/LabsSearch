@@ -113,6 +113,7 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
         return cell
     }
     
+    /// Deselect the selected row when returning to the view. From iOS 13, this is necessary when returning via AddEdit VC's cancel bar button.
     func deselectRow() {
         guard let selectedRow = tableView.indexPathForSelectedRow else { return }
         tableView.deselectRow(at: selectedRow, animated: false)
