@@ -131,7 +131,7 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
     /// Deselect the selected row when returning to the view. From iOS 13, this is necessary when returning via AddEdit VC's cancel bar button.
     func deselectRow() {
         guard let selectedRow = tableView.indexPathForSelectedRow else { return }
-        tableView.deselectRow(at: selectedRow, animated: false)
+        tableView.deselectRow(at: selectedRow, animated: true)
     }
     
     
@@ -276,11 +276,12 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
             return
         }
         
+        // Assign ourselves as our own presentation delegate to know when OpS/AddEdit VC is dismissed by dragging
+        // This is new for iOS 13 since the new view is now presented as a popover
+        destinationNavigationController.presentationController?.delegate = self
+        
         if let openSearchViewController = destinationNavigationController.topViewController as? OpenSearchTableViewController {
-            // Assign ourselves as our own presentation delegate to know when OpS VC is dismissed by dragging
             // We will also be the delegate to receive viewDidDisappear notifications
-            // This is new for iOS 13 since the new view is now presented as a popover
-            destinationNavigationController.presentationController?.delegate = self
             openSearchViewController.delegate = self
         } else if let destination = destinationNavigationController.topViewController as? AddEditEngineTableViewController {
             
@@ -318,11 +319,14 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
         
     }
     
-    // Calls when OpS is dismissed via dragging down (new for iOS 13)
+    // Calls when OpS/AddEdit is dismissed via dragging down (new for iOS 13)
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         print(.i, "Presented view controller dismissed (iOS 13+).")
+        // For OpS
         openSearch = nil
         searchEngineEditor = nil
+        // For returning from AddEdit
+        deselectRow()
     }
     
     
