@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol OpenSearchTableViewControllerDelegate {
+    func openSearchViewControllerDidDisappear()
+}
+
 class OpenSearchTableViewController: UITableViewController {
     
     // MARK: - Parameters
@@ -16,6 +20,8 @@ class OpenSearchTableViewController: UITableViewController {
     var openSearch: OpenSearch?
     var searchEngineEditor = SearchEngineEditor()
     let urlController = UrlController()
+    
+    var delegate: OpenSearchTableViewControllerDelegate?
     
     // A properly formatted URL, in case the user entered a slightly malformed one
     // When set to nil, test button should be disabled
@@ -60,6 +66,12 @@ class OpenSearchTableViewController: UITableViewController {
         urlTextField.becomeFirstResponder()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        delegate?.openSearchViewControllerDidDisappear()
+        
+    }
+    
     @IBAction func urlTextFieldChanged() {
         // Disable the test button if the URL field is empty
         guard let urlString = urlTextField.text,
@@ -71,33 +83,6 @@ class OpenSearchTableViewController: UITableViewController {
 
         // If the user's text is a proper URL, make sure it's https and enable test button
         // Note that the URL validates even for single words, so this isn't very robust
-
-//        guard let url = URL(string: urlString) else {
-//            print(.x, "Could not form a URL from the entered text.")
-//            self.url = nil
-//            return
-//        }
-//
-//        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-
-        // This was the working bit:
-//        // Returns nil if any percent-encoding is missing
-//        var testComponents = URLComponents(string: urlString)
-//
-//        // Use custom encoder in case any non-Unicode characters are detected
-//        if testComponents == nil {
-//            let encoding = CharacterEncoding(name: "invalid utf-8", value: .invalid)
-//            let encoder = CharacterEncoder(encoding: encoding)
-//            let encodedUrl = encoder.encode(urlString, fullUrl: true)
-//            testComponents = URLComponents(string: encodedUrl)
-//        }
-//
-//        guard var components = testComponents else {
-//            print(.n, "Failed to break URL into components.")
-//            self.url = nil
-//            return
-//        }
-
 
         // TODO: Maybe we can just look for "://" ...
         //- Split into components using ://
@@ -119,28 +104,6 @@ class OpenSearchTableViewController: UITableViewController {
             self.url = nil
             return
         }
-//        // First, check that URL itself is valid
-//        var url = urlController.validUrl(from: urlString, schemeIsValid: { _ in true })
-//
-//        // If the URL isn't valid, try changing the encoding to "invalid utf-8" and try again
-//        if url == nil {
-//            print(.d, "URL invalid. Trying invalid utf-8...")
-//            let invalidEncoding = CharacterEncoding(name: "invalid utf-8", value: .invalid)
-//            let invalidEncoder = CharacterEncoder(encoding: invalidEncoding)
-//            guard let encodedUrl = urlController.validUrl(from: urlString, characterEncoder: invalidEncoder, schemeIsValid: { _ in true }) else {
-//                // URL field is not a valid URL
-////                urlController.urlIsValid = false
-//                self.url = nil
-//                return
-//            }
-//            // If the encoding was the problem, change URL and keep going
-//            url = encodedUrl
-//            searchEngineEditor.characterEncoder = invalidEncoder
-//        } else {
-//            // URL is UTF-8 friendly, but we don't know the real encoding
-//            searchEngineEditor.characterEncoder = nil
-//        }
-//        print(.d, "encodedUrl = \(url)")
 
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             print(.n, "Failed to break URL into components.")
@@ -152,16 +115,6 @@ class OpenSearchTableViewController: UITableViewController {
 
         // Network requests tend to fail unless protocol is followed by "://",
         //- but URLComponents usually only inserts ":". We try to fix this.
-//        if components.host == nil {
-//            let urlStringWithHost = "//\(urlString)"
-//            guard let urlWithHost = URL(string: urlStringWithHost),
-//                let componentsWithHost = URLComponents(url: urlWithHost, resolvingAgainstBaseURL: true) else {
-//                    print("Failed to determine host in user entered URL.")
-//                    return
-//            }
-//            components = componentsWithHost
-//        }
-//
         components.scheme = "https"
 
         guard var urlWithSlashes = components.string else {
@@ -231,14 +184,9 @@ class OpenSearchTableViewController: UITableViewController {
         let openSearchController = OpenSearchController()
         openSearchController.detectOpenSearch(at: url) {
             // Save HTML so other controllers can use it
-//            var searchEngineEditor = SearchEngineEditor()
             self.searchEngineEditor.html = openSearchController.html
             // And the character encoder, in case we found an encoding
             // But don't use UTF-8 if the URL isn't valid UTF!
-//            if openSearchController.characterEncoder?.encoding.value != .utf8,
-//                self.searchEngineEditor.characterEncoder == nil {
-//                self.searchEngineEditor.characterEncoder = openSearchCharacterEncoder
-//            }
             
             if let remoteEncoder = openSearchController.characterEncoder {
                 let textFieldEncoder = self.searchEngineEditor.characterEncoder
@@ -246,34 +194,13 @@ class OpenSearchTableViewController: UITableViewController {
                 case (.utf8, String.Encoding.invalid):
                     // Keep invalid utf-8
                     break
-//                case (_, nil):
-//                    // Any encoding should be fine
-//                    self.searchEngineEditor.characterEncoder = remoteEncoder
-//                case (_, String.Encoding.invalid):
-//                    // Any non-UTF8 encoding should be fine
-//                    self.searchEngineEditor.characterEncoder = remoteEncoder
                 default:
-//                    print(.x, "Could not find a suitable case to choose between remote encoder \(remoteEncoder.encoding) and text field encoder \(textFieldEncoder?.encoding.name ?? "nil").")
                     // Any encoding should be fine
                     self.searchEngineEditor.characterEncoder = remoteEncoder
                 }
             }
             
-            
-//            print(.d, "OpSVC 1st openSearchController.html: \(openSearchController.html != nil ? String("💚") : String("💔"))")
-//            print(.d, "OpSVC 1st self.searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
-            
             let name = openSearchController.openSearch.name
-            
-//            guard !name.isEmpty,
-//                let url = openSearchController.openSearch.url else {
-//                    print(.n, "Failed to fetch OpenSearch name and/or URL.")
-//                    return
-//            }
-//
-//            print(.o, "Found OpenSearch named \"\(name)\" with URL \(url).")
-//
-//            self.openSearch = openSearchController.openSearch
             
             if let openSearchUrl = openSearchController.openSearch.url {
                 print(.o, "Found OpenSearch named \"\(name)\" with URL \(openSearchUrl).")
@@ -286,7 +213,6 @@ class OpenSearchTableViewController: UITableViewController {
             
             // Make sure the segue occurs on the main thread
             DispatchQueue.main.async {
-//                print(.d, "OpSVC async searchEngineEditor.html: \(self.searchEngineEditor.html != nil ? String("💚") : String("💔"))")
                 self.performSegue(withIdentifier: SegueKeys.attemptedOpenSearchUnwind, sender: nil)
             }
         }
@@ -321,7 +247,6 @@ class OpenSearchTableViewController: UITableViewController {
         case Cell.testButton:
             // When test button is enabled, show highlight on tap
             return (url != nil && !testButtonActivityIndicator.isAnimating)
-//            return (url != nil)
         default:
             // Other cells never need to be highlighted
             return false
@@ -348,7 +273,20 @@ class OpenSearchTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        print(segue.identifier)
+        guard #available(iOS 13.0, *),
+            let presentationController = presentationController else { return }
+        presentationController.delegate?.presentationControllerDidDismiss?(presentationController)
+        presentationController.delegate?.presentationControllerDidDismiss!(presentationController)
     }
     */
+    
+//    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+//        super.dismiss(animated: flag, completion: completion)
+//
+//        guard #available(iOS 13.0, *),
+//            let presentationController = presentationController else { return }
+//        presentationController.delegate?.presentationControllerDidDismiss?(presentationController)
+//    }
 
 }

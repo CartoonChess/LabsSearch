@@ -121,7 +121,7 @@ extension EngineIconViewController {
         
         // Check if the detected engine has an image
         if let image = engine.getImage() {
-            print(.i, "\(engine.name) has an image; using for icon.")
+//            print(.i, "\(engine.name) has an image; using for icon.")
             engineIconImage.image = image
             engineIconImage.alpha = 1
             // Change background colour to white, in case image has transparencies

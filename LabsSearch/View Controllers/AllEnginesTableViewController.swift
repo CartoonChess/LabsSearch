@@ -11,7 +11,7 @@ import UIKit
 import UIKit
 
 /// Shows a list of all search engines in detail for editing.
-class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTableViewControllerDelegate {
+class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTableViewControllerDelegate, OpenSearchTableViewControllerDelegate, UIAdaptivePresentationControllerDelegate {
     
     // This VC can receive the details of an OpenSearch from the OpenSearch VC
     //- It will then pass the object on to AddEdit via viewDidAppear
@@ -34,8 +34,23 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
         super.viewDidLoad()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+//    // FIXME: This is no longer triggered when returning from OpS VC as of iOS 13
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//
+//        // In case we're coming back from OpS VC, kill the activity indicator
+//        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//
+//        // If an OpS engine is received, segue immediately to AddEdit VC
+//        if openSearch != nil {
+//            performSegue(withIdentifier: SegueKeys.addEngine, sender: nil)
+//        }
+//    }
+    
+    func openSearchViewControllerDidDisappear() {
+//        // Set VC vars (this is legacy; may no longer be required)
+//        self.openSearch = openSearch
+//        self.searchEngineEditor = searchEngineEditor
         
         // In case we're coming back from OpS VC, kill the activity indicator
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -246,28 +261,7 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
             print(.n, "No matching image was found, so we are not trying to delete one.")
         }
         
-        // Default engine is no longer allowed to be disabled or deleted.
-        //        // Handle cases where the user deletes the last engine or the default engine
-        //
-        //        let allEngines = SearchEngines.shared.allEngines
-        //
-        //        // If we've deleted the last engine, load the defaults
-        //        if allEngines.count == 0 {
-        //            // TODO : This doesn't refresh the view until we go out and return to it;
-        //            //- Anyway, we should have a more elegant approach to having no engines
-        //            //- (plus, we will likely make the default engines only hideable, not deleteable)
-        //            print(.n, "Deleted last engine; loading defaults.")
-        //            SearchEngines.shared.loadEngines()
-        //            tableView.reloadData()
-        ////        } else if UserDefaults.standard.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
-        //        } else if UserDefaults(suiteName: AppKeys.appGroup)?.string(forKey: SettingsKeys.defaultEngineShortcut) == engine.shortcut {
-        //            // If this is the default engine, reflect our shared object (updates preferences automatically)
-        //            // TODO : We should handle default engine logic elsewhere; this is temporary
-        //            print(.n, "Deleted default engine; setting next available engine as new default.")
-        ////            SearchEngines.shared.defaultEngine = allEngines.first?.value
-        //            // FIXME : This will fail if all engines are disabled!
-        //            SearchEngines.shared.defaultEngine = allEngines[SearchEngines.shared.enabledShortcuts.first!]
-        //        }
+        // Note: Default engine is no longer allowed to be disabled or deleted.
     }
     
     
@@ -282,8 +276,12 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
             return
         }
         
-        if let _ = destinationNavigationController.topViewController as? OpenSearchTableViewController {
-            // No special prep required
+        if let openSearchViewController = destinationNavigationController.topViewController as? OpenSearchTableViewController {
+            // Assign ourselves as our own presentation delegate to know when OpS VC is dismissed by dragging
+            // We will also be the delegate to receive viewDidDisappear notifications
+            // This is new for iOS 13 since the new view is now presented as a popover
+            destinationNavigationController.presentationController?.delegate = self
+            openSearchViewController.delegate = self
         } else if let destination = destinationNavigationController.topViewController as? AddEditEngineTableViewController {
             
             switch segue.identifier {
@@ -320,6 +318,13 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
         
     }
     
+    // Calls when OpS is dismissed via dragging down (new for iOS 13)
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        print(.i, "Presented view controller dismissed (iOS 13+).")
+        openSearch = nil
+        searchEngineEditor = nil
+    }
+    
     
     @IBAction func unwindToAllEnginesTable(segue: UIStoryboardSegue) {
         print(.i, "Unwinding to AllEngines view.")
@@ -333,8 +338,6 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
                 openSearch = nil
                 searchEngineEditor = nil
             case SegueKeys.skipOpenSearchUnwind:
-//                // If user tapped skip button, segue to AddEdit VC with dummy object
-//                openSearch = OpenSearch(name: "", url: nil)
                 // If user tapped skip button, segue to AddEdit VC with entered URL, if available
                 openSearch = OpenSearch(name: "", url: source.url)
                 searchEngineEditor = source.searchEngineEditor
@@ -361,18 +364,6 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
                 // If a row was selected in the all engines table, this is an edit
                 if tableView.indexPathForSelectedRow != nil {
                     // Save name for comparison
-//                    guard let engineBeforeUpdates = engines[shortcuts[selectedIndexPath.row]]  else {
-//                        print(.x, "Could not get engine at selected row for updates.")
-//                        return
-//                    }
-                    
-//                    guard let cell = tableView.cellForRow(at: selectedIndexPath) as? EngineTableViewCell,
-//                        let engineBeforeUpdates = cell.engine else {
-//                        print(.x, "Could not get engine at selected row for updates.")
-//                        return
-//                    }
-//
-//                    updateEngine(engineBeforeUpdates, to: engineAfterUpdates, at: selectedIndexPath)
                     
                     updateEngine(to: engineAfterUpdates)
                     
@@ -389,15 +380,6 @@ class AllEnginesTableViewController: EngineTableViewController, AddEditEngineTab
             }
         case SegueKeys.deleteEngineUnwind:
             // We're going to delete the engine in the currently selected row
-//            guard let selectedIndexPath = tableView.indexPathForSelectedRow,
-//                let cell = tableView.cellForRow(at: selectedIndexPath) as? EngineTableViewCell,
-//                let engine = cell.engine else {
-////                let engine = engines[shortcuts[selectedIndexPath.row]] else {
-//                    print(.x, "Failed to detect engine at cell or unwrap engine for deletion.")
-//                    return
-//            }
-//
-//            deleteEngine(engine, at: selectedIndexPath)
             deleteEngine()
             
         default:

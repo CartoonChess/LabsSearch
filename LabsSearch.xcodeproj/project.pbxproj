@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		4A44803224166B640072CDB8 /* UIColor+adaptiveLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44803124166B640072CDB8 /* UIColor+adaptiveLabel.swift */; };
 		4A44803324166B640072CDB8 /* UIColor+adaptiveLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44803124166B640072CDB8 /* UIColor+adaptiveLabel.swift */; };
+		4A448035241E0FC30072CDB8 /* OpenSearchPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A448034241E0FC30072CDB8 /* OpenSearchPresentationController.swift */; };
+		4A448036241E0FC30072CDB8 /* OpenSearchPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A448034241E0FC30072CDB8 /* OpenSearchPresentationController.swift */; };
 		AE072A6622BA0D8500DF19FD /* CharacterEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE072A6522BA0D8500DF19FD /* CharacterEncoder.swift */; };
 		AE072A6722BA14EA00DF19FD /* CharacterEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE072A6522BA0D8500DF19FD /* CharacterEncoder.swift */; };
 		AE093EB0218DB4E300CF3361 /* URLComponents+withoutQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE093EAF218DB4E300CF3361 /* URLComponents+withoutQueries.swift */; };
@@ -127,6 +129,7 @@
 
 /* Begin PBXFileReference section */
 		4A44803124166B640072CDB8 /* UIColor+adaptiveLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+adaptiveLabel.swift"; sourceTree = "<group>"; };
+		4A448034241E0FC30072CDB8 /* OpenSearchPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSearchPresentationController.swift; sourceTree = "<group>"; };
 		AE072A6522BA0D8500DF19FD /* CharacterEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterEncoder.swift; sourceTree = "<group>"; };
 		AE093EAF218DB4E300CF3361 /* URLComponents+withoutQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLComponents+withoutQueries.swift"; sourceTree = "<group>"; };
 		AE093EB1218DB52500CF3361 /* Dictionary+replaceValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+replaceValue.swift"; sourceTree = "<group>"; };
@@ -316,6 +319,7 @@
 		AEF665DE21781C2200DB310D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4A448034241E0FC30072CDB8 /* OpenSearchPresentationController.swift */,
 				AEF665E92178263A00DB310D /* SearchController.swift */,
 				AE093EE721932AA900CF3361 /* SearchController+showSearchInExternalApp.swift */,
 				AE830D0F219807FD00CD8257 /* UrlController.swift */,
@@ -496,6 +500,7 @@
 				AE093ED72193261400CF3361 /* SearchEngine.swift in Sources */,
 				AE093ED6219325E200CF3361 /* UrlDetailsTableViewController+actionExtension.swift in Sources */,
 				AE093EDA2193270000CF3361 /* URL+withQueries.swift in Sources */,
+				4A448036241E0FC30072CDB8 /* OpenSearchPresentationController.swift in Sources */,
 				AE94B5202195907400616860 /* AddEditEngineTableViewController.swift in Sources */,
 				AE0A15C321FD8EB300B5A07A /* OpenSearchController.swift in Sources */,
 				AE7F31FC22BFB4F0009E85F0 /* CharacterSet+union.swift in Sources */,
@@ -524,6 +529,7 @@
 				AE4C65CE2310172C003970C8 /* IntroExampleViewController.swift in Sources */,
 				AE093EE1219328CE00CF3361 /* AddEditEngineTableViewController.swift in Sources */,
 				AE093EE92193305100CF3361 /* String+removeLeadingSpaces.swift in Sources */,
+				4A448035241E0FC30072CDB8 /* OpenSearchPresentationController.swift in Sources */,
 				AE093EE2219328D100CF3361 /* UrlDetailsTableViewController+mainApp.swift in Sources */,
 				AE2FFD602185EFBB0081F2EB /* TableCellTextField.swift in Sources */,
 				AE093EB0218DB4E300CF3361 /* URLComponents+withoutQueries.swift in Sources */,
