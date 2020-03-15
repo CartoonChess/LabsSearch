@@ -826,6 +826,7 @@
 				CODE_SIGN_ENTITLEMENTS = LabsSearch/LabsSearch.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = V7WZHBVH5B;
 				INFOPLIST_FILE = LabsSearch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -833,6 +834,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.distantlabs.LabsSearch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -849,6 +851,7 @@
 				CODE_SIGN_ENTITLEMENTS = LabsSearch/LabsSearch.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = V7WZHBVH5B;
 				INFOPLIST_FILE = LabsSearch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -856,6 +859,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.distantlabs.LabsSearch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
