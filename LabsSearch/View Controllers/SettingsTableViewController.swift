@@ -287,8 +287,10 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
                 return NSLocalizedString("Settings.stayInAppFooter-Off", comment: "")
             }
         default:
-            // We have to let this fail silently because it's called every time the view scrolls...
-            return nil
+//            // We have to let this fail silently because it's called every time the view scrolls...
+//            return nil
+            // For other sections' footers (like auto-clear), don't do anything special
+            return super.tableView(tableView, titleForFooterInSection: section)
         }
     }
     
