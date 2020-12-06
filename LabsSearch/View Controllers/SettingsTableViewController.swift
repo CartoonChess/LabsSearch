@@ -24,7 +24,7 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     
     enum Section {
         static let stayInApp = 0
-        static let developerSettings = 3
+        static let developerSettings = 4
     }
     
     enum Cell {
@@ -35,6 +35,7 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     @IBOutlet weak var stayInAppLabel: UILabel!
     @IBOutlet weak var stayInAppSwitch: UISwitch!
     @IBOutlet weak var defaultEngineNameLabel: UILabel!
+    @IBOutlet weak var autoClearSwitch: UISwitch!
     
     
     // MARK: - Methods
@@ -65,6 +66,7 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
     func loadSettings() {
         // This check returns false whether set by the user or simply nonexistent
         stayInAppSwitch.isOn = defaults?.bool(forKey: SettingsKeys.stayInApp) ?? false
+        autoClearSwitch.isOn = defaults?.bool(forKey: SettingsKeys.autoClear) ?? false
         updateSectionFooter(Section.stayInApp)
     }
     
@@ -76,6 +78,12 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
         print(.o, "Stay in app preference udpated to \(sender.isOn).")
         
     }
+    
+    @IBAction func autoClearSwitchToggled(_ sender: UISwitch) {
+        UserDefaults(suiteName: AppKeys.appGroup)?.set(sender.isOn, forKey: SettingsKeys.autoClear)
+        print(.o, "Auto-clear search preference udpated to \(sender.isOn).")
+    }
+    
     
     
     // Delegate function; update the default engine when received from selection table view
@@ -259,11 +267,13 @@ class SettingsTableViewController: UITableViewController, DefaultEngineTableView
 //
 //        return numberOfSections
         
+        let totalSections = 5
+        
         if let enableDeveloperSettings = UserDefaults(suiteName: AppKeys.appGroup)?.bool(forKey: SettingsKeys.developerSettings),
             enableDeveloperSettings {
-            return 4
+            return totalSections
         } else {
-            return 3
+            return totalSections - 1
         }
     }
     

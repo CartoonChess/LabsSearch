@@ -208,6 +208,12 @@ class MainViewController: UIViewController, SearchControllerDelegate, SFSafariVi
                 print(.o, "Opening external app to show url: \(url)")
                 searchController.showSearchInExternalApp(for: url)
             }
+            
+            // Clear search field, if user has set option
+            if let autoClear = defaults?.bool(forKey: SettingsKeys.autoClear),
+               autoClear {
+                searchTextField.text = ""
+            }
         }
     }
     
