@@ -32,6 +32,7 @@ struct SettingsKeys {
     static let extensionDidChangeData = "extensionDidChangeData"
     static let defaultEngineShortcut = "DefaultEngineShortcut"
     static let stayInApp = "StayInApp"
+    static let autoClear = "AutoClearSearch"
     static let developerSettings = "DeveloperSettings"
 }
 
