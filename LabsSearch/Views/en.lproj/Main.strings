@@ -102,3 +102,9 @@
 
 /* Class = "UILabel"; text = "X"; ObjectID = "vmZ-TH-H54"; */
 "vmZ-TH-H54.text" = "X";
+
+/* Class = "UILabel"; text = "Automatically Clear Search"; ObjectID = "81C-fO-SMe"; */
+"81C-fO-SMe.text" = "Automatically Clear Search";
+
+/* Class = "UITableViewSection"; text = "When enabled, the search field will be cleared before you perform a new search."; ObjectID = "Noz-YN-5gb"; */
+"Noz-YN-5gb.footerTitle" = "When enabled, the search field will be cleared before you perform a new search.";
